@@ -117,12 +117,12 @@ export default function Home() {
 
                 <motion.div
                   variants={staggerWrap}
-                  className="mt-6 grid gap-3 sm:grid-cols-[auto_auto] sm:items-center md:mt-8 md:gap-3.5 md:grid-cols-[auto_auto_auto]"
+                  className="mt-6 grid grid-cols-2 gap-3 sm:items-center md:mt-8 md:gap-3.5 md:grid-cols-2"
                 >
                   <motion.div variants={fadeUp}>
                     <Link
                       href="#institucional"
-                      className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_30px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600"
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_30px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 w-full"
                     >
                       CONOCER ACAV
                       <FiArrowRight className="text-[13px]" />
@@ -132,7 +132,7 @@ export default function Home() {
                   <motion.div variants={fadeUp}>
                     <Link
                       href="#asociate"
-                      className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10"
+                      className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10 w-full"
                     >
                       ASOCIATE
                     </Link>
