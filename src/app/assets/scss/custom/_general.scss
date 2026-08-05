@@ -1,0 +1,41 @@
+/*********************************/
+/*             General           */
+/*===============================*/
+html {
+    @apply scroll-smooth;
+}
+
+body {
+    @apply text-[16px] text-slate-900;
+    @apply font-manrope;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    @apply font-manrope;
+}
+
+p {
+    @apply leading-relaxed;
+}
+
+ul li{
+    -webkit-margin-start: 0.25rem;
+            margin-inline-start: 0.25rem;
+  }
+  ul li:first-child{
+    -webkit-margin-start: 0px;
+            margin-inline-start: 0px;
+  }
+  a{
+    cursor: pointer;
+  }
+
+/* Fondo del hero responsive por orientación */
+.hero-bg {
+  background-image: url('/images/hero.png');
+}
+@media (orientation: landscape) {
+  .hero-bg {
+    background-image: url('/images/hero_horizontal.png');
+  }
+}

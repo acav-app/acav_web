@@ -1,0 +1,57 @@
+/*****************/
+/*  Testimonial  */
+/*****************/
+.tns-nav {
+    @apply text-center mt-3;
+    button {
+        @apply rounded-full bg-black/20 dark:bg-white/20 transition-all duration-500 ease-in-out border-2 border-white dark:border-slate-900 m-1 p-[2px];
+        &.tns-nav-active {
+            @apply bg-red-500 border-red-500;
+        }
+    }
+}
+
+.tns-controls {
+    button[data-controls="prev"],
+    button[data-controls="next"] {
+        @apply absolute top-1/2 -translate-y-1/2 text-base w-8 h-8 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-none z-1 shadow-lg shadow-slate-200 dark:shadow-slate-700;
+        &:hover {
+            @apply bg-red-500 text-white;
+        }
+    }
+    button[data-controls="prev"] {
+        @apply start-0 md:-start-2;
+    }
+    button[data-controls="next"] {
+        @apply end-0 md:-end-2;
+    }
+}
+
+.service-modal {
+    .tns-controls {
+        button[data-controls="prev"],
+        button[data-controls="next"] {
+            @apply w-10 h-10 text-lg bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-xl shadow-slate-200/60 dark:shadow-slate-900/40 backdrop-blur;
+            &:hover {
+                @apply bg-red-500 text-white border-red-500;
+            }
+        }
+        button[data-controls="prev"] {
+            @apply start-2 md:start-3;
+        }
+        button[data-controls="next"] {
+            @apply end-2 md:end-3;
+        }
+    }
+}
+
+html[dir="rtl"]{
+    .tns-inner, .tns-nav, .slider, .slider2 {
+        direction: ltr !important;
+    }
+
+    .tns-visually-hidden {
+        left: 0 !important;
+        visibility: hidden;
+    }
+}
