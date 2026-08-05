@@ -131,18 +131,6 @@ export default function Home() {
 
                   <motion.div variants={fadeUp}>
                     <Link
-                      href="#"
-                      className="inline-flex h-11 items-center justify-center gap-3 rounded-full border border-white/25 bg-white/5 px-5 text-[11px] font-bold uppercase text-white backdrop-blur-sm transition duration-300 hover:border-white/45 hover:bg-white/10"
-                    >
-                      <span className="flex size-7 items-center justify-center rounded-full bg-white text-slate-900">
-                        <FiPlay className="ml-0.5 text-[12px]" />
-                      </span>
-                      VER VIDEO INSTITUCIONAL
-                    </Link>
-                  </motion.div>
-
-                  <motion.div variants={fadeUp}>
-                    <Link
                       href="#asociate"
                       className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10"
                     >
@@ -206,7 +194,7 @@ export default function Home() {
             variants={sectionReveal}
             className="container"
           >
-            <div className="grid gap-1.5 overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#092859_0%,#05153a_55%,#030c24_100%)] px-4 py-4 shadow-[0_22px_55px_rgba(2,6,23,0.45)] sm:px-5 sm:grid-cols-2 sm:gap-2 md:px-6 md:grid-cols-4 md:gap-0 md:py-3.5 lg:px-6.5">
+            <div className="grid grid-cols-2 gap-1.5 overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#092859_0%,#05153a_55%,#030c24_100%)] px-4 py-4 shadow-[0_22px_55px_rgba(2,6,23,0.45)] sm:px-5 sm:gap-2 md:px-6 md:grid-cols-4 md:gap-0 md:py-3.5 lg:px-6.5">
               {siteConfig.hero.stats.map((stat, index) => {
                 const Icon = statIcons[index] ?? FiUsers
 
@@ -214,8 +202,8 @@ export default function Home() {
                   <div
                     key={stat.label}
                     className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-white transition hover:bg-white/5 sm:px-3.5 sm:py-3.5 md:px-4 md:py-3.5 lg:px-5 lg:py-4 ${
-                      index < siteConfig.hero.stats.length - 1 ? 'sm:border-b sm:border-white/10 md:border-b-0 md:border-r md:border-white/10' : ''
-                    } ${index < 2 ? 'sm:border-b sm:border-white/10' : ''}`}
+                      index < siteConfig.hero.stats.length - 1 ? 'md:border-b-0 md:border-r md:border-white/10' : ''
+                    } ${index % 2 === 0 ? 'border-r border-white/10 md:border-r md:border-white/10' : ''} ${index < 2 ? 'border-b border-white/10 md:border-b-0' : ''}`}
                   >
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/7 text-lg text-white transition group-hover:bg-white/12 sm:size-11 sm:text-xl">
                       <Icon />
@@ -243,13 +231,13 @@ export default function Home() {
             variants={sectionReveal}
             className="container"
           >
-            <motion.div variants={staggerWrap} className="grid gap-10 md:gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-              <motion.div variants={fadeUp}>
-                <p className="text-[11px] font-bold uppercase text-primary-600">SOBRE ACAV</p>
-                <h2 className="mt-4 max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-3xl">
+            <motion.div variants={staggerWrap} className="grid gap-10 md:gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20 w-full min-w-0 overflow-hidden">
+              <motion.div variants={fadeUp} className="w-full min-w-0 overflow-hidden">
+                <p className="w-full min-w-0 break-words text-[11px] font-bold uppercase text-primary-600">SOBRE ACAV</p>
+                <h2 className="mt-4 w-full min-w-0 md:max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-3xl break-words">
                   Trabajamos por el crecimiento y la profesionalización del sector turístico.
                 </h2>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-slate-600">
+                <p className="mt-4 w-full min-w-0 md:max-w-lg text-sm leading-7 text-slate-600 break-words">
                   Desde 1963 representamos a las agencias de viajes, defendiendo sus intereses y generando herramientas, capacitaciones y beneficios exclusivos para que sigan creciendo.
                 </p>
 
@@ -260,11 +248,11 @@ export default function Home() {
                     { Icon: FiPercent, label: 'Beneficios' },
                     { Icon: FiUsers, label: 'Comunidad' },
                   ].map(({ Icon, label }) => (
-                    <div key={label} className="flex flex-col items-start gap-2.5">
+                    <div key={label} className="flex flex-col items-center text-center gap-2">
                       <div className="flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.05)]">
                         <Icon className="text-[18px]" />
                       </div>
-                      <p className="text-[12px] font-bold uppercase text-slate-700">{label}</p>
+                      <p className="w-full text-[10px] sm:text-[12px] font-bold uppercase text-slate-700 leading-snug break-words">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -278,8 +266,8 @@ export default function Home() {
                 </Link>
               </motion.div>
 
-              <motion.div variants={fadeUp}>
-                <div className="relative w-full overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)]">
+              <motion.div variants={fadeUp} className="w-full min-w-0 overflow-hidden">
+                <div className="relative w-full min-w-0 overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)]">
                   <Image
                     src="/images/sobre-acav-video.jpg"
                     alt="Sobre ACAV"
@@ -429,7 +417,7 @@ export default function Home() {
             </div>
 
             {/* Mobile: automatic slider minimalista */}
-            <div className="sm:hidden">
+            <div className="sm:hidden w-full min-w-0 overflow-hidden">
               <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{ delay: 3600, disableOnInteraction: false }}
@@ -576,7 +564,7 @@ export default function Home() {
             </div>
 
             {/* Mobile benefits slider */}
-            <div className="mt-8 sm:hidden">
+            <div className="mt-8 sm:hidden w-full min-w-0 overflow-hidden">
               <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{ delay: 2800, disableOnInteraction: false }}
@@ -622,7 +610,7 @@ export default function Home() {
             </div>
 
             <div className="relative mt-8 md:mt-10">
-              <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:px-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:px-7 md:py-6">
+              <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:px-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:px-7 md:py-6 min-w-0">
                 <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[260px] md:h-full">
                   <Image
                     src="/images/benefits/beneficio-destacado.jpg"
@@ -675,7 +663,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="relative mt-7 md:mt-8">
+            <div className="relative mt-7 md:mt-8 w-full min-w-0 overflow-hidden">
               <Swiper
                 modules={[Autoplay]}
                 autoplay={{ delay: 3200, disableOnInteraction: false }}
@@ -793,7 +781,7 @@ export default function Home() {
               </div>
 
               {/* Mobile history slider */}
-              <div className="sm:hidden">
+              <div className="sm:hidden w-full min-w-0 overflow-hidden">
                 <Swiper
                   modules={[Autoplay, Pagination]}
                   autoplay={{ delay: 4000, disableOnInteraction: false }}
@@ -865,7 +853,7 @@ export default function Home() {
               COMISIÓN DIRECTIVA 2025 - 2026
             </p>
 
-            <div className="relative mt-7 md:mt-8">
+            <div className="relative mt-7 md:mt-8 w-full min-w-0 overflow-hidden">
               <Swiper
                 modules={[Autoplay]}
                 autoplay={{ delay: 3000, disableOnInteraction: false }}
@@ -921,8 +909,8 @@ export default function Home() {
             variants={sectionReveal}
             className="container"
           >
-            <div className="grid gap-7 rounded-[24px] md:rounded-[28px] border border-slate-200 bg-slate-50/70 px-4 py-6 shadow-[0_22px_60px_rgba(15,23,42,0.06)] sm:px-5 sm:py-7 md:gap-10 md:px-10 md:py-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.6fr)] lg:gap-12">
-              <div>
+            <div className="grid gap-7 rounded-[24px] md:rounded-[28px] border border-slate-200 bg-slate-50/70 px-4 py-6 shadow-[0_22px_60px_rgba(15,23,42,0.06)] overflow-hidden sm:px-5 sm:py-7 md:gap-10 md:px-10 md:py-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.6fr)] lg:gap-12">
+              <div className="w-full min-w-0">
                 <p className="text-[11px] font-bold uppercase text-primary-600">ASOCIATE A ACAV</p>
                 <h2 className="mt-4 max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-[30px]">
                   Sumate a nuestra comunidad y potenciá tu agencia.
@@ -936,67 +924,69 @@ export default function Home() {
                 </Link>
               </div>
 
-              <div className="relative hidden md:block">
-                <div className="absolute left-6 right-6 top-[30px] h-[3px] rounded-full bg-slate-200">
-                  <div className="h-full w-1/4 rounded-full bg-gradient-to-r from-primary-500 via-primary-400 to-primary-300" />
-                </div>
+              <div className="w-full min-w-0 overflow-hidden">
+                <div className="relative hidden md:block w-full min-w-0 overflow-hidden">
+                  <div className="absolute left-6 right-6 top-[30px] h-[3px] rounded-full bg-slate-200">
+                    <div className="h-full w-1/4 rounded-full bg-gradient-to-r from-primary-500 via-primary-400 to-primary-300" />
+                  </div>
 
-                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 md:gap-3.5">
-                  {[
-                    { n: '01', title: 'Requisitos', desc: 'Conocé los requisitos para asociarte.', Icon: FiCheckCircle },
-                    { n: '02', title: 'Beneficios', desc: 'Descubrí todo lo que podés obtener.', Icon: FiTarget },
-                    { n: '03', title: 'Documentación', desc: 'Encontrá qué documentación debés presentar.', Icon: FiFileText },
-                    { n: '04', title: 'Contacto', desc: 'Completá el formulario y envía tu solicitud.', Icon: FiSend },
-                  ].map(({ n, title, desc, Icon }) => (
-                    <div
-                      key={n}
-                      className="relative z-10 rounded-[22px] border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.05)]"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-[18px] font-extrabold leading-none text-primary-600">{n}</span>
-                        <div className="flex size-9 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-                          <Icon className="text-[16px]" />
-                        </div>
-                      </div>
-                      <p className="mt-4 text-[12px] font-bold uppercase text-slate-900">{title}</p>
-                      <p className="mt-2 text-[12.5px] leading-6 text-slate-600">{desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mobile: slider de pasos */}
-              <div className="md:hidden">
-                <Swiper
-                  modules={[Autoplay, Pagination]}
-                  autoplay={{ delay: 4200, disableOnInteraction: false }}
-                  loop
-                  spaceBetween={12}
-                  slidesPerView={1.15}
-                  speed={600}
-                  pagination={{ clickable: true, el: '#join-pagination' }}
-                >
-                  {[
-                    { n: '01', title: 'Requisitos', desc: 'Conocé los requisitos para asociarte.', Icon: FiCheckCircle },
-                    { n: '02', title: 'Beneficios', desc: 'Descubrí todo lo que podés obtener.', Icon: FiTarget },
-                    { n: '03', title: 'Documentación', desc: 'Qué documentación debés presentar.', Icon: FiFileText },
-                    { n: '04', title: 'Contacto', desc: 'Completá el formulario y envía tu solicitud.', Icon: FiSend },
-                  ].map(({ n, title, desc, Icon }) => (
-                    <SwiperSlide key={n}>
-                      <div className="rounded-[22px] border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.05)]">
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 md:gap-3.5 w-full min-w-0">
+                    {[
+                      { n: '01', title: 'Requisitos', desc: 'Conocé los requisitos para asociarte.', Icon: FiCheckCircle },
+                      { n: '02', title: 'Beneficios', desc: 'Descubrí todo lo que podés obtener.', Icon: FiTarget },
+                      { n: '03', title: 'Documentación', desc: 'Encontrá qué documentación debés presentar.', Icon: FiFileText },
+                      { n: '04', title: 'Contacto', desc: 'Completá el formulario y envía tu solicitud.', Icon: FiSend },
+                    ].map(({ n, title, desc, Icon }) => (
+                      <div
+                        key={n}
+                        className="relative z-10 rounded-[22px] border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.05)] w-full min-w-0"
+                      >
                         <div className="flex items-center justify-between">
-                          <span className="text-[20px] font-extrabold leading-none text-primary-600">{n}</span>
-                          <div className="flex size-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-                            <Icon className="text-[17px]" />
+                          <span className="text-[18px] font-extrabold leading-none text-primary-600">{n}</span>
+                          <div className="flex size-9 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+                            <Icon className="text-[16px]" />
                           </div>
                         </div>
-                        <p className="mt-5 text-[13px] font-bold uppercase text-slate-900">{title}</p>
-                        <p className="mt-2 text-[13px] leading-6 text-slate-600">{desc}</p>
+                        <p className="mt-4 text-[12px] font-bold uppercase text-slate-900">{title}</p>
+                        <p className="mt-2 text-[12.5px] leading-6 text-slate-600">{desc}</p>
                       </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-                <div id="join-pagination" className="mt-4 flex justify-center" />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mobile: slider de pasos */}
+                <div className="md:hidden w-full min-w-0 overflow-hidden">
+                  <Swiper
+                    modules={[Autoplay, Pagination]}
+                    autoplay={{ delay: 4200, disableOnInteraction: false }}
+                    loop
+                    spaceBetween={12}
+                    slidesPerView={1.15}
+                    speed={600}
+                    pagination={{ clickable: true, el: '#join-pagination' }}
+                  >
+                    {[
+                      { n: '01', title: 'Requisitos', desc: 'Conocé los requisitos para asociarte.', Icon: FiCheckCircle },
+                      { n: '02', title: 'Beneficios', desc: 'Descubrí todo lo que podés obtener.', Icon: FiTarget },
+                      { n: '03', title: 'Documentación', desc: 'Qué documentación debés presentar.', Icon: FiFileText },
+                      { n: '04', title: 'Contacto', desc: 'Completá el formulario y envía tu solicitud.', Icon: FiSend },
+                    ].map(({ n, title, desc, Icon }) => (
+                      <SwiperSlide key={n}>
+                        <div className="rounded-[22px] border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.05)] w-full min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[20px] font-extrabold leading-none text-primary-600">{n}</span>
+                            <div className="flex size-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+                              <Icon className="text-[17px]" />
+                            </div>
+                          </div>
+                          <p className="mt-5 text-[13px] font-bold uppercase text-slate-900">{title}</p>
+                          <p className="mt-2 text-[13px] leading-6 text-slate-600">{desc}</p>
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                  <div id="join-pagination" className="mt-4 flex justify-center" />
+                </div>
               </div>
             </div>
           </motion.div>

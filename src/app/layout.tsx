@@ -54,9 +54,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="light scroll-smooth" dir="ltr">
+    <html lang="es" className="light scroll-smooth overflow-x-hidden" dir="ltr">
       <body
-        className={` ${manrope.variable} font-manrope text-base text-slate-900 dark:text-white dark:bg-slate-900`}
+        className={`overflow-x-hidden overflow-y-visible ${manrope.variable} font-manrope text-base text-slate-900 dark:text-white dark:bg-slate-900`}
       >
         {children}
         {siteConfig.contact.whatsapp ? <WhatsappBtn phone={siteConfig.contact.whatsapp} /> : null}

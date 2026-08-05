@@ -14,9 +14,40 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    if (typeof document === 'undefined') return
+    const root = document.documentElement
+    const body = document.body
+
+    if (menuOpen) {
+      root.style.setProperty('overflow', 'hidden', 'important')
+      root.style.setProperty('touch-action', 'none', 'important')
+      body.style.setProperty('overflow', 'hidden', 'important')
+      body.style.setProperty('position', 'fixed', 'important')
+      body.style.setProperty('inset', '0', 'important')
+    } else {
+      root.style.removeProperty('overflow')
+      root.style.removeProperty('touch-action')
+      body.style.removeProperty('overflow')
+      body.style.removeProperty('position')
+      body.style.removeProperty('inset')
+    }
+
+    const prevent = (e: TouchEvent) => {
+      const t = e.target as HTMLElement | null
+      if (t && t.closest('[data-mobile-menu-scroll]')) return
+      if (e.cancelable) e.preventDefault()
+    }
+    if (menuOpen) {
+      document.addEventListener('touchmove', prevent, { passive: false })
+    }
+
     return () => {
-      document.body.style.overflow = ''
+      document.removeEventListener('touchmove', prevent)
+      root.style.removeProperty('overflow')
+      root.style.removeProperty('touch-action')
+      body.style.removeProperty('overflow')
+      body.style.removeProperty('position')
+      body.style.removeProperty('inset')
     }
   }, [menuOpen])
 
@@ -104,9 +135,9 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.26, ease: easeOutCubic }}
-            className="fixed inset-0 z-20 bg-white/98 backdrop-blur-md md:hidden"
+            className="fixed inset-0 z-20 bg-white backdrop-blur-xl md:hidden shadow-[0_30px_80px_rgba(15,23,42,0.18)]"
           >
-            <div className="container h-full flex flex-col pt-20 pb-6">
+            <div className="container h-full flex flex-col pt-[88px] pb-7 overflow-y-auto" data-mobile-menu-scroll>
               <motion.nav
                 initial="hidden"
                 animate="show"
@@ -114,37 +145,37 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                   hidden: {},
                   show: { transition: { staggerChildren: 0.055, delayChildren: 0.04 } },
                 }}
-                className="flex flex-col gap-1"
+                className="flex flex-col"
               >
                 {siteConfig.nav.items.map((item, i) => (
                   <motion.div
                     key={item.label}
                     variants={{
-                      hidden: { opacity: 0, y: 18 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.34, ease: easeOutCubic } },
+                      hidden: { opacity: 0, y: 14 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: easeOutCubic } },
                     }}
                   >
                     <Link
                       href={item.href}
                       onClick={() => setMenuOpen(false)}
-                      className="-mx-1 flex items-center justify-between rounded-2xl px-4 py-4 text-base font-bold text-slate-900 border-b border-slate-100/80"
+                      className="group flex items-center justify-between rounded-xl px-2 py-3.5 text-base font-bold text-slate-900 border-b border-slate-200 transition-colors duration-200 hover:bg-slate-50 active:bg-slate-100"
                     >
                       <span>{item.label}</span>
-                      <FiChevronDown className="text-[12px] text-slate-400" />
+                      <FiChevronDown className="text-[11px] text-slate-400 transition group-hover:text-primary-600 group-hover:-translate-y-0.5" />
                     </Link>
                   </motion.div>
                 ))}
 
                 <motion.div
                   variants={{
-                    hidden: { opacity: 0, y: 18 },
-                    show: { opacity: 1, y: 0, transition: { duration: 0.34, ease: [0.22, 1, 0.36, 1] } },
+                    hidden: { opacity: 0, y: 14 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
                   }}
                 >
                   <Link
                     href={siteConfig.nav.cta.href}
                     onClick={() => setMenuOpen(false)}
-                    className="-mx-1 mt-4 inline-flex h-12 w-full items-center justify-center rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white transition hover:bg-accent-600"
+                    className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 active:scale-[0.98]"
                   >
                     {siteConfig.nav.cta.label}
                   </Link>
@@ -154,8 +185,8 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
-                className="mt-auto pt-10 flex items-center justify-between text-[11px] font-semibold uppercase text-slate-500"
+                transition={{ delay: 0.28, duration: 0.4 }}
+                className="mt-auto pt-10 flex items-center justify-between text-xs font-bold uppercase text-slate-500"
               >
                 <span>ACAV · Córdoba</span>
                 <span>Asociación Cordobesa</span>
