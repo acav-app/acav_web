@@ -3,6 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { FiArrowRight, FiAward, FiBookOpen, FiCheck, FiMonitor, FiUsers } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
+
 export const metadata: Metadata = {
   title: 'Capacitaciones y Cursos | ACAV',
   description:
@@ -47,7 +49,7 @@ const beneficios = [
 
 export default function CapacitacionesPage() {
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
@@ -117,6 +119,6 @@ export default function CapacitacionesPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

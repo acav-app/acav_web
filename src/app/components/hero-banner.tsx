@@ -47,10 +47,10 @@ function Media({ slide }: { slide: BannerSlide }) {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster={slide.poster || undefined}
       >
-        <source src={slide.media} />
+        <source src={slide.media} type="video/mp4" />
       </video>
     )
   }
