@@ -41,6 +41,7 @@ import {
 import HeroBanner from './components/hero-banner'
 import Navbar from './components/navbar'
 import SiteFooter from './components/site-footer'
+import ContactForm from './contacto/contact-form'
 import { comisionPlana, iniciales } from './data/comision'
 import { siteConfig } from './config/site'
 import type { BannerSlide } from '@/lib/admin/types'
@@ -864,6 +865,50 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   </Swiper>
                   <div id="join-pagination" className="mt-4 flex justify-center" />
                 </div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* =============================================================
+           CONTACTO (Sección Minimalista antes del Footer)
+        ============================================================= */}
+        <section id="contacto" className="pb-section md:pb-section-lg">
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportTrigger}
+            variants={sectionReveal}
+            className="container"
+          >
+            <div className="grid gap-10 rounded-[28px] border border-slate-200 bg-slate-50/40 px-6 py-8 shadow-sm overflow-hidden md:p-10 lg:grid-cols-[2fr_3fr] lg:gap-16 xl:gap-20">
+              <div className="flex flex-col justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-primary-600">Contacto</p>
+                  <h2 className="mt-4 text-[26px] font-extrabold leading-tight text-slate-900 md:text-[34px]">
+                    ¿Tenés alguna consulta?
+                  </h2>
+                  <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base">
+                    Ponete en contacto con la Asociación Cordobesa de Agencias de Viajes. Nuestro equipo está a disposición para responder tus dudas.
+                  </p>
+                </div>
+                <div className="mt-8 space-y-4 text-slate-700">
+                  <div className="flex items-center gap-3">
+                    <FiMapPin className="text-primary-500 text-[17px] shrink-0" />
+                    <span className="text-sm font-semibold">Obispo Trejo 180 Piso 4, Córdoba</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <FiMail className="text-primary-500 text-[17px] shrink-0" />
+                    <span className="text-sm font-semibold">info@acav.org.ar</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <FiPhone className="text-primary-500 text-[17px] shrink-0" />
+                    <span className="text-sm font-semibold">(0351) 422 4425</span>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-sm md:p-8">
+                <ContactForm />
               </div>
             </div>
           </motion.div>
