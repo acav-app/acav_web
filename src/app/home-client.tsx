@@ -202,25 +202,6 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                  {[
-                    { label: 'Nuestra Historia', sub: 'Conocé nuestros inicios', href: '#historia' },
-                    { label: 'Comisión Directiva', sub: 'Conocé a nuestro equipo', href: '#comision' },
-                    { label: 'Estatuto', sub: 'Documentos institucionales', href: '#estatuto' },
-                  ].map((q) => (
-                    <Link
-                      key={q.label}
-                      href={q.href}
-                      className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-[0_12px_30px_rgba(15,23,42,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)]"
-                    >
-                      <div>
-                        <p className="text-[12px] font-bold uppercase text-slate-900">{q.label}</p>
-                        <p className="mt-1 text-[11px] leading-5 text-slate-500">{q.sub}</p>
-                      </div>
-                      <FiArrowRight className="text-[13px] text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-primary-600" />
-                    </Link>
-                  ))}
-                </div>
               </motion.div>
             </motion.div>
           </motion.div>
