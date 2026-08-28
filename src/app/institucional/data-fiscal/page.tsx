@@ -3,27 +3,6 @@ import {
   FiBriefcase,
   FiCalendar,
   FiCheckCircle,
-  FiFileText,
-  FiMail,
-  FiMapPin,
-  FiPercent,
-  FiPhone,
-  FiUsers,
-} from 'react-icons/fi'
-
-import { siteConfig } from '../../config/site'
-
-export const metadata: Metadata = {
-  title: 'Data Fiscal | ACAV',
-  description: 'Información fiscal e institucional de la Asociación Cordobesa de Agencias de Viajes.',
-}
-
-import type { Metadata } from 'next'
-import {
-  FiBriefcase,
-  FiCalendar,
-  FiCheckCircle,
-  FiFileText,
   FiHash,
   FiMail,
   FiMapPin,
