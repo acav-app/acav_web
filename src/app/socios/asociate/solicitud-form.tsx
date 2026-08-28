@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { FiCheckCircle, FiSend } from 'react-icons/fi'
 
 import { CATEGORIAS_SOCIO, emptySolicitud, type SolicitudInput } from '@/lib/admin/types'
+import PublicImageUploader from './public-image-uploader'
 
 const fieldClass =
   'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-100'
@@ -164,6 +165,17 @@ export default function SolicitudForm() {
             onChange={(event) => set('sitio', event.target.value)}
             placeholder="miagencia.com.ar"
             className={fieldClass}
+          />
+        </Campo>
+      </div>
+
+      <div className="mt-4">
+        <Campo label="Logo de la agencia">
+          <PublicImageUploader
+            value={form.logo}
+            folder="socios"
+            onChange={(url) => set('logo', url)}
+            label="Subir logo"
           />
         </Campo>
       </div>

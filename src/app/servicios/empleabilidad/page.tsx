@@ -52,14 +52,14 @@ export default function EmpleabilidadPage() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  href="mailto:info@acav.org.ar?subject=Red%20de%20Empleabilidad%20ACAV"
+                  href="https://acav-empleos.vercel.app/"
                   className="inline-flex h-12 items-center gap-2 rounded-full bg-accent-500 px-7 text-[11px] font-bold uppercase text-white shadow-[0_14px_32px_rgba(249,73,16,0.3)] transition hover:-translate-y-0.5 hover:bg-accent-600"
                 >
                   Explorar empleos
                   <FiArrowRight />
                 </Link>
                 <Link
-                  href="/socios/asociate"
+                  href="https://acav-empleos.vercel.app/"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
                 >
                   Publicar una búsqueda

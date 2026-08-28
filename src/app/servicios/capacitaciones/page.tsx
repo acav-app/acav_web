@@ -62,7 +62,7 @@ export default function CapacitacionesPage() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  href="/socios/asociate"
+                  href="https://acav-cursos.vercel.app/"
                   className="inline-flex h-12 items-center gap-2 rounded-full bg-accent-500 px-7 text-[11px] font-bold uppercase text-white shadow-[0_14px_32px_rgba(249,73,16,0.3)] transition hover:-translate-y-0.5 hover:bg-accent-600"
                 >
                   Quiero capacitarme

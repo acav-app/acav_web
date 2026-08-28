@@ -75,6 +75,7 @@ export type EstadoSolicitud = (typeof ESTADOS_SOLICITUD)[number]
 export interface Solicitud {
   id: string
   agencia: string
+  logo: string
   categoria: string
   legajo: string
   responsable: string
@@ -93,6 +94,7 @@ export type SolicitudInput = Omit<Solicitud, 'id' | 'estado' | 'notas' | 'create
 
 export const emptySolicitud: SolicitudInput = {
   agencia: '',
+  logo: '',
   categoria: 'Agencia de viajes',
   legajo: '',
   responsable: '',

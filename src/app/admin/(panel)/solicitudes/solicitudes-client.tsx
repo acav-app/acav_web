@@ -137,19 +137,31 @@ export default function SolicitudesClient() {
             <article key={solicitud.id} className="rounded-2xl border border-slate-200 bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="truncate font-bold text-slate-900">{solicitud.agencia}</h2>
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ESTILO_ESTADO[solicitud.estado]}`}
-                    >
-                      {solicitud.estado}
-                    </span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {solicitud.logo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={solicitud.logo}
+                        alt={`Logo de ${solicitud.agencia}`}
+                        className="h-10 w-10 shrink-0 rounded-lg border border-slate-200 object-contain bg-white"
+                      />
+                    ) : null}
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 className="truncate font-bold text-slate-900">{solicitud.agencia}</h2>
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${ESTILO_ESTADO[solicitud.estado]}`}
+                        >
+                          {solicitud.estado}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-400">
+                        {solicitud.categoria}
+                        {solicitud.legajo ? ` · Legajo ${solicitud.legajo}` : ''} ·{' '}
+                        {formatDate(solicitud.createdAt)}
+                      </p>
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs text-slate-400">
-                    {solicitud.categoria}
-                    {solicitud.legajo ? ` · Legajo ${solicitud.legajo}` : ''} ·{' '}
-                    {formatDate(solicitud.createdAt)}
-                  </p>
                 </div>
 
                 <button

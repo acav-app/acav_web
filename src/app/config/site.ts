@@ -41,7 +41,7 @@ export const siteConfig = {
         label: "Socios",
         href: "/socios",
         children: [
-          { label: "Directorio de socios", href: "/socios" },
+          { label: "Socios", href: "/socios" },
           { label: "Asociate", href: "/socios/asociate" },
         ],
       },
@@ -184,7 +184,7 @@ export const siteConfig = {
       title: "Empleabilidad ACAV",
       description:
         "Plataforma laboral destinada a conectar agencias de viajes con profesionales del sector turístico.",
-      cta: { label: "Explorar empleos", href: "#asociate" },
+      cta: { label: "Explorar empleos", href: "https://acav-empleos.vercel.app/" },
       metrics: [
         { value: "120+", label: "Ofertas activas" },
         { value: "850+", label: "Perfiles registrados" },
@@ -195,7 +195,7 @@ export const siteConfig = {
       title: "Cursos ACAV",
       description:
         "Campus educativo para capacitaciones, certificaciones y formación profesional.",
-      cta: { label: "Ver cursos", href: "#asociate" },
+      cta: { label: "Ver cursos", href: "https://acav-cursos.vercel.app/" },
       metrics: [
         { value: "35+", label: "Cursos disponibles" },
         { value: "2000+", label: "Alumnos capacitados" },

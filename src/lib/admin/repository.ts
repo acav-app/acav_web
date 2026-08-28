@@ -338,6 +338,7 @@ function mapSolicitud(doc: QueryDocumentSnapshot<DocumentData>): Solicitud {
   return {
     id: doc.id,
     agencia: str(data.agencia),
+    logo: str(data.logo),
     categoria: str(data.categoria, 'Agencia de viajes'),
     legajo: str(data.legajo),
     responsable: str(data.responsable),
@@ -372,6 +373,7 @@ export function normalizeSolicitud(payload: unknown): SolicitudInput {
 
   return {
     agencia,
+    logo: str(raw.logo),
     categoria: cap(raw.categoria, 60) || 'Agencia de viajes',
     legajo: cap(raw.legajo, 60),
     responsable,
