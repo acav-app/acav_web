@@ -3,6 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { FiArrowRight, FiBriefcase, FiCheck, FiSearch, FiSend, FiUserPlus } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
+
 export const metadata: Metadata = {
   title: 'Red de Empleabilidad | ACAV',
   description:
@@ -37,7 +39,7 @@ const pasos = [
 
 export default function EmpleabilidadPage() {
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
@@ -60,7 +62,7 @@ export default function EmpleabilidadPage() {
                   <FiArrowRight />
                 </Link>
                 <Link
-                  href="https://acav-empleos.vercel.app/"
+                   href="https://acav-empleos.vercel.app/"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
                 >
                   Publicar una búsqueda
@@ -121,6 +123,6 @@ export default function EmpleabilidadPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FiArrowRight, FiAward, FiBookOpen, FiShield, FiUsers } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
 import { siteConfig } from '../../config/site'
 export const metadata: Metadata = {
   title: 'Quiénes somos | ACAV',
@@ -35,7 +36,7 @@ const pilares = [
 
 export default function QuienesSomosPage() {
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
           <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
@@ -87,6 +88,6 @@ export default function QuienesSomosPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

@@ -12,6 +12,7 @@ import {
   FiYoutube,
 } from 'react-icons/fi'
 
+import PageAnimation from '../components/page-animation'
 import ContactForm from './contact-form'
 import { siteConfig } from '../config/site'
 
@@ -45,7 +46,7 @@ const redes = [
 
 export default function ContactoPage() {
   return (
-    <>
+    <PageAnimation>
       {/* Sección Hero + Formulario Integrado (Full Minimal, UI UX) */}
       <section className="py-section md:py-section-lg bg-slate-50/50">
         <div className="container">
@@ -139,6 +140,6 @@ export default function ContactoPage() {
           />
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

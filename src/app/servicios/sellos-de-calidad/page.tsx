@@ -15,6 +15,8 @@ import {
   FiVolume2,
 } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
+
 export const metadata: Metadata = {
   title: 'Proyecto Sellos de Calidad | ACAV',
   description:
@@ -103,7 +105,7 @@ const niveles = [
 
 export default function SellosDeCalidadPage() {
   return (
-    <>
+    <PageAnimation>
       {/* Encabezado */}
       <section className="py-section md:py-section-lg">
         <div className="container">
@@ -121,7 +123,7 @@ export default function SellosDeCalidadPage() {
 
               <p className="mt-6 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
                 Se aprobó recientemente el proyecto de acompañamiento a los Sellos de Calidad, impulsado a nivel
-                federal, que busca fortalecer la competitividad y profesionalización de las empresas de viajes y
+                federal, que busca fortalecer la competitividad ya profesionalización de las empresas de viajes y
                 turismo de Córdoba mediante la implementación de un modelo de mejora de procesos de gestión y
                 calidad creado ad hoc.
               </p>
@@ -297,6 +299,6 @@ export default function SellosDeCalidadPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

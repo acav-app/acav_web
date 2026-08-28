@@ -15,6 +15,8 @@ import {
   FiUsers,
 } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
+
 export const metadata: Metadata = {
   title: 'Convenios y Beneficios | ACAV',
   description:
@@ -72,7 +74,7 @@ const beneficios = [
 
 export default function ConveniosYBeneficiosPage() {
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
           <div className="max-w-2xl">
@@ -81,7 +83,7 @@ export default function ConveniosYBeneficiosPage() {
               Convenios y Beneficios
             </h1>
             <p className="mt-5 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
-              Más beneficios, más oportunidades. Generamos convenios de cooperación con instituciones y empresas
+              Más beneficios, más oportunidades. Generamos convenios de cooperación con instituciones and empresas
               para que tu agencia acceda a condiciones preferenciales y herramientas exclusivas.
             </p>
           </div>
@@ -166,6 +168,6 @@ export default function ConveniosYBeneficiosPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 
+import PageAnimation from '../../components/page-animation'
 import { comisionDirectiva, iniciales } from '../../data/comision'
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ComisionDirectivaPage() {
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container space-y-14">
           <div className="max-w-2xl">
@@ -69,6 +70,6 @@ export default function ComisionDirectivaPage() {
           ))}
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

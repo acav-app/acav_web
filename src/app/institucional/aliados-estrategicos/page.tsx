@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FiArrowRight, FiExternalLink } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
 import { listAliadosActivos } from '@/lib/admin/repository'
 import type { Aliado } from '@/lib/admin/types'
 
@@ -23,7 +24,7 @@ export default async function AliadosEstrategicosPage() {
   }
 
   return (
-    <>
+    <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
           <div className="mb-10 max-w-2xl">
@@ -97,6 +98,6 @@ export default async function AliadosEstrategicosPage() {
           )}
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }

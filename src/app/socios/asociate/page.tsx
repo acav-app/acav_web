@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FiArrowRight, FiCheck, FiDownload, FiFileText } from 'react-icons/fi'
 
+import PageAnimation from '../../components/page-animation'
 import CategoriasAsociado, { type Categoria } from './categorias-asociado'
 import SolicitudForm from './solicitud-form'
 
@@ -66,7 +67,7 @@ const SOLICITUD_PDF = '/docs/solicitud-de-ingreso-acav.pdf'
 
 export default function AsociatePage() {
   return (
-    <>
+    <PageAnimation>
       {/* Intro + beneficios */}
       <section className="py-section md:py-section-lg">
         <div className="container">
@@ -190,6 +191,6 @@ export default function AsociatePage() {
           </div>
         </div>
       </section>
-    </>
+    </PageAnimation>
   )
 }
