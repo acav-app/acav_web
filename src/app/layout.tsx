@@ -4,7 +4,7 @@ import './assets/scss/tailwind.scss'
 import './assets/css/material.css'
 
 import { siteConfig } from "./config/site";
-import WhatsappBtn from "./components/whatsapp-btn";
+import WhatsappFloating from "./components/whatsapp-floating";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -59,7 +59,7 @@ export default function RootLayout({
         className={`${manrope.variable} font-manrope text-base text-slate-900 dark:text-white dark:bg-slate-900`}
       >
         {children}
-        {siteConfig.contact.whatsapp ? <WhatsappBtn phone={siteConfig.contact.whatsapp} /> : null}
+        {siteConfig.contact.whatsapp ? <WhatsappFloating phone={siteConfig.contact.whatsapp} /> : null}
       </body>
     </html>
   );

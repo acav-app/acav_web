@@ -56,7 +56,7 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
       <div className="container">
         <div className="flex h-16 items-center justify-between gap-5 md:h-[72px]">
           <Link
-            href="#home"
+            href="/#home"
             onClick={() => setMenuOpen(false)}
             className="relative z-30 shrink-0"
           >
@@ -78,8 +78,26 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                   className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[11px] font-bold uppercase text-slate-700 transition-colors duration-300 hover:bg-slate-50 hover:text-primary-600"
                 >
                   {item.label}
-                  <FiChevronDown className="mt-0.5 text-[10px] text-slate-400 transition group-hover:text-primary-500" />
+                  {item.children ? (
+                    <FiChevronDown className="mt-0.5 text-[10px] text-slate-400 transition group-hover:text-primary-500" />
+                  ) : null}
                 </Link>
+
+                {item.children ? (
+                  <div className="invisible absolute left-0 top-full z-20 w-60 pt-2 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100">
+                    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-[0_18px_45px_rgba(15,23,42,0.12)]">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block px-4 py-2.5 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ))}
           </nav>
@@ -161,8 +179,25 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                       className="group flex items-center justify-between rounded-xl px-2 py-3.5 text-base font-bold text-slate-900 border-b border-slate-200 transition-colors duration-200 hover:bg-slate-50 active:bg-slate-100"
                     >
                       <span>{item.label}</span>
-                      <FiChevronDown className="text-[11px] text-slate-400 transition group-hover:text-primary-600 group-hover:-translate-y-0.5" />
+                      {item.children ? (
+                        <FiChevronDown className="text-[11px] text-slate-400 transition group-hover:text-primary-600 group-hover:-translate-y-0.5" />
+                      ) : null}
                     </Link>
+
+                    {item.children ? (
+                      <div className="flex flex-col border-b border-slate-200 bg-slate-50/60">
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={() => setMenuOpen(false)}
+                            className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
                   </motion.div>
                 ))}
 

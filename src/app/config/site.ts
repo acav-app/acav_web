@@ -2,7 +2,7 @@ export const siteConfig = {
   brand: {
     name: "ACAV",
     longName: "Asociación Cordobesa de Agencias de Viajes",
-    tagline: "La comunidad que impulsa el turismo en Córdoba",
+    tagline: "Asociación Cordobesa de Agencias de Viajes ",
   },
   seo: {
     url: "https://acav.org.ar",
@@ -26,22 +26,96 @@ export const siteConfig = {
   },
   nav: {
     items: [
-      { label: "Home", href: "#home" },
-      { label: "Eventos", href: "#eventos" },
-      { label: "Servicios", href: "#servicios" },
-      { label: "Socios", href: "#socios" },
-      { label: "Institucional", href: "#institucional" },
+      { label: "Home", href: "/#home" },
+      {
+        label: "Institucional",
+        href: "/institucional/quienes-somos",
+        children: [
+          { label: "Quiénes somos", href: "/institucional/quienes-somos" },
+          { label: "Comisión Directiva", href: "/institucional/comision-directiva" },
+          { label: "Data Fiscal", href: "/institucional/data-fiscal" },
+          { label: "Aliados Estratégicos", href: "/institucional/aliados-estrategicos" },
+        ],
+      },
+      {
+        label: "Socios",
+        href: "/socios",
+        children: [
+          { label: "Directorio de socios", href: "/socios" },
+          { label: "Asociate", href: "/socios/asociate" },
+        ],
+      },
+      {
+        label: "Servicios",
+        href: "/servicios/capacitaciones",
+        children: [
+          { label: "Capacitaciones y Cursos", href: "/servicios/capacitaciones" },
+          { label: "Convenios y Beneficios", href: "/servicios/convenios-y-beneficios" },
+          { label: "Proyecto | Sellos de Calidad", href: "/servicios/sellos-de-calidad" },
+          { label: "Red de Empleabilidad", href: "/servicios/empleabilidad" },
+        ],
+      },
+      {
+        label: "Novedades",
+        href: "/novedades/actualidad",
+        children: [
+          { label: "Actualidad", href: "/novedades/actualidad" },
+          { label: "Redes", href: "/novedades/redes" },
+          { label: "Mercado de Viajes", href: "/novedades/mercado-de-viajes" },
+        ],
+      },
+      { label: "Contacto", href: "/contacto" },
+    ] as readonly {
+      label: string
+      href: string
+      children?: readonly { label: string; href: string }[]
+    }[],
+    cta: { label: "Asociate", href: "/socios/asociate" },
+  },
+  servicios: {
+    links: [
+      { label: "Capacitaciones y Cursos", href: "/servicios/capacitaciones" },
+      { label: "Convenios y Beneficios", href: "/servicios/convenios-y-beneficios" },
+      { label: "Proyecto | Sellos de Calidad", href: "/servicios/sellos-de-calidad" },
+      { label: "Red de Empleabilidad", href: "/servicios/empleabilidad" },
     ],
-    cta: { label: "Asociate", href: "#asociate" },
+  },
+  novedades: {
+    links: [
+      { label: "Actualidad", href: "/novedades/actualidad" },
+      { label: "Redes", href: "/novedades/redes" },
+      { label: "Mercado de Viajes", href: "/novedades/mercado-de-viajes" },
+    ],
+  },
+  institucional: {
+    links: [
+      { label: "Quiénes somos", href: "/institucional/quienes-somos" },
+      { label: "Comisión Directiva", href: "/institucional/comision-directiva" },
+      { label: "Data Fiscal", href: "/institucional/data-fiscal" },
+      { label: "Aliados Estratégicos", href: "/institucional/aliados-estrategicos" },
+    ],
+    dataFiscal: {
+      razonSocial: "Asociación Cordobesa de Agencias de Viajes (ACAV)",
+      cuit: "30-55915252-4",
+      tipoPersona: "Persona Jurídica",
+      provincia: "Córdoba",
+      localidad: "Ciudad de Córdoba",
+      fechaContratoSocial: "25/10/1966",
+      iva: "IVA Exento",
+      empleador: "Sí",
+      domicilioFiscal: "Obispo Trejo 180, Piso 4, Córdoba, Argentina (CP 5000)",
+      // Código del QR de AFIP: https://www.afip.gob.ar/formulario-960/
+      afipQrCode: null as string | null,
+    },
   },
   hero: {
     eyebrow: "ACAV - Pasión por el turismo",
-    headline: "La comunidad que impulsa el turismo en Córdoba",
-    subheadline: "Representamos, capacitamos y fortalecemos a las agencias de viajes de la provincia.",
+    headline: "Asociación Cordobesa de Agencias de Viajes ",
+    subheadline: "Trabajando junto a vos, defendiendo los derechos de quienes hacemos crecer el turismo en Córdoba",
     description:
       "Representamos, conectamos y fortalecemos a las agencias de viajes de Córdoba con una agenda activa de capacitación, networking, eventos y oportunidades para el sector.",
     actions: {
-      primary: { label: "Conocer ACAV", href: "#institucional" },
+      primary: { label: "Sumate a ACAV", href: "#institucional" },
       tertiary: { label: "Asociarse", href: "#asociate" },
     },
     video: {
