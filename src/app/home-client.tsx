@@ -919,46 +919,6 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     ))}
                   </div>
                 </div>
-
-                {/* Botón de asociarse + Redes Integradas */}
-                <div className="mt-4 space-y-6 text-left">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-bold uppercase text-primary-600">¿Querés asociarte?</p>
-                      <p className="mt-1 text-sm font-bold text-slate-900">Completá la solicitud de ingreso.</p>
-                    </div>
-                    <Link
-                      href="/socios/asociate"
-                      className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600 shadow-[0_10px_25px_rgba(249,73,16,0.15)]"
-                    >
-                      Asociate
-                      <FiArrowRight />
-                    </Link>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl bg-[#04112e] px-6 py-4 text-white">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-white/50">Síguenos en redes</p>
-                    <div className="flex gap-2">
-                      {[
-                        { label: 'Instagram', Icon: FiInstagram, href: siteConfig.contact.social.instagram },
-                        { label: 'Facebook', Icon: FiFacebook, href: null },
-                        { label: 'LinkedIn', Icon: FiLinkedin, href: siteConfig.contact.social.linkedin },
-                        { label: 'YouTube', Icon: FiYoutube, href: siteConfig.contact.social.youtube },
-                      ].map(({ label, Icon, href }) => (
-                        <a
-                          key={label}
-                          href={href ?? '#'}
-                          target={href ? '_blank' : undefined}
-                          rel={href ? 'noopener noreferrer' : undefined}
-                          aria-label={label}
-                          className="inline-flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
-                        >
-                          <Icon className="text-[14px]" />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Columna Derecha: Formulario Minimalista */}
