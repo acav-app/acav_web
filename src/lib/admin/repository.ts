@@ -160,6 +160,15 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 /* --------------------------------- Socios --------------------------------- */
 
+function capitalizeWords(text: string): string {
+  if (!text) return ''
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
 function mapSocio(doc: QueryDocumentSnapshot<DocumentData>): Socio {
   const data = doc.data()
   const contacto = (data.contacto ?? {}) as Record<string, unknown>
@@ -169,7 +178,7 @@ function mapSocio(doc: QueryDocumentSnapshot<DocumentData>): Socio {
   return {
     id: doc.id,
     legajo: str(data.legajo),
-    nombre: str(data.nombre),
+    nombre: capitalizeWords(str(data.nombre)),
     logo: str(data.logo),
     categoria: str(data.categoria, 'Agencia de viajes'),
     localidad: str(data.localidad),
@@ -188,7 +197,7 @@ export function normalizeSocio(payload: unknown): SocioInput {
   const contacto = (raw.contacto ?? {}) as Record<string, unknown>
   const delegado = (raw.delegado ?? {}) as Record<string, unknown>
   const subdelegado = (raw.subdelegado ?? {}) as Record<string, unknown>
-  const nombre = str(raw.nombre)
+  const nombre = capitalizeWords(str(raw.nombre))
 
   if (!nombre) throw new Error('El nombre del socio es obligatorio.')
 
@@ -211,8 +220,10 @@ export async function listSociosActivos(): Promise<Socio[]> {
 }
 
 export async function listSocios(): Promise<Socio[]> {
-  const snap = await adminDb().collection(SOCIOS_COLLECTION).orderBy('nombre').get()
-  return snap.docs.map(mapSocio)
+  const snap = await adminDb().collection(SOCIOS_COLLECTION).get()
+  return snap.docs
+    .map(mapSocio)
+    .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }))
 }
 
 export async function getSocio(id: string): Promise<Socio | null> {
@@ -281,8 +292,10 @@ export function normalizeAliado(payload: unknown): AliadoInput {
 }
 
 export async function listAliados(): Promise<Aliado[]> {
-  const snap = await adminDb().collection(ALIADOS_COLLECTION).orderBy('orden').get()
-  return snap.docs.map(mapAliado)
+  const snap = await adminDb().collection(ALIADOS_COLLECTION).get()
+  return snap.docs
+    .map(mapAliado)
+    .sort((a, b) => a.orden - b.orden)
 }
 
 export async function listAliadosActivos(): Promise<Aliado[]> {
