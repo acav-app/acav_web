@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FiArrowLeft, FiCalendar, FiUser } from 'react-icons/fi'
 
+import PageAnimation from '../../../components/page-animation'
 import { getPostBySlug } from '@/lib/admin/repository'
 
 export const revalidate = 120

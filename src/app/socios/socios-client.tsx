@@ -43,10 +43,12 @@ function DatoFila({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center gap-3 border-t border-slate-100 py-2.5 first:border-t-0">
-      <Icon className="shrink-0 text-[15px] text-slate-400" aria-hidden />
-      <span className="shrink-0 text-[13px] text-slate-500">{label}</span>
-      <span className="ml-auto min-w-0 truncate text-right text-[13px] font-semibold text-slate-900">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 border-t border-slate-100 py-2.5 first:border-t-0 min-w-0">
+      <div className="flex items-center gap-2 shrink-0">
+        <Icon className="shrink-0 text-[15px] text-slate-400" aria-hidden />
+        <span className="text-[13px] text-slate-500">{label}</span>
+      </div>
+      <span className="sm:ml-auto min-w-0 truncate text-left sm:text-right text-[13px] font-semibold text-slate-900 break-words">
         {children}
       </span>
     </div>
@@ -57,39 +59,41 @@ function TarjetaSocio({ socio }: { socio: Socio }) {
   const sitio = urlDeSitio(socio.sitio)
 
   return (
-    <article className="flex h-full flex-col gap-5 rounded-[22px] border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:flex-row">
-      <div className="shrink-0">
+    <article className="flex h-full flex-col gap-5 rounded-[22px] border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:flex-row sm:p-6">
+      <div className="flex justify-center sm:justify-start shrink-0">
         {socio.logo ? (
           // Los logos viven en R2; se sirven sin el optimizador de Next.
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={socio.logo}
             alt={`Logo de ${socio.nombre}`}
-            className="size-[104px] rounded-[18px] border border-slate-200 bg-white object-contain p-2"
+            className="size-20 rounded-[18px] border border-slate-200 bg-white object-contain p-2 sm:size-[104px]"
           />
         ) : (
-          <span className="flex size-[104px] items-center justify-center rounded-[18px] bg-slate-100 text-[32px] font-extrabold text-slate-300">
+          <span className="flex size-20 items-center justify-center rounded-[18px] bg-slate-100 text-[26px] font-extrabold text-slate-300 sm:size-[104px] sm:text-[32px]">
             {socio.nombre.charAt(0).toUpperCase()}
           </span>
         )}
       </div>
 
-      <div className="min-w-0 flex-1">
-        <h2 className="text-[20px] font-bold leading-tight text-slate-900">{socio.nombre}</h2>
+      <div className="min-w-0 flex-1 text-center sm:text-left">
+        <h2 className="text-[18px] font-bold leading-snug text-slate-900 sm:text-[20px] break-words">{socio.nombre}</h2>
 
         {socio.localidad ? (
-          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-slate-500">
+          <p className="mt-1 flex items-center justify-center sm:justify-start gap-1.5 text-[13px] text-slate-500">
             <FiMapPin className="text-[13px]" aria-hidden />
-            {socio.localidad}
+            <span className="truncate">{socio.localidad}</span>
           </p>
         ) : null}
 
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[12px] font-semibold text-emerald-700">
-          <FiCheckCircle className="text-[13px]" aria-hidden />
-          Socio verificado ACAV
-        </p>
+        <div className="flex justify-center sm:justify-start mt-3">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700">
+            <FiCheckCircle className="text-[12px]" aria-hidden />
+            Socio verificado ACAV
+          </p>
+        </div>
 
-        <div className="mt-4">
+        <div className="mt-4 border-t border-slate-50 pt-2 text-left">
           {socio.legajo ? (
             <DatoFila Icon={FiCreditCard} label="Legajo RNAV">
               {socio.legajo}
@@ -98,7 +102,7 @@ function TarjetaSocio({ socio }: { socio: Socio }) {
 
           {socio.contacto.email ? (
             <DatoFila Icon={FiMail} label="Email">
-              <a href={`mailto:${socio.contacto.email}`} className="text-primary-600 hover:text-primary-700">
+              <a href={`mailto:${socio.contacto.email}`} className="text-primary-600 hover:text-primary-700 block truncate">
                 {socio.contacto.email}
               </a>
             </DatoFila>
@@ -116,7 +120,7 @@ function TarjetaSocio({ socio }: { socio: Socio }) {
                 href={sitio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-600 hover:text-primary-700"
+                className="text-primary-600 hover:text-primary-700 block truncate"
               >
                 {etiquetaDeSitio(socio.sitio)}
               </a>
@@ -163,7 +167,7 @@ export default function SociosClient({ socios }: { socios: Socio[] }) {
 
   return (
     <>
-      <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+      <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
         <div className="relative">
           <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
