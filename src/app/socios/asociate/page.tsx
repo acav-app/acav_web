@@ -168,43 +168,6 @@ export default function AsociatePage() {
               </li>
             ))}
           </ol>
-
-          <div className="mt-12 grid gap-8 rounded-[26px] border border-slate-200 bg-slate-50/70 p-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:p-10">
-            <div>
-              <div className="flex size-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-                <FiFileText className="text-[18px]" />
-              </div>
-              <h3 className="mt-5 text-[20px] font-bold leading-tight text-slate-900">
-                Documentación requerida
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Preparala antes de enviar tu solicitud para agilizar la evaluación.
-              </p>
-
-              <a
-                href={SOLICITUD_PDF}
-                download
-                className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-primary-500 px-6 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-primary-600"
-              >
-                <FiDownload />
-                Descargar solicitud
-              </a>
-            </div>
-
-            <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-              {documentacion.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[13px] leading-6 text-slate-700"
-                >
-                  <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                    <FiCheck className="text-[12px]" />
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </section>
 
