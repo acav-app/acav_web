@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { adminAuth } from '@/lib/firebase/admin'
+import { verifyIdTokenREST } from '@/lib/firebase/admin'
 import { SESSION_COOKIE, SESSION_MAX_AGE_MS, isAllowedEmail } from '@/lib/admin/session'
 
 export const runtime = 'nodejs'
@@ -12,19 +12,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Falta el token de acceso.' }, { status: 400 })
     }
 
-    const decoded = await adminAuth().verifyIdToken(idToken, true)
+    const decoded = await verifyIdTokenREST(idToken)
 
-    if (!isAllowedEmail(decoded.email)) {
+    if (!decoded || !isAllowedEmail(decoded.email)) {
       return NextResponse.json({ error: 'Esta cuenta no tiene acceso al panel.' }, { status: 403 })
     }
 
-    const sessionCookie = await adminAuth().createSessionCookie(idToken, {
-      expiresIn: SESSION_MAX_AGE_MS,
-    })
-
     const response = NextResponse.json({ ok: true, email: decoded.email ?? null })
 
-    response.cookies.set(SESSION_COOKIE, sessionCookie, {
+    // Guardar el idToken del cliente directamente en la cookie de sesión sin crear una cookie de sesión del Admin SDK
+    response.cookies.set(SESSION_COOKIE, idToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

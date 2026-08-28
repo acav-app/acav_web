@@ -1,7 +1,14 @@
 import 'server-only'
 
 import sanitizeHtml from 'sanitize-html'
-import { FieldValue, Timestamp, type DocumentData, type QueryDocumentSnapshot } from 'firebase-admin/firestore'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'
+
+// Mapeo local de tipos y clases desde el SDK compatible de Firebase
+const FieldValue = firebase.firestore.FieldValue
+const Timestamp = firebase.firestore.Timestamp
+type DocumentData = firebase.firestore.DocumentData
+type QueryDocumentSnapshot<T = firebase.firestore.DocumentData> = firebase.firestore.QueryDocumentSnapshot<T>
 
 import { adminDb } from '@/lib/firebase/admin'
 import {

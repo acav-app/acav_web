@@ -1,9 +1,7 @@
 import 'server-only'
 
 import { cookies } from 'next/headers'
-import type { DecodedIdToken } from 'firebase-admin/auth'
-
-import { adminAuth } from '@/lib/firebase/admin'
+import { verifyIdTokenREST, type DecodedIdTokenREST } from '@/lib/firebase/admin'
 
 export const SESSION_COOKIE = 'acav_admin_session'
 export const SESSION_MAX_AGE_MS = 60 * 60 * 24 * 5 * 1000 // 5 días
@@ -22,13 +20,13 @@ export function isAllowedEmail(email?: string | null): boolean {
   return !!email && list.includes(email.toLowerCase())
 }
 
-export async function getSessionUser(): Promise<DecodedIdToken | null> {
+export async function getSessionUser(): Promise<DecodedIdTokenREST | null> {
   const cookie = cookies().get(SESSION_COOKIE)?.value
   if (!cookie) return null
 
   try {
-    const decoded = await adminAuth().verifySessionCookie(cookie, true)
-    return isAllowedEmail(decoded.email) ? decoded : null
+    const decoded = await verifyIdTokenREST(cookie)
+    return decoded && isAllowedEmail(decoded.email) ? decoded : null
   } catch {
     return null
   }
@@ -41,7 +39,7 @@ export class UnauthorizedError extends Error {
   }
 }
 
-export async function requireSessionUser(): Promise<DecodedIdToken> {
+export async function requireSessionUser(): Promise<DecodedIdTokenREST> {
   const user = await getSessionUser()
   if (!user) throw new UnauthorizedError()
   return user
