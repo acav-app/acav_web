@@ -24,6 +24,14 @@ function getAdminApp(): App {
     }
     // Reemplazamos los saltos de línea escapados por saltos de línea reales
     privateKey = privateKey.replace(/\\n/g, '\n')
+
+    // Especial para Vercel: si se copió con espacios u otros caracteres invisibles al final de cada línea,
+    // limpiamos el inicio y fin de cada línea individual del certificado PEM de forma robusta.
+    privateKey = privateKey
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join('\n')
   }
 
   if (!projectId || !clientEmail || !privateKey) {
