@@ -78,38 +78,15 @@ export default function CapacitacionesPage() {
               </div>
             </div>
 
-            <div className="rounded-[26px] bg-[linear-gradient(135deg,#ff7a2d,#f85a16_55%,#e24a0b)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(248,90,22,0.22)] min-h-[380px] lg:min-h-[460px]">
-              {/* Contenedor relativo para la imagen de mockup escalada de forma limpia y responsiva */}
-              <div className="absolute -bottom-8 left-1/2 z-0 w-[84%] -translate-x-1/2 pointer-events-none select-none sm:w-[65%] md:w-[70%] lg:w-[84%]">
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src="/images/acav_cursos.png"
-                    alt="Cursos ACAV"
-                    fill
-                    priority
-                    unoptimized
-                    className="object-contain object-bottom drop-shadow-[0_20px_50px_rgba(2,6,23,0.35)]"
-                  />
-                </div>
-              </div>
-
-              <div className="relative z-10 bg-gradient-to-b from-[#f85a16]/90 via-[#f85a16]/40 to-transparent p-3 rounded-2xl -mx-3 -mt-3">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-white/90">Cursos ACAV</p>
-                <p className="mt-2 text-[20px] font-bold leading-snug md:text-2xl">
-                  Campus educativo para capacitaciones, certificaciones y formación profesional.
-                </p>
-              </div>
-
-              <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/20 pt-6 bg-gradient-to-t from-[#e24a0b]/90 via-[#e24a0b]/40 to-transparent p-3 rounded-2xl -mx-3 -mb-3">
-                {metricas.map((metrica) => (
-                  <div key={metrica.label}>
-                    <p className="text-[22px] font-bold leading-none md:text-3xl">{metrica.value}</p>
-                    <p className="mt-1.5 text-[10px] font-bold uppercase leading-5 text-white/90">
-                      {metrica.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            <div className="relative h-[280px] sm:h-[360px] md:h-[400px] lg:h-full w-full min-h-[300px] rounded-[26px] overflow-hidden shadow-lg border border-slate-200">
+              <Image
+                src="/images/acav_cursos.png"
+                alt="Cursos ACAV"
+                fill
+                priority
+                unoptimized
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
