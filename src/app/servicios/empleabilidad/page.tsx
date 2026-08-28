@@ -72,7 +72,7 @@ export default function EmpleabilidadPage() {
 
             <div className="relative h-[280px] sm:h-[360px] md:h-[400px] lg:h-full w-full min-h-[300px] rounded-[26px] overflow-hidden shadow-lg border border-slate-200">
               <Image
-                src="/images/acav_empleos.png"
+                src="/images/placeholder.jpg"
                 alt="Empleabilidad ACAV"
                 fill
                 priority

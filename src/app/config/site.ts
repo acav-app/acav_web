@@ -258,12 +258,12 @@ export const siteConfig = {
       description: "Workshops, capacitaciones, testimonios y eventos. Personas y experiencias reales.",
       cta: { label: "Ver más en redes", href: "#redes" },
       items: [
-        { type: "video", src: "/videos/acav-hero.mp4", poster: "/images/hero.png", label: "Workshops" },
-        { type: "image", src: "/images/nosotros.jpg", label: "Capacitaciones" },
-        { type: "image", src: "/images/servicios.jpg", label: "Destinos de Córdoba" },
-        { type: "image", src: "/images/hero.png", label: "Networking" },
-        { type: "image", src: "/images/hero.png", label: "Ferias" },
-        { type: "image", src: "/images/hero_horizontal.png", label: "Experiencias" },
+        { type: "video", src: "/videos/acav-hero.mp4", poster: "/images/placeholder.jpg", label: "Workshops" },
+        { type: "image", src: "/images/placeholder.jpg", label: "Capacitaciones" },
+        { type: "image", src: "/images/placeholder.jpg", label: "Destinos de Córdoba" },
+        { type: "image", src: "/images/placeholder.jpg", label: "Networking" },
+        { type: "image", src: "/images/placeholder.jpg", label: "Ferias" },
+        { type: "image", src: "/images/placeholder.jpg", label: "Experiencias" },
       ] as
         | readonly { type: "image"; src: string; label: string }[]
         | readonly { type: "video"; src: string; poster: string; label: string }[],

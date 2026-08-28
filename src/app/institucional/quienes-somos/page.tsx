@@ -78,7 +78,7 @@ export default function QuienesSomosPage() {
 
             <div className="relative overflow-hidden rounded-[26px] border border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
               <Image
-                src="/images/nosotros.jpg"
+                src="/images/placeholder.jpg"
                 alt="Equipo de ACAV"
                 width={900}
                 height={700}

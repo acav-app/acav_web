@@ -91,7 +91,7 @@ export default function ConveniosYBeneficiosPage() {
           <div className="mt-10 grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:p-6">
             <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[280px] md:h-full">
               <Image
-                src="/images/benefits/beneficio-destacado.jpg"
+                src="/images/benefits/placeholder.jpg"
                 alt="Descuentos exclusivos"
                 width={960}
                 height={540}

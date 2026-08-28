@@ -233,7 +233,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   ],
                   gradient: 'from-[#0a2d69] via-[#082559] to-[#051a41]',
                   glow: 'from-primary-400/40 via-primary-600/20',
-                  mock: '/images/acav_empleos.png',
+                  mock: '/images/placeholder.jpg',
                   alt: 'Empleabilidad ACAV',
                 },
                 {
@@ -248,7 +248,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   ],
                   gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
                   glow: 'from-accent-400/40 via-accent-600/20',
-                  mock: '/images/acav_cursos.png',
+                  mock: '/images/placeholder.jpg',
                   alt: 'Cursos ACAV',
                 },
               ].map((p) => (
@@ -319,7 +319,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     ],
                     gradient: 'from-[#0a2d69] via-[#082559] to-[#051a41]',
                     glow: 'from-primary-400/40 via-primary-600/20',
-                    mock: '/images/acav_empleos.png',
+                    mock: '/images/placeholder.jpg',
                     alt: 'Empleabilidad ACAV',
                   },
                   {
@@ -334,7 +334,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     ],
                     gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
                     glow: 'from-accent-400/40 via-accent-600/20',
-                    mock: '/images/acav_cursos.png',
+                    mock: '/images/placeholder.jpg',
                     alt: 'Cursos ACAV',
                   },
                 ].map((p) => (
@@ -492,7 +492,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:px-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:px-7 md:py-6 min-w-0">
                 <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[260px] md:h-full">
                   <Image
-                    src="/images/benefits/beneficio-destacado.jpg"
+                    src="/images/benefits/placeholder.jpg"
                     alt="Descuentos exclusivos"
                     width={960}
                     height={540}
@@ -559,12 +559,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 onSwiper={(s) => (communitySwiper.current = s)}
               >
                 {[
-                  { title: 'Convención anual', fecha: '20 Nov 2024', img: '/images/community/1.jpg' },
-                  { title: 'Workshop ACAV', fecha: '12 Oct 2024', img: '/images/community/2.jpg' },
-                  { title: 'Destinos Córdoba', fecha: '08 Sep 2024', img: '/images/community/3.jpg' },
-                  { title: 'Capacitación', fecha: '24 Ago 2024', img: '/images/community/4.jpg' },
-                  { title: 'Marketing Turístico', fecha: '15 Jul 2024', img: '/images/community/5.jpg' },
-                  { title: 'Workshop ventas', fecha: '02 Jul 2024', img: '/images/community/6.jpg' },
+                  { title: 'Convención anual', fecha: '20 Nov 2024', img: '/images/placeholder.jpg' },
+                  { title: 'Workshop ACAV', fecha: '12 Oct 2024', img: '/images/placeholder.jpg' },
+                  { title: 'Destinos Córdoba', fecha: '08 Sep 2024', img: '/images/placeholder.jpg' },
+                  { title: 'Capacitación', fecha: '24 Ago 2024', img: '/images/placeholder.jpg' },
+                  { title: 'Marketing Turístico', fecha: '15 Jul 2024', img: '/images/placeholder.jpg' },
+                  { title: 'Workshop ventas', fecha: '02 Jul 2024', img: '/images/placeholder.jpg' },
                 ].map((item, i) => (
                   <SwiperSlide key={i}>
                     <article className="group relative overflow-hidden rounded-[22px] border border-slate-200 bg-slate-900 shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
@@ -627,12 +627,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 <div className="absolute left-0 right-0 top-10 h-px bg-white/15" />
                 <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-4">
                   {[
-                    { year: '1963', title: 'Fundación de ACAV', img: '/images/history/1963.jpg' },
-                    { year: '1975', title: '1ra Convención institucional', img: '/images/history/1975.jpg' },
-                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/history/1995.jpg' },
-                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/history/2010.jpg' },
-                    { year: '2020', title: 'Transformación digital', img: '/images/history/2020.jpg' },
-                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/history/actualidad.jpg' },
+                    { year: '1963', title: 'Fundación de ACAV', img: '/images/placeholder.jpg' },
+                    { year: '1975', title: '1ra Convención institucional', img: '/images/placeholder.jpg' },
+                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/placeholder.jpg' },
+                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/placeholder.jpg' },
+                    { year: '2020', title: 'Transformación digital', img: '/images/placeholder.jpg' },
+                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/placeholder.jpg' },
                   ].map((h, i) => (
                     <div key={h.year} className="relative flex flex-col items-start gap-4 md:items-center md:text-center">
                       <div className="relative z-10 flex size-9 items-center justify-center rounded-full border-2 border-white/30 bg-[#071f4e] text-white ring-4 ring-[#0a2e6d] md:size-10">
@@ -671,12 +671,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   pagination={{ clickable: true, el: '#history-pagination' }}
                 >
                   {[
-                    { year: '1963', title: 'Fundación de ACAV', img: '/images/history/1963.jpg' },
-                    { year: '1975', title: '1ra Convención institucional', img: '/images/history/1975.jpg' },
-                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/history/1995.jpg' },
-                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/history/2010.jpg' },
-                    { year: '2020', title: 'Transformación digital', img: '/images/history/2020.jpg' },
-                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/history/actualidad.jpg' },
+                    { year: '1963', title: 'Fundación de ACAV', img: '/images/placeholder.jpg' },
+                    { year: '1975', title: '1ra Convención institucional', img: '/images/placeholder.jpg' },
+                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/placeholder.jpg' },
+                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/placeholder.jpg' },
+                    { year: '2020', title: 'Transformación digital', img: '/images/placeholder.jpg' },
+                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/placeholder.jpg' },
                   ].map((h, i) => (
                     <SwiperSlide key={h.year + i}>
                       <div className="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
