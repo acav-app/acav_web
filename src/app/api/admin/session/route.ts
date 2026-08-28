@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { adminAuth } from '@/lib/firebase/admin'
@@ -23,7 +22,9 @@ export async function POST(request: Request) {
       expiresIn: SESSION_MAX_AGE_MS,
     })
 
-    cookies().set(SESSION_COOKIE, sessionCookie, {
+    const response = NextResponse.json({ ok: true, email: decoded.email ?? null })
+
+    response.cookies.set(SESSION_COOKIE, sessionCookie, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -31,14 +32,15 @@ export async function POST(request: Request) {
       maxAge: SESSION_MAX_AGE_MS / 1000,
     })
 
-    return NextResponse.json({ ok: true, email: decoded.email ?? null })
+    return response
   } catch (error) {
-    console.error('[admin-session]', error)
+    console.error('[admin-session] Error al iniciar sesión:', error instanceof Error ? error.message : error, error)
     return NextResponse.json({ error: 'No se pudo iniciar sesión.' }, { status: 401 })
   }
 }
 
 export async function DELETE() {
-  cookies().delete(SESSION_COOKIE)
-  return NextResponse.json({ ok: true })
+  const response = NextResponse.json({ ok: true })
+  response.cookies.delete(SESSION_COOKIE)
+  return response
 }

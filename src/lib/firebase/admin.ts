@@ -11,8 +11,20 @@ function getAdminApp(): App {
 
   const projectId = process.env.FIREBASE_PROJECT_ID
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL
-  // La private key viaja en una sola línea con "\n" escapados.
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n')
+  
+  // Limpiar y parsear de forma robusta la private key de Firebase
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY
+  if (privateKey) {
+    privateKey = privateKey.trim()
+    // Si viene envuelta en comillas como suele pasar en Vercel, las eliminamos
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1)
+    } else if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+      privateKey = privateKey.slice(1, -1)
+    }
+    // Reemplazamos los saltos de línea escapados por saltos de línea reales
+    privateKey = privateKey.replace(/\\n/g, '\n')
+  }
 
   if (!projectId || !clientEmail || !privateKey) {
     throw new Error(
