@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FiArrowRight, FiBriefcase, FiCheck, FiSearch, FiSend, FiUserPlus } from 'react-icons/fi'
 
 export const metadata: Metadata = {
@@ -67,15 +68,27 @@ export default function EmpleabilidadPage() {
               </div>
             </div>
 
-            <div className="rounded-[26px] bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] p-8 text-white md:p-10">
-              <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary-500/20 text-primary-300">
-                <FiBriefcase className="text-[24px]" />
-              </span>
-              <p className="mt-6 text-[20px] font-bold leading-snug">
-                Empleabilidad ACAV, la puerta de entrada al empleo turístico en Córdoba.
-              </p>
+            <div className="rounded-[26px] bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(10,45,105,0.22)]">
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/images/acav_empleos.png"
+                  alt="Empleabilidad ACAV"
+                  fill
+                  priority
+                  className="object-cover opacity-15 select-none pointer-events-none"
+                />
+              </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-6">
+              <div className="relative z-10">
+                <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary-500/20 text-primary-300">
+                  <FiBriefcase className="text-[24px]" />
+                </span>
+                <p className="mt-6 text-[20px] font-bold leading-snug">
+                  Empleabilidad ACAV, la puerta de entrada al empleo turístico en Córdoba.
+                </p>
+              </div>
+
+              <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-6">
                 {metricas.map((metrica) => (
                   <div key={metrica.label}>
                     <p className="text-[22px] font-bold leading-none">{metrica.value}</p>

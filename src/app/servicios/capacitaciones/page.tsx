@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FiArrowRight, FiAward, FiBookOpen, FiCheck, FiMonitor, FiUsers } from 'react-icons/fi'
 
 export const metadata: Metadata = {
@@ -77,13 +78,25 @@ export default function CapacitacionesPage() {
               </div>
             </div>
 
-            <div className="rounded-[26px] bg-[linear-gradient(135deg,#ff7a2d,#f85a16_55%,#e24a0b)] p-8 text-white md:p-10">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">Cursos ACAV</p>
-              <p className="mt-3 text-[20px] font-bold leading-snug">
-                Campus educativo para capacitaciones, certificaciones y formación profesional.
-              </p>
+            <div className="rounded-[26px] bg-[linear-gradient(135deg,#ff7a2d,#f85a16_55%,#e24a0b)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(248,90,22,0.22)]">
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/images/acav_cursos.png"
+                  alt="Cursos ACAV"
+                  fill
+                  priority
+                  className="object-cover opacity-15 select-none pointer-events-none"
+                />
+              </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-3 border-t border-white/20 pt-6">
+              <div className="relative z-10">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">Cursos ACAV</p>
+                <p className="mt-3 text-[20px] font-bold leading-snug">
+                  Campus educativo para capacitaciones, certificaciones y formación profesional.
+                </p>
+              </div>
+
+              <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/20 pt-6">
                 {metricas.map((metrica) => (
                   <div key={metrica.label}>
                     <p className="text-[22px] font-bold leading-none">{metrica.value}</p>

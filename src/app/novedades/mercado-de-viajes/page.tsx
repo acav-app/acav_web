@@ -47,8 +47,6 @@ export default function MercadoDeViajesPage() {
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.6)_55%,rgba(2,6,23,0.25)_100%)]" />
 
             <div className="absolute inset-0 flex flex-col justify-center px-8 text-white md:px-12">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">Sitio externo</p>
-              <p className="mt-2 text-[24px] font-bold leading-tight md:text-[34px]">mercadodeviajes.ar</p>
               <span className="mt-5 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition group-hover:bg-accent-600">
                 Visitar el portal
                 <FiArrowUpRight className="text-[14px]" />

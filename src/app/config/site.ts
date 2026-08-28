@@ -205,7 +205,7 @@ export const siteConfig = {
     benefits: {
       title: "Beneficios para socios",
       description: "Más beneficios, más oportunidades.",
-      cta: { label: "Ver todos los beneficios", href: "#asociate" },
+      cta: { label: "Ver todos los beneficios", href: "/servicios/convenios-y-beneficios" },
       featured: {
         title: "Descuentos exclusivos",
         description:
