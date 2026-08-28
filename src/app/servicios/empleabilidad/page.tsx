@@ -68,27 +68,31 @@ export default function EmpleabilidadPage() {
               </div>
             </div>
 
-            <div className="rounded-[26px] bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(10,45,105,0.22)] min-h-[360px] lg:min-h-[440px]">
-              <div className="absolute inset-0 z-0 select-none pointer-events-none">
-                <Image
-                  src="/images/acav_empleos.png"
-                  alt="Empleabilidad ACAV"
-                  fill
-                  priority
-                  className="object-cover md:object-contain object-bottom scale-105 origin-bottom opacity-20"
-                />
+            <div className="rounded-[26px] bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(10,45,105,0.22)] min-h-[380px] lg:min-h-[460px]">
+              {/* Contenedor relativo para la imagen de mockup de empleos escalada de forma limpia y responsiva */}
+              <div className="absolute -bottom-8 left-1/2 z-0 w-[84%] -translate-x-1/2 pointer-events-none select-none sm:w-[65%] md:w-[70%] lg:w-[84%]">
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src="/images/acav_empleos.png"
+                    alt="Empleabilidad ACAV"
+                    fill
+                    priority
+                    unoptimized
+                    className="object-contain object-bottom drop-shadow-[0_20px_50px_rgba(2,6,23,0.35)]"
+                  />
+                </div>
               </div>
 
-              <div className="relative z-10">
+              <div className="relative z-10 bg-gradient-to-b from-[#082559]/90 via-[#082559]/40 to-transparent p-3 rounded-2xl -mx-3 -mt-3">
                 <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary-500/20 text-primary-300">
                   <FiBriefcase className="text-[24px]" />
                 </span>
-                <p className="mt-6 text-[20px] font-bold leading-snug md:text-2xl">
+                <p className="mt-4 text-[20px] font-bold leading-snug md:text-2xl">
                   Empleabilidad ACAV, la puerta de entrada al empleo turístico en Córdoba.
                 </p>
               </div>
 
-              <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-6">
+              <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/15 pt-6 bg-gradient-to-t from-[#051a41]/95 via-[#051a41]/40 to-transparent p-3 rounded-2xl -mx-3 -mb-3">
                 {metricas.map((metrica) => (
                   <div key={metrica.label}>
                     <p className="text-[22px] font-bold leading-none md:text-3xl">{metrica.value}</p>
