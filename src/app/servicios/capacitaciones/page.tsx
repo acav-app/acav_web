@@ -78,20 +78,20 @@ export default function CapacitacionesPage() {
               </div>
             </div>
 
-            <div className="rounded-[26px] bg-[linear-gradient(135deg,#ff7a2d,#f85a16_55%,#e24a0b)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(248,90,22,0.22)]">
-              <div className="absolute inset-0 z-0">
+            <div className="rounded-[26px] bg-[linear-gradient(135deg,#ff7a2d,#f85a16_55%,#e24a0b)] p-8 text-white md:p-10 relative overflow-hidden flex flex-col justify-between shadow-[0_24px_55px_rgba(248,90,22,0.22)] min-h-[360px] lg:min-h-[440px]">
+              <div className="absolute inset-0 z-0 select-none pointer-events-none">
                 <Image
                   src="/images/acav_cursos.png"
                   alt="Cursos ACAV"
                   fill
                   priority
-                  className="object-cover opacity-15 select-none pointer-events-none"
+                  className="object-cover md:object-contain object-bottom scale-105 origin-bottom opacity-20"
                 />
               </div>
 
               <div className="relative z-10">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">Cursos ACAV</p>
-                <p className="mt-3 text-[20px] font-bold leading-snug">
+                <p className="mt-3 text-[20px] font-bold leading-snug md:text-2xl">
                   Campus educativo para capacitaciones, certificaciones y formación profesional.
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function CapacitacionesPage() {
               <div className="relative z-10 mt-8 grid grid-cols-3 gap-3 border-t border-white/20 pt-6">
                 {metricas.map((metrica) => (
                   <div key={metrica.label}>
-                    <p className="text-[22px] font-bold leading-none">{metrica.value}</p>
+                    <p className="text-[22px] font-bold leading-none md:text-3xl">{metrica.value}</p>
                     <p className="mt-1.5 text-[10px] font-bold uppercase leading-5 text-white/80">
                       {metrica.label}
                     </p>

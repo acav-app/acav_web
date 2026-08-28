@@ -408,7 +408,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               </div>
 
               {/* Desktop grid */}
-              <div className="hidden flex-1 grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 md:grid gap-2">
+              <div className="hidden flex-1 grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-7 lg:grid">
                 {[
                   { label: 'Descuentos exclusivos', active: true, Icon: FiPercent },
                   { label: 'Capacitaciones y eventos', Icon: FiBookOpen },
@@ -875,9 +875,9 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         ============================================================= */}
         <section id="contacto" className="py-section md:py-section-lg bg-slate-50/50">
           <div className="container">
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16 xl:gap-20 items-stretch">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16 xl:gap-20 items-stretch">
               {/* Columna Izquierda: Mensaje y Datos de contacto */}
-              <div className="flex flex-col justify-between">
+              <div className="flex flex-col justify-between gap-10">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wider text-primary-600">Contacto</p>
                   <h2 className="mt-3 text-[32px] font-extrabold leading-none tracking-tight text-slate-900 md:text-[42px]">
@@ -900,7 +900,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                         </div>
                         <div className="min-w-0 text-left">
                           <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</h2>
-                          <div className="mt-1 text-sm font-semibold text-slate-800">
+                          <div className="mt-1 text-sm font-semibold text-slate-800 break-words">
                             {href ? (
                               <a
                                 href={href}
@@ -921,22 +921,22 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 </div>
 
                 {/* Botón de asociarse + Redes Integradas */}
-                <div className="mt-12 space-y-6 text-left">
-                  <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="mt-4 space-y-6 text-left">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="min-w-0">
                       <p className="text-[11px] font-bold uppercase text-primary-600">¿Querés asociarte?</p>
                       <p className="mt-1 text-sm font-bold text-slate-900">Completá la solicitud de ingreso.</p>
                     </div>
                     <Link
                       href="/socios/asociate"
-                      className="inline-flex h-10 items-center gap-2 rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600 shadow-[0_10px_25px_rgba(249,73,16,0.15)]"
+                      className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600 shadow-[0_10px_25px_rgba(249,73,16,0.15)]"
                     >
                       Asociate
                       <FiArrowRight />
                     </Link>
                   </div>
 
-                  <div className="flex items-center justify-between rounded-2xl bg-[#04112e] px-6 py-4 text-white">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl bg-[#04112e] px-6 py-4 text-white">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-white/50">Síguenos en redes</p>
                     <div className="flex gap-2">
                       {[

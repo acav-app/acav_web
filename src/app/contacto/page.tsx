@@ -91,19 +91,6 @@ export default function ContactoPage() {
 
               {/* Botón de asociarse + Redes Integradas */}
               <div className="mt-12 space-y-6">
-                <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-bold uppercase text-primary-600">¿Querés asociarte?</p>
-                    <p className="mt-1 text-sm font-bold text-slate-900">Completá la solicitud de ingreso.</p>
-                  </div>
-                  <Link
-                    href="/socios/asociate"
-                    className="inline-flex h-10 items-center gap-2 rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600 shadow-[0_10px_25px_rgba(249,73,16,0.15)]"
-                  >
-                    Asociate
-                    <FiArrowRight />
-                  </Link>
-                </div>
 
                 <div className="flex items-center justify-between rounded-2xl bg-[#04112e] px-6 py-4 text-white">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-white/50">Síguenos en redes</p>
