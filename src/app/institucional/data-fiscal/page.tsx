@@ -43,8 +43,7 @@ export default function DataFiscalPage() {
     <PageAnimation>
       <section className="py-section md:py-section-lg bg-slate-50/40">
         <div className="container">
-          <div className="mx-auto max-w-4xl">
-            {/* Header minimal */}
+           {/* Header minimal */}
             <header className="mb-12 border-b border-slate-200/60 pb-8 text-center sm:text-left">
               <p className="text-[11px] font-bold uppercase tracking-wider text-primary-600">Institucional</p>
               <h1 className="mt-3 text-[32px] font-extrabold leading-none tracking-tight text-slate-900 md:text-[42px]">
@@ -54,7 +53,7 @@ export default function DataFiscalPage() {
                 Datos fiscales y constitucionales oficiales de la Asociación Cordobesa de Agencias de Viajes, conforme a las normativas de transparencia y AFIP vigentes.
               </p>
             </header>
-
+          <div className="mx-auto max-w-4xl">
             <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr] items-start">
               {/* Columna Izquierda: Datos Registrales */}
               <div className="space-y-6">
