@@ -38,11 +38,13 @@ const datos = [
 ]
 
 const redes = [
-  { label: 'Instagram', Icon: FiInstagram, href: siteConfig.contact.social.instagram },
-  { label: 'Facebook', Icon: FiFacebook, href: null },
-  { label: 'LinkedIn', Icon: FiLinkedin, href: siteConfig.contact.social.linkedin },
-  { label: 'YouTube', Icon: FiYoutube, href: siteConfig.contact.social.youtube },
+  { label: 'Instagram', Icon: FiInstagram, href: 'https://www.instagram.com/acavoficial/' },
+  { label: 'Facebook', Icon: FiFacebook, href: 'https://www.facebook.com/acav.cba/' },
+  { label: 'LinkedIn', Icon: FiLinkedin, href: 'https://www.linkedin.com/company/asociaci%C3%B3n-cordobesa-de-agencias-de-viajes/' },
+  { label: 'YouTube', Icon: FiYoutube, href: '' },
 ]
+
+
 
 export default function ContactoPage() {
   return (
