@@ -173,7 +173,7 @@ export default function AsociatePage() {
       </section>
 
       {/* Formulario */}
-      <section id="solicitud" className="pb-section md:pb-section-lg">
+      {/* <section id="solicitud" className="pb-section md:pb-section-lg">
         <div className="container">
           <div className="mx-auto max-w-3xl">
             <div className="mb-8 text-center">
@@ -190,7 +190,7 @@ export default function AsociatePage() {
             <SolicitudForm />
           </div>
         </div>
-      </section>
+      </section> */}
     </PageAnimation>
   )
 }

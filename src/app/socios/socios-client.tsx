@@ -100,20 +100,6 @@ function TarjetaSocio({ socio }: { socio: Socio }) {
             </DatoFila>
           ) : null}
 
-          {socio.contacto.email ? (
-            <DatoFila Icon={FiMail} label="Email">
-              <a href={`mailto:${socio.contacto.email}`} className="text-primary-600 hover:text-primary-700 block truncate">
-                {socio.contacto.email}
-              </a>
-            </DatoFila>
-          ) : null}
-
-          {socio.contacto.whatsapp ? (
-            <DatoFila Icon={FiPhone} label="WhatsApp">
-              {socio.contacto.whatsapp}
-            </DatoFila>
-          ) : null}
-
           {sitio ? (
             <DatoFila Icon={FiGlobe} label="Sitio web / Redes">
               <a

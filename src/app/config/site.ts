@@ -103,7 +103,7 @@ export const siteConfig = {
       fechaContratoSocial: "25/10/1966",
       iva: "IVA Exento",
       empleador: "Sí",
-      domicilioFiscal: "Obispo Trejo 180, Piso 4, Córdoba, Argentina (CP 5000)",
+      domicilioFiscal: "Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina",
       // Código del QR de AFIP: https://www.afip.gob.ar/formulario-960/
       afipQrCode: null as string | null,
     },
@@ -133,15 +133,15 @@ export const siteConfig = {
     stats: [
       { value: "+60", label: "años", detail: "de trayectoria" },
       { value: "+300", label: "agencias", detail: "asociadas" },
-      { value: "+100", label: "capacitaciones", detail: "al año" },
-      { value: "+50", label: "alianzas", detail: "estratégicas" },
+      { value: "+120", label: "capacitaciones", detail: "el ultimo año" },
+      { value: "+3000", label: "turistas", detail: "mercado de viajes" },
     ],
   },
   contact: {
     address: null as string | null,
     email: null as string | null,
     phone: null as string | null,
-    whatsapp: null as string | null,
+    whatsapp: "5493518747119",
     social: {
       instagram: null as string | null,
       youtube: null as string | null,

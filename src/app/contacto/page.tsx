@@ -19,11 +19,11 @@ import { siteConfig } from '../config/site'
 export const metadata: Metadata = {
   title: 'Contacto | ACAV',
   description:
-    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Trejo 180 Piso 4, Córdoba. info@acav.org.ar · (0351) 422 4425.',
+    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina. info@acav.org.ar · +54 9 3518 74-7119.',
 }
 
-const DIRECCION = 'Obispo Trejo 180 Piso 4, Córdoba, Argentina, CP 5000'
-const MAPA = `https://www.google.com/maps?q=${encodeURIComponent('Obispo Trejo 180, Córdoba, Argentina')}&output=embed`
+const DIRECCION = 'Obispo Salguero 169, Córdoba'
+const MAPA = `https://www.google.com/maps?q=${encodeURIComponent('Obispo Salguero 169, Córdoba, Argentina')}&output=embed`
 
 const datos = [
   {
@@ -33,7 +33,7 @@ const datos = [
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DIRECCION)}`,
   },
   { Icon: FiMail, label: 'Email', value: 'info@acav.org.ar', href: 'mailto:info@acav.org.ar' },
-  { Icon: FiPhone, label: 'Tel / Fax', value: '(0351) 422 4425', href: 'tel:+543514224425' },
+  { Icon: FiPhone, label: 'Tel', value: '+54 9 3518 74-7119', href: 'tel:+5493518747119' },
   { Icon: FiClock, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },
 ]
 

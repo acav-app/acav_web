@@ -78,12 +78,57 @@ export default function QuienesSomosPage() {
 
             <div className="relative overflow-hidden rounded-[26px] border border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
               <Image
-                src="/images/placeholder.jpg"
+                src="/images/quienes-somos.png"
                 alt="Equipo de ACAV"
                 width={900}
                 height={700}
                 className="h-full w-full object-cover"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-section md:pb-section-lg">
+        <div className="container">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
+            <div>
+              <p className="text-[11px] font-bold uppercase text-primary-600">Nuestra historia</p>
+              <h2 className="mt-3 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
+                Los orígenes de ACAV
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+                El 18 de Julio del año 1963, se reúnen en el local de la Bolsa de Comercio los agentes de viajes:
+                Francisco Bernabé García, en representación de &quot;Viajes Comares&quot;; Manuel Novillo, en representación de
+                &quot;Exprinter&quot;; Jorge Raul Maldonado, de &quot;Viajes Aeroturis&quot;; Andrés Lista, de &quot;Eves&quot;; Aldo Criconia, de
+                &quot;Oceanía&quot;; Pedro Furlán, de &quot;Atlántica&quot;; Esteban Sablich, de &quot;Aprisa&quot;; Camilo Asis, de &quot;Asis Travel
+                Service&quot;; José Barujel, de &quot;Barujel&quot;;
+              </p>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[26px] border border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+              <Image
+                src="/images/6.jpeg"
+                alt=""
+                width={900}
+                height={700}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,12,36,0.55)_0%,rgba(3,12,36,0.78)_100%)]" />
+              <div className="relative flex flex-col justify-between gap-8 p-8 text-white">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">Año de fundación</p>
+                  <p className="mt-3 text-[56px] font-extrabold leading-none tracking-tight text-white md:text-[68px]">
+                    1963
+                  </p>
+                </div>
+                <div className="space-y-3 border-t border-white/20 pt-5">
+                  <p className="text-sm font-semibold">Asociación Cordobesa de Agencias de Viajes</p>
+                  <p className="text-xs leading-6 text-white/70">
+                    Más de 60 años representando y fortaleciendo a las agencias de viajes de Córdoba.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

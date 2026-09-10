@@ -142,18 +142,34 @@ export default function SellosDeCalidadPage() {
                   <FiArrowRight />
                 </Link>
                 <Link
-                  href="/socios"
+                  href="https://www.faevyt.org.ar/sellodecalidad/agencia/login"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
                 >
-                  Ver socios verificados
+                  Ir a Sellos de Calidad
+                  <FiArrowRight />
                 </Link>
               </div>
             </div>
 
             <div className="rounded-[26px] bg-[#04112e] p-8 text-white md:p-10">
-              <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-primary-500/20 text-primary-300">
-                <FiAward className="text-[24px]" />
-              </span>
+              <a
+                href="https://www.faevyt.org.ar/sellodecalidad/agencia/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Acceder al portal de Sellos de Calidad"
+                className="group relative inline-flex size-14 items-center justify-center rounded-2xl bg-primary-500/20 text-primary-300 transition-all duration-300 hover:scale-110 hover:bg-primary-500/30 hover:text-primary-200 hover:shadow-[0_0_24px_rgba(59,130,246,0.35)] cursor-pointer"
+              >
+                <Image
+                  src="/images/SELLO-CALIDAD-GENERAL.png"
+                  alt="Sello de Calidad Turístico"
+                  width={56}
+                  height={56}
+                  className="transition-transform duration-300 group-hover:scale-105"
+                />
+                <span className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full bg-accent-500 text-white transition-transform duration-300 group-hover:scale-110">
+                  <FiArrowRight className="text-[10px]" />
+                </span>
+              </a>
 
               <p className="mt-6 text-[20px] font-bold leading-snug">
                 Un camino conjunto hacia el Sello Federal de Calidad Turística.

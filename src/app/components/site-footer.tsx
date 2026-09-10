@@ -45,7 +45,7 @@ export default function SiteFooter() {
             <div className="mt-6 space-y-3 text-sm text-white/70">
               <div className="flex items-start gap-2.5">
                 <FiMapPin className="mt-1 text-[14px] text-white/60" />
-                <span>Obispo Trejo 180 Piso 4, Córdoba, Argentina, CP 5000</span>
+                <span>Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina.</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <FiMail className="mt-1 text-[14px] text-white/60" />

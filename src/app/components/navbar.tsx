@@ -75,11 +75,11 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
               <div key={item.label} className="relative group">
                 <Link
                   href={item.href}
-                  className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[11px] font-bold uppercase text-slate-700 transition-colors duration-300 hover:bg-slate-50 hover:text-primary-600"
+                  className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-[13px] font-bold uppercase text-slate-700 transition-colors duration-300 hover:bg-slate-50 hover:text-primary-600"
                 >
                   {item.label}
                   {item.children ? (
-                    <FiChevronDown className="mt-0.5 text-[10px] text-slate-400 transition group-hover:text-primary-500" />
+                    <FiChevronDown className="mt-0.5 text-[11px] text-slate-400 transition group-hover:text-primary-500" />
                   ) : null}
                 </Link>
 
@@ -90,7 +90,7 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-2.5 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
+                          className="block px-4 py-2.5 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
                         >
                           {child.label}
                         </Link>
@@ -105,7 +105,7 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
           <div className="flex items-center gap-3">
             <Link
               href={siteConfig.nav.cta.href}
-              className="hidden h-11 items-center justify-center rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 md:inline-flex"
+              className="hidden h-11 items-center justify-center rounded-full bg-accent-500 px-6 text-[13px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 md:inline-flex"
             >
               {siteConfig.nav.cta.label}
             </Link>
@@ -210,7 +210,7 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                   <Link
                     href={siteConfig.nav.cta.href}
                     onClick={() => setMenuOpen(false)}
-                    className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 active:scale-[0.98]"
+                    className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-accent-500 px-5 text-[13px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 active:scale-[0.98]"
                   >
                     {siteConfig.nav.cta.label}
                   </Link>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { FiArrowUpRight, FiCalendar, FiGlobe, FiUsers } from 'react-icons/fi'
+import { FiArrowUpRight, FiCalendar, FiGlobe, FiInstagram, FiUsers } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
 
@@ -9,28 +9,53 @@ export const metadata: Metadata = {
 }
 
 const SITIO = 'https://mercadodeviajes.ar/'
-const BANNER = '/images/mercado-de-viajes.jpg'
-
-const destacados = [
-  { Icon: FiGlobe, title: 'Actualidad del sector', detail: 'Noticias diarias del turismo nacional e internacional.' },
-  { Icon: FiCalendar, title: 'Agenda', detail: 'Ferias, workshops y eventos de la industria.' },
-  { Icon: FiUsers, title: 'Comunidad', detail: 'Entrevistas y coberturas del ecosistema de agencias.' },
-]
+const INSTAGRAM = 'https://www.instagram.com/mercadodeviajesar/'
+const VIDEO = '/mercado-de-viajes2.mp4'
 
 export default function MercadoDeViajesPage() {
   return (
     <PageAnimation>
       <section className="py-section md:py-section-lg">
         <div className="container">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <p className="text-[11px] font-bold uppercase text-primary-600">Novedades</p>
-            <h1 className="mt-3 text-[26px] font-bold leading-tight text-slate-900 md:text-[34px]">
+            <h1 className="mt-3 text-[28px] font-bold leading-[1.15] text-slate-900 md:text-[38px]">
               Mercado de Viajes
             </h1>
-            <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
-              Portal de novedades y actualidad del turismo argentino. Ingresá para leer las últimas noticias del
-              sector.
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+              La feria turística abierta al público más importante del interior de Argentina, organizada por ACAV. Un
+              espacio diseñado para inspirar al viajero y conectar la oferta directamente con el público final,
+              complementado por los tradicionales workshops profesionales de ACAV.
             </p>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  value: '+150',
+                  label: 'Agencias participantes',
+                  detail: 'Agencias de viajes y turismo de todo el país.',
+                },
+                {
+                  value: '100%',
+                  label: 'Entrada libre y gratuita',
+                  detail: 'Acceso abierto para todo el público general.',
+                },
+                {
+                  value: 'ACAV',
+                  label: 'Organiza',
+                  detail: 'Asociación Cordobesa de Agencias de Viajes.',
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-slate-200 bg-slate-50/70 px-5 py-4"
+                >
+                  <p className="text-xl font-bold leading-none text-primary-600">{item.value}</p>
+                  <p className="mt-2 text-[13px] font-bold leading-5 text-slate-900">{item.label}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500">{item.detail}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <a
@@ -39,39 +64,38 @@ export default function MercadoDeViajesPage() {
             rel="noopener noreferrer"
             className="group mt-10 block overflow-hidden rounded-[26px] border border-slate-200 bg-[#04112e] transition hover:-translate-y-1 hover:shadow-[0_26px_60px_rgba(15,23,42,0.18)]"
           >
-            <div className="relative aspect-[21/9] w-full bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] sm:aspect-[3/1]">
-              {/* Banner opcional: si no existe el archivo, queda el degradado de fondo. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={BANNER}
-                alt="Mercado de Viajes"
-                className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            <div className="relative aspect-[21/9] w-full overflow-hidden bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] sm:aspect-[3/1]">
+              <video
+                src={VIDEO}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.6)_55%,rgba(2,6,23,0.25)_100%)]" />
 
               <div className="absolute inset-0 flex flex-col justify-center px-8 text-white md:px-12">
-                <span className="mt-5 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition group-hover:bg-accent-600">
-                  Visitar el portal
-                  <FiArrowUpRight className="text-[14px]" />
-                </span>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <span className="inline-flex h-11 items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition group-hover:bg-accent-600">
+                    Visitar el portal
+                    <FiArrowUpRight className="text-[14px]" />
+                  </span>
+                  <a
+                    href={INSTAGRAM}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Mercado de Viajes en Instagram"
+                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition hover:border-white/50 hover:bg-white/20"
+                  >
+                    <FiInstagram className="text-[17px]" />
+                  </a>
+                </div>
               </div>
             </div>
           </a>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {destacados.map(({ Icon, title, detail }) => (
-              <article
-                key={title}
-                className="rounded-[22px] border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.07)]"
-              >
-                <div className="flex size-11 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
-                  <Icon className="text-[18px]" />
-                </div>
-                <h2 className="mt-5 text-[15px] font-bold text-slate-900">{title}</h2>
-                <p className="mt-2 text-[13px] leading-6 text-slate-600">{detail}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
     </PageAnimation>

@@ -521,7 +521,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            COMMUNITY SLIDER (mobile auto + desktop horizontal Swiper)
         ============================================================= */}
-        <section id="eventos" className="pb-section md:pb-section-lg">
+        {/* <section id="eventos" className="pb-section md:pb-section-lg">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -601,7 +601,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               </Swiper>
             </div>
           </motion.div>
-        </section>
+        </section> */}
 
         {/* =============================================================
            HISTORY (mobile slider / desktop grid)
@@ -627,12 +627,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 <div className="absolute left-0 right-0 top-10 h-px bg-white/15" />
                 <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-4">
                   {[
-                    { year: '1963', title: 'Fundación de ACAV', img: '/images/placeholder.jpg' },
-                    { year: '1975', title: '1ra Convención institucional', img: '/images/placeholder.jpg' },
-                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/placeholder.jpg' },
-                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/placeholder.jpg' },
-                    { year: '2020', title: 'Transformación digital', img: '/images/placeholder.jpg' },
-                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/placeholder.jpg' },
+                    { year: '1963', title: 'Fundación de ACAV', img: '/images/6.jpeg' },
+                    { year: '1975', title: '1ra Convención institucional', img: '/images/5.jpeg' },
+                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/4.jpeg' },
+                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/3.jpeg' },
+                    { year: '2020', title: 'Transformación digital', img: '/images/2.jpeg' },
+                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/1.jpg' },
                   ].map((h, i) => (
                     <div key={h.year} className="relative flex flex-col items-start gap-4 md:items-center md:text-center">
                       <div className="relative z-10 flex size-9 items-center justify-center rounded-full border-2 border-white/30 bg-[#071f4e] text-white ring-4 ring-[#0a2e6d] md:size-10">
@@ -889,7 +889,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
 
                   <div className="mt-10 space-y-6">
                     {[
-                      { Icon: FiMapPin, label: 'Dirección', value: 'Obispo Trejo 180 Piso 4, Córdoba, Argentina, CP 5000', href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Obispo Trejo 180 Piso 4, Córdoba, Argentina, CP 5000')}` },
+                      { Icon: FiMapPin, label: 'Dirección', value: 'Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina.', href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Obispo Salguero, Cordoba.')}` },
                       { Icon: FiMail, label: 'Email', value: 'info@acav.org.ar', href: 'mailto:info@acav.org.ar' },
                       { Icon: FiPhone, label: 'Tel / Fax', value: '(0351) 422 4425', href: 'tel:+543514224425' },
                       { Icon: FiCalendar, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },

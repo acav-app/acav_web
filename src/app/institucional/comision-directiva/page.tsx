@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 
 import PageAnimation from '../../components/page-animation'
+import ComisionesHistoricasAccordion from './comisiones-historicas-accordion'
 import { comisionDirectiva, iniciales } from '../../data/comision'
+import { comisionesHistoricas } from '../../data/comisiones-historicas'
 
 export const metadata: Metadata = {
   title: 'Comisión Directiva | ACAV',
@@ -68,6 +70,21 @@ export default function ComisionDirectivaPage() {
               </div>
             </div>
           ))}
+
+          {/* Comisiones Directivas Anteriores */}
+          <div className="max-w-2xl">
+            <h2 className="text-[22px] font-bold leading-tight text-slate-900 md:text-[26px]">
+              Comisiones Directivas Anteriores
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              Consultá la composición de las comisiones directivas de períodos anteriores. Seleccioná un año para
+              desplegar el listado completo de integrantes.
+            </p>
+          </div>
+
+          <div className="mt-8 max-w-4xl">
+            <ComisionesHistoricasAccordion comisiones={comisionesHistoricas} />
+          </div>
         </div>
       </section>
     </PageAnimation>
