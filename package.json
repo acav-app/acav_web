@@ -39,7 +39,8 @@
     "server-only": "^0.0.1",
     "swiper": "^14.0.7",
     "tiny-slider-react": "^0.5.7",
-    "wow.js": "^1.2.2"
+    "wow.js": "^1.2.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20",
