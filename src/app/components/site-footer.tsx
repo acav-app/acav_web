@@ -63,10 +63,10 @@ export default function SiteFooter() {
 
             <div className="mt-7 flex items-center gap-2.5">
               {[
-                { href: '#', Icon: FiInstagram, label: 'Instagram' },
-                { href: '#', Icon: FiFacebook, label: 'Facebook' },
+                { href: 'https://www.instagram.com/acavoficial/', Icon: FiInstagram, label: 'Instagram' },
+                { href: 'https://www.facebook.com/acav.cba/', Icon: FiFacebook, label: 'Facebook' },
                 { href: 'https://www.linkedin.com/company/asociaci%C3%B3n-cordobesa-de-agencias-de-viajes/', Icon: FiLinkedin, label: 'LinkedIn' },
-                { href: '#', Icon: FiYoutube, label: 'YouTube' },
+                { href: '', Icon: FiYoutube, label: 'YouTube' },
               ].map((s) => (
                 <a
                   key={s.label}
