@@ -189,7 +189,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     className="hidden object-cover"
                     priority
                   />
-<div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,12,36,0.08)_0%,rgba(3,12,36,0.36)_52%,rgba(3,12,36,0.66)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,12,36,0.08)_0%,rgba(3,12,36,0.36)_52%,rgba(3,12,36,0.66)_100%)]" />
 
                   <div className="absolute left-5 top-5 md:left-6 md:top-6">
                     <Image
