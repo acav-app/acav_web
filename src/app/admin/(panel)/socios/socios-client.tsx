@@ -191,7 +191,7 @@ export default function SociosClient() {
         />
       </div>
 
-      <div className="mb-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-5">
+      {/* <div className="mb-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-600">
@@ -298,7 +298,7 @@ export default function SociosClient() {
         {importError ? (
           <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{importError}</p>
         ) : null}
-      </div>
+      </div> */}
 
       {error ? (
         <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{error}</p>
