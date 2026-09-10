@@ -78,7 +78,7 @@ export default function QuienesSomosPage() {
 
             <div className="relative overflow-hidden rounded-[26px] border border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
               <Image
-                src="/images/quienes-somos.png"
+                src="/images/quienes-somos.jpg"
                 alt="Equipo de ACAV"
                 width={900}
                 height={700}
@@ -108,7 +108,7 @@ export default function QuienesSomosPage() {
 
             <div className="relative overflow-hidden rounded-[26px] border border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
               <Image
-                src="/images/6.jpeg"
+                src="/images/historia/6.jpeg"
                 alt=""
                 width={900}
                 height={700}

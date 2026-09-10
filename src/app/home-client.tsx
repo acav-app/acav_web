@@ -156,7 +156,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 </div>
 
                 <Link
-                  href="#historia"
+                  href="/institucional/quienes-somos"
                   className="mt-7 inline-flex items-center gap-2.5 text-[11px] font-bold uppercase text-primary-600 transition hover:text-primary-700"
                 >
                   CONOCE MÁS SOBRE ACAV
@@ -165,15 +165,31 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               </motion.div>
 
               <motion.div variants={fadeUp} className="w-full min-w-0 overflow-hidden">
-                <div className="relative w-full min-w-0 overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)]">
+                <div className="relative w-full min-w-0 overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)] h-[320px] md:h-[420px]">
+                  <video
+                    className="absolute inset-0 h-full w-full object-cover opacity-90"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    controls
+                    poster={siteConfig.hero.video.poster}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  >
+                    <source src={siteConfig.hero.video.src} type="video/mp4" />
+                  </video>
                   <Image
-                    src="/images/sobre-acav-video.jpg"
+                    src={siteConfig.hero.video.poster}
                     alt="Sobre ACAV"
-                    width={1200}
-                    height={720}
-                    className="h-[320px] w-full object-cover md:h-[420px]"
+                    fill
+                    className="hidden object-cover"
+                    priority
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,12,36,0.08)_0%,rgba(3,12,36,0.36)_52%,rgba(3,12,36,0.66)_100%)]" />
+<div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,12,36,0.08)_0%,rgba(3,12,36,0.36)_52%,rgba(3,12,36,0.66)_100%)]" />
 
                   <div className="absolute left-5 top-5 md:left-6 md:top-6">
                     <Image
@@ -186,20 +202,6 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     <p className="mt-1.5 text-[10px] font-bold uppercase text-white/85">
                       Asociación Cordobesa de Agencias de Viajes
                     </p>
-                  </div>
-
-                  <div className="absolute inset-0 grid place-items-center">
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="flex size-[84px] items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md md:size-[96px]"
-                      aria-label="Reproducir video"
-                    >
-                      <span className="flex size-[56px] items-center justify-center rounded-full bg-white text-primary-600 shadow-[0_18px_40px_rgba(255,255,255,0.25)] md:size-[64px]">
-                        <FiPlay className="ml-1 text-[20px] md:text-[22px]" />
-                      </span>
-                    </motion.button>
                   </div>
                 </div>
 
@@ -627,12 +629,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 <div className="absolute left-0 right-0 top-10 h-px bg-white/15" />
                 <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-4">
                   {[
-                    { year: '1963', title: 'Fundación de ACAV', img: '/images/6.jpeg' },
-                    { year: '1975', title: '1ra Convención institucional', img: '/images/5.jpeg' },
-                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/4.jpeg' },
-                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/3.jpeg' },
-                    { year: '2020', title: 'Transformación digital', img: '/images/2.jpeg' },
-                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/1.jpg' },
+                    { year: '1963', title: 'Fundación de ACAV', img: '/images/historia/4.jpeg' },
+                    { year: '1975', title: '1ra Convención institucional', img: '/images/historia/6.jpeg' },
+                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/historia/5.jpeg' },
+                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/historia/1.jpg' },
+                    { year: '2020', title: 'Transformación digital', img: '/images/historia/2.jpeg' },
+                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/historia/3.jpeg' },
                   ].map((h, i) => (
                     <div key={h.year} className="relative flex flex-col items-start gap-4 md:items-center md:text-center">
                       <div className="relative z-10 flex size-9 items-center justify-center rounded-full border-2 border-white/30 bg-[#071f4e] text-white ring-4 ring-[#0a2e6d] md:size-10">
@@ -650,7 +652,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                             alt={h.title}
                             width={240}
                             height={160}
-                            className="h-[130px] md:h-[110px] w-full object-cover grayscale transition duration-500 hover:grayscale-0"
+                            className="h-[130px] md:h-[110px] w-full object-cover transition duration-500"
                           />
                         </div>
                       </div>

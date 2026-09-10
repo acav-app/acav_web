@@ -133,7 +133,7 @@ export default function SiteFooter() {
 
         <div className="h-px w-full bg-white/10" />
 
-        <motion.div
+        {/* <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="show"
@@ -149,7 +149,7 @@ export default function SiteFooter() {
             <FiHeart className="text-accent-500" />
             en Córdoba, Argentina
           </p>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </footer>
   )

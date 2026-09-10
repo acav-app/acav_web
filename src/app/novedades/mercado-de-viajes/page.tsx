@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const SITIO = 'https://mercadodeviajes.ar/'
 const INSTAGRAM = 'https://www.instagram.com/mercadodeviajesar/'
-const VIDEO = '/mercado-de-viajes2.mp4'
+const VIDEO = '/mercado-de-viajes.mp4'
 
 export default function MercadoDeViajesPage() {
   return (
