@@ -55,8 +55,8 @@ export default function SiteFooter() {
               </div>
               <div className="flex items-start gap-2.5">
                 <FiPhone className="mt-1 text-[14px] text-white/60" />
-                <a href="tel:+543514224425" className="transition hover:text-white">
-                  Tel/Fax: (0351) 422 4425
+                <a href="tel:+5493518747119" className="transition hover:text-white">
+                  Tel: +54 9 351 874 7119
                 </a>
               </div>
             </div>
@@ -65,7 +65,7 @@ export default function SiteFooter() {
               {[
                 { href: '#', Icon: FiInstagram, label: 'Instagram' },
                 { href: '#', Icon: FiFacebook, label: 'Facebook' },
-                { href: '#', Icon: FiLinkedin, label: 'LinkedIn' },
+                { href: 'https://www.linkedin.com/company/asociaci%C3%B3n-cordobesa-de-agencias-de-viajes/', Icon: FiLinkedin, label: 'LinkedIn' },
                 { href: '#', Icon: FiYoutube, label: 'YouTube' },
               ].map((s) => (
                 <a
