@@ -47,6 +47,7 @@ interface StoredSolicitudIngreso {
   notificaciones: SolicitudIngreso['notificaciones']
   draftHash?: string
   draftExpiresAt?: string
+  eliminando?: boolean
   invites?: Partial<Record<'aval1' | 'aval2', StoredInvite>>
   pendingUploads?: Partial<Record<DocumentoIngreso, { key: string; contentType: string; size: number; expiresAt: string }>>
 }
@@ -122,6 +123,7 @@ function publicRecord(stored: StoredSolicitudIngreso): SolicitudIngreso {
 }
 
 function assertDraft(stored: StoredSolicitudIngreso, token: string) {
+  if (stored.eliminando) throw new Error('Esta solicitud fue dada de baja y ya no está disponible.')
   if (!token || !stored.draftHash || stored.draftHash !== hashToken(token)) throw new Error('El borrador no existe o el acceso venció. Iniciá una nueva solicitud.')
   if (!stored.draftExpiresAt || new Date(stored.draftExpiresAt).getTime() < Date.now()) throw new Error('El borrador venció. Iniciá una nueva solicitud.')
   if (stored.estado !== 'BORRADOR') throw new Error('Esta solicitud ya fue enviada y no admite cambios.')
@@ -359,6 +361,7 @@ export async function buscarAval(token: string) {
   if (found.empty) throw new Error('El enlace de firma es inválido, ya se usó o venció.')
   const doc = found.docs[0]
   const stored = asStored(doc.data() as Record<string, unknown>, doc.id)
+  if (stored.eliminando) throw new Error('Esta solicitud ya no está disponible.')
   const step: 1 | 2 = stored.estado === 'PENDIENTE_AVAL_2' ? 2 : 1
   const invite = stored.invites?.[`aval${step}`]
   if (!invite || invite.hash !== tokenHash || invite.usedAt) throw new Error('El enlace de firma es inválido o ya se usó.')
@@ -412,6 +415,7 @@ export async function firmarAval(input: {
     const snapshot = await transaction.get(ref)
     if (!snapshot.exists) throw new Error('La solicitud ya no está disponible.')
     const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
+    if (stored.eliminando) throw new Error('Esta solicitud ya no está disponible.')
     const step: 0 | 1 | 2 = stored.estado === 'PENDIENTE_AVAL_1' ? 1 : stored.estado === 'PENDIENTE_AVAL_2' ? 2 : 0
     if (!step) throw new Error('Esta solicitud ya no admite firmas.')
     const key = `aval${step}` as 'aval1' | 'aval2'
@@ -502,6 +506,48 @@ export async function obtenerSolicitudIngreso(id: string): Promise<SolicitudIngr
   return publicRecord(asStored(snapshot.data() as Record<string, unknown>, snapshot.id))
 }
 
+export async function eliminarSolicitudIngreso(id: string): Promise<boolean> {
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) throw new Error('El identificador de la solicitud no es válido.')
+
+  const ref = collection().doc(id)
+  const keys = await solicitudesDb().runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ref)
+    if (!snapshot.exists) return null
+
+    const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
+    const fileKeys = [
+      ...Object.values(stored.documentos).map((document) => document?.key),
+      ...Object.values(stored.pendingUploads ?? {}).map((upload) => upload?.key),
+      stored.pdfKey,
+    ].filter((key): key is string => typeof key === 'string' && key.length > 0)
+
+    for (const key of fileKeys) {
+      const belongsToSolicitud =
+        key.startsWith(`solicitudes-ingreso/${id}/`) || key.startsWith(`solicitudes-ingreso-tmp/${id}/`)
+      if (!belongsToSolicitud || key.includes('..') || key.includes('\\')) {
+        throw new Error('La solicitud contiene una referencia de archivo no válida; no se eliminó.')
+      }
+    }
+
+    transaction.update(ref, { eliminando: true, updatedAt: FieldValue.serverTimestamp() })
+    return Array.from(new Set(fileKeys))
+  })
+
+  if (!keys) return false
+
+  // Si falla la limpieza de archivos, el trámite permanece marcado para permitir
+  // reintentar la operación; borrar objetos que ya no existan es idempotente.
+  const cleanup = await Promise.allSettled(keys.map((key) => deleteSolicitudFile(key)))
+  const failures = cleanup.filter((result) => result.status === 'rejected')
+  if (failures.length) {
+    console.error('[solicitud-ingreso-delete-files]', failures.map((result) => result.reason))
+    throw new Error('No se pudieron eliminar todos los archivos. La solicitud quedó pendiente de eliminación; volvé a intentarlo.')
+  }
+
+  await ref.delete()
+  return true
+}
+
 export async function listarSolicitudesIngreso(): Promise<SolicitudIngresoResumen[]> {
   const snapshot = await collection().orderBy('createdAt', 'desc').get()
   const records = snapshot.docs.map((doc) => ({ doc, stored: asStored(doc.data() as Record<string, unknown>, doc.id) }))
@@ -557,6 +603,7 @@ export async function renovarInvitacion(id: string) {
     const snapshot = await transaction.get(ref)
     if (!snapshot.exists) throw new Error('No se encontró la solicitud.')
     const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
+    if (stored.eliminando) throw new Error('Esta solicitud ya no está disponible.')
     if (stored.estado !== 'PENDIENTE_AVAL_1' && stored.estado !== 'PENDIENTE_AVAL_2' && stored.estado !== 'VENCIDO') {
       throw new Error('Solo se pueden reenviar invitaciones pendientes o vencidas.')
     }

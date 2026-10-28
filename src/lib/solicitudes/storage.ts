@@ -132,6 +132,9 @@ export async function readSolicitudFile(key: string): Promise<Uint8Array> {
 }
 
 export async function deleteSolicitudFile(key: string) {
-  if (!key.startsWith('solicitudes-ingreso/')) throw new Error('La ruta del documento no es válida.')
+  const allowedPrefix = key.startsWith('solicitudes-ingreso/') || key.startsWith('solicitudes-ingreso-tmp/')
+  if (!allowedPrefix || key.includes('..') || key.includes('\\')) {
+    throw new Error('La ruta del documento no es válida.')
+  }
   await client().send(new DeleteObjectCommand({ Bucket: solicitudesBucket(), Key: key }))
 }
