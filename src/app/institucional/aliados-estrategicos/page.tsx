@@ -46,7 +46,7 @@ export default async function AliadosEstrategicosPage() {
                 sumarte como aliado estratégico, escribinos.
               </p>
               <Link
-                href="mailto:info@acav.org.ar"
+                href="mailto:info@acav.com.ar"
                 className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-primary-500 px-6 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-primary-600"
               >
                 Contactanos

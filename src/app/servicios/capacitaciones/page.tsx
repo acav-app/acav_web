@@ -72,7 +72,7 @@ export default function CapacitacionesPage() {
                   <FiArrowRight />
                 </Link>
                 <Link
-                  href="mailto:info@acav.org.ar"
+                  href="mailto:eventos@acav.com.ar"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
                 >
                   Consultar agenda
@@ -82,7 +82,7 @@ export default function CapacitacionesPage() {
 
             <div className="relative h-[280px] sm:h-[360px] md:h-[400px] lg:h-full w-full min-h-[300px] rounded-[26px] overflow-hidden shadow-lg border border-slate-200">
               <Image
-                src="/images/placeholder.jpg"
+                src="/images/cursos-acav-500x500.jpg"
                 alt="Cursos ACAV"
                 fill
                 priority

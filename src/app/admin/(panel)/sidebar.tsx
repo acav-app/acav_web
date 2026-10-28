@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { FiAward, FiFileText, FiImage, FiInbox, FiLogOut, FiMenu, FiUsers, FiX } from 'react-icons/fi'
+import { FiAward, FiFileText, FiImage, FiInbox, FiLogOut, FiMenu, FiSettings, FiUsers, FiX } from 'react-icons/fi'
 import { signOut } from 'firebase/auth'
 
 import { firebaseAuth } from '@/lib/firebase/client'
@@ -14,6 +14,7 @@ const NAV = [
   { href: '/admin/socios', label: 'Socios', icon: FiUsers },
   { href: '/admin/solicitudes', label: 'Solicitudes', icon: FiInbox },
   { href: '/admin/aliados', label: 'Aliados', icon: FiAward },
+  { href: '/admin/configuracion/cta', label: 'CTA Asociarse', icon: FiSettings },
 ]
 
 export default function Sidebar({ email }: { email: string | null }) {

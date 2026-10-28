@@ -5,6 +5,7 @@ import { FiExternalLink, FiMail, FiMapPin, FiPhone, FiSearch, FiTrash2 } from 'r
 
 import { ESTADOS_SOLICITUD, type EstadoSolicitud, type Solicitud } from '@/lib/admin/types'
 import { Input, Select, StateMessage, Textarea } from '../ui'
+import SolicitudesIngresoAdmin from './solicitudes-ingreso'
 
 const ESTILO_ESTADO: Record<EstadoSolicitud, string> = {
   nueva: 'bg-sky-50 text-sky-700',
@@ -92,6 +93,7 @@ export default function SolicitudesClient() {
 
   return (
     <div className="mx-auto max-w-6xl">
+      <SolicitudesIngresoAdmin />
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Solicitudes de asociación</h1>
         <p className="text-sm text-slate-500">

@@ -4,6 +4,7 @@ import './assets/scss/tailwind.scss'
 import './assets/css/material.css'
 
 import { siteConfig } from "./config/site";
+import { AssociationCtaProvider } from "./components/association-cta";
 import WhatsappFloating from "./components/whatsapp-floating";
 
 const manrope = Manrope({
@@ -58,7 +59,7 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} font-manrope text-base text-slate-900 dark:text-white dark:bg-slate-900`}
       >
-        {children}
+        <AssociationCtaProvider>{children}</AssociationCtaProvider>
         {siteConfig.contact.whatsapp ? <WhatsappFloating phone={siteConfig.contact.whatsapp} /> : null}
       </body>
     </html>

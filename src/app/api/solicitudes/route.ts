@@ -2,12 +2,17 @@ import { NextResponse } from 'next/server'
 
 import { createSolicitud, normalizeSolicitud } from '@/lib/admin/repository'
 import { allowRequest, clientKey } from '@/lib/admin/rate-limit'
+import { INSCRIPCIONES_HABILITADAS, MENSAJE_INSCRIPCIONES_PAUSADAS } from '@/lib/solicitudes/availability'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   try {
+    if (!INSCRIPCIONES_HABILITADAS) {
+      return NextResponse.json({ error: MENSAJE_INSCRIPCIONES_PAUSADAS }, { status: 503 })
+    }
+
     if (!allowRequest(clientKey(request))) {
       return NextResponse.json(
         { error: 'Demasiadas solicitudes. Probá de nuevo más tarde.' },

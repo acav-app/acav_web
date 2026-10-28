@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { FiArrowRight, FiAward, FiBookOpen, FiShield, FiUsers } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
+import { AssociationCtaLink } from '../../components/association-cta'
 import { siteConfig } from '../../config/site'
 export const metadata: Metadata = {
   title: 'Quiénes somos | ACAV',
@@ -67,12 +68,11 @@ export default function QuienesSomosPage() {
                   Comisión Directiva
                   <FiArrowRight />
                 </Link>
-                <Link
-                  href={siteConfig.nav.cta.href}
+                <AssociationCtaLink
                   className="inline-flex h-11 items-center gap-2 rounded-full border border-slate-200 px-6 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
                 >
                   Asociate
-                </Link>
+                </AssociationCtaLink>
               </div>
             </div>
 

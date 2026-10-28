@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiInstagram, FiLinkedin, FiMail, FiMapPin, FiPhone, FiYoutube } from "react-icons/fi";
+import { FiInstagram, FiLinkedin, FiMail, FiMapPin, FiMessageCircle, FiPhone, FiYoutube } from "react-icons/fi";
 
 import { siteConfig } from "../config/site";
+import { AssociationCtaLink } from "../components/association-cta";
 
 export default function FooterAcav() {
   const contact = siteConfig.contact;
@@ -30,19 +31,32 @@ export default function FooterAcav() {
                   <span>{contact.address}</span>
                 </div>
               ) : null}
-              {contact.email ? (
-                <div className="flex items-start gap-2.5">
+              {contact.emails.map(({ label, address }) => (
+                <div key={address} className="flex items-start gap-2.5">
                   <FiMail className="mt-1 text-sm text-white/70" />
-                  <a href={`mailto:${contact.email}`} className="transition hover:text-white">
-                    {contact.email}
+                  <a href={`mailto:${address}`} className="transition hover:text-white">
+                    {label}: {address}
+                  </a>
+                </div>
+              ))}
+              {contact.phone ? (
+                <div className="flex items-start gap-2.5">
+                  <FiPhone className="mt-1 text-sm text-white/70" />
+                  <a href={`tel:${contact.phoneHref}`} className="transition hover:text-white">
+                    {contact.phone}
                   </a>
                 </div>
               ) : null}
               {contact.phone ? (
                 <div className="flex items-start gap-2.5">
-                  <FiPhone className="mt-1 text-sm text-white/70" />
-                  <a href={`tel:${contact.phone}`} className="transition hover:text-white">
-                    {contact.phone}
+                  <FiMessageCircle className="mt-1 text-sm text-white/70" />
+                  <a
+                    href={`https://wa.me/${contact.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition hover:text-white"
+                  >
+                    WhatsApp: {contact.phone}
                   </a>
                 </div>
               ) : null}
@@ -94,9 +108,9 @@ export default function FooterAcav() {
                     {item.label}
                   </Link>
                 ))}
-                <Link href={siteConfig.nav.cta.href} className="transition hover:text-white">
+                <AssociationCtaLink className="transition hover:text-white">
                   {siteConfig.nav.cta.label}
-                </Link>
+                </AssociationCtaLink>
               </div>
             </div>
 
@@ -147,4 +161,3 @@ export default function FooterAcav() {
     </footer>
   );
 }
-

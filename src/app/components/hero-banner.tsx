@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { FiArrowRight, FiPlay } from 'react-icons/fi'
 
 import { siteConfig } from '../config/site'
+import { AssociationCtaLink } from './association-cta'
+import { isAssociationCta } from '@/lib/association-cta'
 import type { BannerSlide } from '@/lib/admin/types'
 
 const easeOutCubic = [0.22, 1, 0.36, 1] as const
@@ -129,24 +131,37 @@ export default function HeroBanner({ slides }: { slides: BannerSlide[] }) {
             >
               {activo.ctaPrimario.label && activo.ctaPrimario.href ? (
                 <motion.div variants={fadeUp}>
-                  <Link
-                    href={activo.ctaPrimario.href}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_30px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600"
-                  >
-                    {activo.ctaPrimario.label}
-                    <FiArrowRight className="text-[13px]" />
-                  </Link>
+                  {isAssociationCta(activo.ctaPrimario.label, activo.ctaPrimario.href) ? (
+                    <AssociationCtaLink className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_30px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600">
+                      {activo.ctaPrimario.label}
+                      <FiArrowRight className="text-[13px]" />
+                    </AssociationCtaLink>
+                  ) : (
+                    <Link
+                      href={activo.ctaPrimario.href}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_30px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600"
+                    >
+                      {activo.ctaPrimario.label}
+                      <FiArrowRight className="text-[13px]" />
+                    </Link>
+                  )}
                 </motion.div>
               ) : null}
 
               {activo.ctaSecundario.label && activo.ctaSecundario.href ? (
                 <motion.div variants={fadeUp}>
-                  <Link
-                    href={activo.ctaSecundario.href}
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10"
-                  >
-                    {activo.ctaSecundario.label}
-                  </Link>
+                  {isAssociationCta(activo.ctaSecundario.label, activo.ctaSecundario.href) ? (
+                    <AssociationCtaLink className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10">
+                      {activo.ctaSecundario.label}
+                    </AssociationCtaLink>
+                  ) : (
+                    <Link
+                      href={activo.ctaSecundario.href}
+                      className="inline-flex h-11 items-center justify-center rounded-full border border-white/35 px-6 text-[11px] font-bold uppercase text-white transition duration-300 hover:border-white/60 hover:bg-white/10"
+                    >
+                      {activo.ctaSecundario.label}
+                    </Link>
+                  )}
                 </motion.div>
               ) : null}
             </motion.div>

@@ -1,21 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
-import {
-  FiArrowRight,
-  FiBookOpen,
-  FiBriefcase,
-  FiCalendar,
-  FiGlobe,
-  FiHeadphones,
-  FiHome,
-  FiPercent,
-  FiShoppingBag,
-  FiStar,
-  FiUsers,
-} from 'react-icons/fi'
+import { FiArrowRight } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
+import { AssociationCtaLink } from '../../components/association-cta'
 
 export const metadata: Metadata = {
   title: 'Convenios y Beneficios | ACAV',
@@ -23,53 +11,16 @@ export const metadata: Metadata = {
     'Descuentos exclusivos, convenios institucionales, capacitaciones, asesoramiento y networking para las agencias asociadas a ACAV.',
 }
 
-const beneficios = [
-  {
-    Icon: FiPercent,
-    title: 'Descuentos exclusivos',
-    detail: 'Condiciones preferenciales en hoteles, aerolíneas, asistencia al viajero y más.',
-    destacado: true,
-  },
-  {
-    Icon: FiBookOpen,
-    title: 'Capacitaciones y eventos',
-    detail: 'Formación continua y una agenda activa durante todo el año.',
-  },
-  {
-    Icon: FiHeadphones,
-    title: 'Asesoramiento profesional',
-    detail: 'Acompañamiento normativo, legal y comercial para tu agencia.',
-  },
-  {
-    Icon: FiUsers,
-    title: 'Networking y vinculación',
-    detail: 'Comunidad activa y conexiones reales con colegas del sector.',
-  },
-  {
-    Icon: FiGlobe,
-    title: 'Convenios y alianzas',
-    detail: 'Acuerdos institucionales con organismos, cámaras y empresas.',
-  },
-  {
-    Icon: FiShoppingBag,
-    title: 'Registro y beneficios',
-    detail: 'Presencia en el directorio oficial de socios verificados de ACAV.',
-  },
-  {
-    Icon: FiCalendar,
-    title: 'Workshops y experiencias',
-    detail: 'Eventos inmersivos, ferias y encuentros con operadores y destinos.',
-  },
-  {
-    Icon: FiHome,
-    title: 'Hotelería y servicios',
-    detail: 'Beneficios pensados para todo el ecosistema turístico.',
-  },
-  {
-    Icon: FiBriefcase,
-    title: 'Herramientas de gestión',
-    detail: 'Recursos y plataformas para profesionalizar el día a día de tu agencia.',
-  },
+const sociosBeneficios = [
+  { title: 'Voy de Viaje', image: '/images/beneficios/VOY DE VIAJE.png' },
+  { title: 'Tren a las Nubes', image: '/images/beneficios/TREN DE LAS NUBES.jpg' },
+  { title: 'Travel Connect', image: '/images/beneficios/TRAVEL.png' },
+  { title: 'Savia Group', image: '/images/beneficios/savia group.jpg' },
+  { title: 'Macro', image: '/images/beneficios/MACFRO.jpg' },
+  { title: 'SanCor Salud', image: '/images/beneficios/images.jpg' },
+  { title: 'Howard Johnson Plaza Villa Carlos Paz', image: '/images/beneficios/HOWARD.jpg' },
+  { title: 'Hotel 111', image: '/images/beneficios/HOTEL 111.png' },
+  { title: 'Hospital Italiano Córdoba', image: '/images/beneficios/hospital italiano.png' },
 ]
 
 export default function ConveniosYBeneficiosPage() {
@@ -91,7 +42,7 @@ export default function ConveniosYBeneficiosPage() {
           <div className="mt-10 grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:p-6">
             <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[280px] md:h-full">
               <Image
-                src="/images/benefits/placeholder.jpg"
+                src="/images/descuentos_exclusivos.jpg"
                 alt="Descuentos exclusivos"
                 width={960}
                 height={540}
@@ -107,13 +58,12 @@ export default function ConveniosYBeneficiosPage() {
                 Accedé a descuentos y condiciones preferenciales en hoteles, aerolíneas, asistencia al viajero y
                 mucho más para potenciar tu agencia y tus experiencias.
               </p>
-              <Link
-                href="/socios/asociate"
+              <AssociationCtaLink
                 className="mt-6 inline-flex h-11 w-fit items-center gap-2 rounded-full bg-slate-900 px-6 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
               >
                 Quiero asociarme
                 <FiArrowRight />
-              </Link>
+              </AssociationCtaLink>
             </div>
           </div>
         </div>
@@ -128,25 +78,24 @@ export default function ConveniosYBeneficiosPage() {
             </h2>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {beneficios.map(({ Icon, title, detail, destacado }) => (
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {sociosBeneficios.map(({ title, image }) => (
               <article
                 key={title}
-                className={`rounded-[22px] border p-6 transition hover:-translate-y-1 ${
-                  destacado
-                    ? 'border-primary-200 bg-primary-50/50 shadow-[0_12px_30px_rgba(0,136,216,0.12)]'
-                    : 'border-slate-200 bg-white hover:border-primary-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.07)]'
-                }`}
+                className="group overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.1)]"
               >
-                <div
-                  className={`flex size-11 items-center justify-center rounded-xl ${
-                    destacado ? 'bg-primary-600 text-white' : 'bg-primary-50 text-primary-600'
-                  }`}
-                >
-                  <Icon className="text-[18px]" />
+                <div className="relative h-32 bg-white sm:h-40">
+                  <Image
+                    src={image}
+                    alt={title}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                    className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03] sm:p-5"
+                  />
                 </div>
-                <h3 className="mt-5 text-[15px] font-bold text-slate-900">{title}</h3>
-                <p className="mt-2 text-[13px] leading-6 text-slate-600">{detail}</p>
+                <div className="flex min-h-14 items-center justify-center border-t border-slate-100 bg-slate-50/70 px-3 py-3 text-center">
+                  <h3 className="text-xs font-bold leading-5 text-slate-800 sm:text-sm">{title}</h3>
+                </div>
               </article>
             ))}
           </div>
@@ -158,13 +107,12 @@ export default function ConveniosYBeneficiosPage() {
                 Sumate y accedé a todos los convenios de ACAV.
               </p>
             </div>
-            <Link
-              href="/socios/asociate"
+            <AssociationCtaLink
               className="inline-flex h-12 items-center gap-2 rounded-full bg-accent-500 px-7 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600"
             >
               Quiero asociarme
               <FiArrowRight />
-            </Link>
+            </AssociationCtaLink>
           </div>
         </div>
       </section>

@@ -62,6 +62,7 @@ export const siteConfig = {
           { label: "Actualidad", href: "/novedades/actualidad" },
           { label: "Redes", href: "/novedades/redes" },
           { label: "Mercado de Viajes", href: "/novedades/mercado-de-viajes" },
+          { label: "Workshop", href: "/novedades/workshop" },
         ],
       },
       { label: "Contacto", href: "/contacto" },
@@ -85,6 +86,7 @@ export const siteConfig = {
       { label: "Actualidad", href: "/novedades/actualidad" },
       { label: "Redes", href: "/novedades/redes" },
       { label: "Mercado de Viajes", href: "/novedades/mercado-de-viajes" },
+      { label: "Workshop", href: "/novedades/workshop" },
     ],
   },
   institucional: {
@@ -103,7 +105,7 @@ export const siteConfig = {
       fechaContratoSocial: "25/10/1966",
       iva: "IVA Exento",
       empleador: "Sí",
-      domicilioFiscal: "Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina",
+      domicilioFiscal: "Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2, C.P. X5000IAC - Córdoba Argentina.",
       // Código del QR de AFIP: https://www.afip.gob.ar/formulario-960/
       afipQrCode: null as string | null,
     },
@@ -138,9 +140,16 @@ export const siteConfig = {
     ],
   },
   contact: {
-    address: null as string | null,
-    email: null as string | null,
-    phone: null as string | null,
+    address: "Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2, C.P. X5000IAC - Córdoba Argentina.",
+    email: "info@acav.com.ar",
+    emails: [
+      { label: "General", address: "info@acav.com.ar" },
+      { label: "Eventos", address: "eventos@acav.com.ar" },
+      { label: "Socios", address: "socios@acav.com.ar" },
+      { label: "Administración", address: "administracion@acav.com.ar" },
+    ],
+    phone: "+54 9 3518 74-7119",
+    phoneHref: "+5493518747119",
     whatsapp: "5493518747119",
     social: {
       instagram: null as string | null,

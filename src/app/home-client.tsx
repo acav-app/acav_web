@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper'
+import { AssociationCtaLink } from './components/association-cta'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -24,6 +25,7 @@ import {
   FiHeart,
   FiMapPin,
   FiMail,
+  FiMessageCircle,
   FiPercent,
   FiPhone,
   FiPlay,
@@ -213,7 +215,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            PROJECTS ACAV
         ============================================================= */}
-        <section id="servicios" className="pb-section md:pb-section-lg">
+        <section id="servicios" className="pb-8 sm:pb-10 md:pb-section-lg">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -235,7 +237,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   ],
                   gradient: 'from-[#0a2d69] via-[#082559] to-[#051a41]',
                   glow: 'from-primary-400/40 via-primary-600/20',
-                  mock: '/images/placeholder.jpg',
+                  mock: '/images/red-empleabilidad-500x500.jpg',
                   alt: 'Empleabilidad ACAV',
                 },
                 {
@@ -250,7 +252,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   ],
                   gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
                   glow: 'from-accent-400/40 via-accent-600/20',
-                  mock: '/images/placeholder.jpg',
+                  mock: '/images/cursos-acav-500x500.jpg',
                   alt: 'Cursos ACAV',
                 },
               ].map((p) => (
@@ -258,7 +260,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   key={p.title}
                   className={`relative isolate overflow-hidden rounded-[24px] border border-slate-900/10 bg-gradient-to-br ${p.gradient} px-5 pb-6 pt-6 text-white shadow-[0_24px_60px_rgba(6,28,74,0.28)] sm:px-6 sm:pt-7 md:px-7 md:pb-7 md:pt-8`}
                 >
-                  <div className="relative z-10 max-w-full sm:max-w-[52%]">
+                  <div className="relative z-10 max-w-full sm:max-w-[46%]">
                     <p className="text-[10px] font-bold uppercase text-white/70">{p.eyebrow}</p>
                     <h3 className="mt-2.5 text-[22px] font-bold leading-[1.1] md:text-[28px]">{p.title}</h3>
                     <p className="mt-3 text-[13px] leading-6 text-white/85 md:text-sm md:leading-7">{p.desc}</p>
@@ -280,16 +282,16 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     </div>
                   </div>
 
-                  <div className="pointer-events-none absolute -bottom-4 left-1/2 z-0 w-[82%] -translate-x-1/2 sm:-bottom-6 sm:-translate-x-0 sm:left-auto sm:right-0 sm:top-8 sm:w-[58%] md:-right-6 md:top-10">
-                    <div className="relative">
-                      <div className={`absolute -inset-6 rounded-[32px] bg-gradient-to-br ${p.glow} to-transparent blur-2xl`} />
+                  <div className="pointer-events-none absolute -bottom-4 left-1/2 z-0 aspect-square w-[82%] -translate-x-1/2 overflow-hidden rounded-t-[16px] sm:bottom-auto sm:left-auto sm:right-5 sm:top-1/2 sm:w-[46%] sm:max-w-[250px] sm:-translate-y-1/2 sm:translate-x-0 sm:rounded-[18px] sm:border sm:border-white/15 sm:bg-slate-950/10 sm:shadow-[0_16px_36px_rgba(2,6,23,0.3)]">
+                    <div className="absolute inset-0">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${p.glow} to-transparent blur-2xl`} />
                       <Image
                         src={p.mock}
                         alt={p.alt}
-                        width={900}
-                        height={620}
+                        fill
+                        sizes="(min-width: 1280px) 250px, 23vw"
                         unoptimized
-                        className="relative rounded-t-[16px] sm:rounded-t-[18px] translate-x-1 translate-y-1 shadow-[0_24px_60px_rgba(2,6,23,0.35)]"
+                        className="object-contain object-center"
                       />
                     </div>
                   </div>
@@ -321,7 +323,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     ],
                     gradient: 'from-[#0a2d69] via-[#082559] to-[#051a41]',
                     glow: 'from-primary-400/40 via-primary-600/20',
-                    mock: '/images/placeholder.jpg',
+                    mock: '/images/red-empleabilidad-542x298px.jpg',
                     alt: 'Empleabilidad ACAV',
                   },
                   {
@@ -336,30 +338,30 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     ],
                     gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
                     glow: 'from-accent-400/40 via-accent-600/20',
-                    mock: '/images/placeholder.jpg',
+                    mock: '/images/cursos-acav-542x298.jpg',
                     alt: 'Cursos ACAV',
                   },
                 ].map((p) => (
                   <SwiperSlide key={p.title}>
                     <article
-                      className={`relative isolate overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br ${p.gradient} px-5 pb-6 pt-6 text-white`}
+                      className={`relative isolate overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br ${p.gradient} px-5 pb-5 pt-5 text-white`}
                     >
                       <p className="text-[10px] font-bold uppercase text-white/70">{p.eyebrow}</p>
                       <h3 className="mt-2 text-2xl font-bold leading-[1.1]">{p.title}</h3>
-                      <p className="mt-2.5 text-sm leading-7 text-white/85">{p.desc}</p>
+                      <p className="mt-2 text-sm leading-6 text-white/85">{p.desc}</p>
 
-                      <div className="relative mt-5 h-[170px] w-full overflow-hidden rounded-[18px] bg-white/5 shadow-[0_18px_50px_rgba(2,6,23,0.25)]">
+                      <div className="relative mt-4 h-[150px] w-full overflow-hidden rounded-[18px] bg-white/5 shadow-[0_18px_50px_rgba(2,6,23,0.25)]">
                         <div className={`absolute -inset-6 rounded-[32px] bg-gradient-to-br ${p.glow} to-transparent blur-2xl`} />
                         <Image
                           src={p.mock}
                           alt={p.alt}
                           fill
                           unoptimized
-                          className="object-contain object-bottom"
+                          className="object-cover object-center"
                         />
                       </div>
 
-                      <div className="mt-5 grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
+                      <div className="mt-4 grid grid-cols-3 gap-2 border-t border-white/10 pt-3">
                         {p.metrics.map((m) => (
                           <div key={m.l}>
                             <p className="text-lg font-bold leading-none">{m.v}</p>
@@ -369,7 +371,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                       </div>
                       <Link
                         href="#"
-                        className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-[11px] font-bold uppercase text-white ring-1 ring-inset ring-white/15"
+                        className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-[11px] font-bold uppercase text-white ring-1 ring-inset ring-white/15"
                       >
                         {p.cta}
                         <FiArrowRight className="text-[12px]" />
@@ -394,7 +396,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             variants={sectionReveal}
             className="container"
           >
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+            <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between xl:gap-12">
               <div className="max-w-md">
                 <p className="text-[11px] font-bold uppercase text-primary-600">BENEFICIOS PARA SOCIOS</p>
                 <h2 className="mt-4 text-[26px] font-bold leading-[1.1] text-slate-900 md:text-[30px]">
@@ -410,7 +412,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               </div>
 
               {/* Desktop grid */}
-              <div className="hidden flex-1 grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-7 lg:grid">
+              <div className="hidden flex-1 grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-7 lg:grid">
                 {[
                   { label: 'Descuentos exclusivos', active: true, Icon: FiPercent },
                   { label: 'Capacitaciones y eventos', Icon: FiBookOpen },
@@ -445,7 +447,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             </div>
 
             {/* Mobile benefits slider */}
-            <div className="mt-8 sm:hidden w-full min-w-0 overflow-hidden">
+            <div className="mt-8 w-full min-w-0 overflow-hidden lg:hidden">
               <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{ delay: 2800, disableOnInteraction: false }}
@@ -453,6 +455,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 loop
                 spaceBetween={12}
                 slidesPerView={2.3}
+                breakpoints={{
+                  480: { slidesPerView: 2.8, spaceBetween: 12 },
+                  640: { slidesPerView: 3.5, spaceBetween: 14 },
+                  768: { slidesPerView: 4.4, spaceBetween: 14 },
+                  900: { slidesPerView: 5.2, spaceBetween: 14 },
+                }}
                 pagination={{ clickable: true, el: '#benefits-icons-pagination' }}
               >
                 {[
@@ -494,7 +502,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:px-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:px-7 md:py-6 min-w-0">
                 <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[260px] md:h-full">
                   <Image
-                    src="/images/benefits/placeholder.jpg"
+                    src="/images/descuentos_exclusivos.jpg"
                     alt="Descuentos exclusivos"
                     width={960}
                     height={540}
@@ -673,12 +681,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   pagination={{ clickable: true, el: '#history-pagination' }}
                 >
                   {[
-                    { year: '1963', title: 'Fundación de ACAV', img: '/images/placeholder.jpg' },
-                    { year: '1975', title: '1ra Convención institucional', img: '/images/placeholder.jpg' },
-                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/placeholder.jpg' },
-                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/placeholder.jpg' },
-                    { year: '2020', title: 'Transformación digital', img: '/images/placeholder.jpg' },
-                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/placeholder.jpg' },
+                    { year: '1963', title: 'Fundación de ACAV', img: '/images/historia/4.jpeg' },
+                    { year: '1975', title: '1ra Convención institucional', img: '/images/historia/6.jpeg' },
+                    { year: '1995', title: 'Premios estatutos y beneficios', img: '/images/historia/5.jpeg' },
+                    { year: '2010', title: 'Capacitaciones y formación', img: '/images/historia/1.jpg' },
+                    { year: '2020', title: 'Transformación digital', img: '/images/historia/2.jpeg' },
+                    { year: 'Actualidad', title: 'Una comunidad que sigue creciendo', img: '/images/historia/3.jpeg' },
                   ].map((h, i) => (
                     <SwiperSlide key={h.year + i}>
                       <div className="rounded-[20px] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
@@ -795,13 +803,12 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 <h2 className="mt-4 max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-[30px]">
                   Sumate a nuestra comunidad y potenciá tu agencia.
                 </h2>
-                <Link
-                  href="#"
+                <AssociationCtaLink
                   className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_14px_32px_rgba(249,73,16,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600"
                 >
                   COMENZAR AHORA
                   <FiArrowRight className="text-[13px]" />
-                </Link>
+                </AssociationCtaLink>
               </div>
 
               <div className="w-full min-w-0 overflow-hidden">
@@ -891,9 +898,10 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
 
                   <div className="mt-10 space-y-6">
                     {[
-                      { Icon: FiMapPin, label: 'Dirección', value: 'Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina.', href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Obispo Salguero, Cordoba.')}` },
-                      { Icon: FiMail, label: 'Email', value: 'info@acav.org.ar', href: 'mailto:info@acav.org.ar' },
-                      { Icon: FiPhone, label: 'Tel / Fax', value: '(0351) 422 4425', href: 'tel:+543514224425' },
+                      { Icon: FiMapPin, label: 'Dirección', value: siteConfig.contact.address, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.contact.address)}` },
+                      ...siteConfig.contact.emails.map(({ label, address }) => ({ Icon: FiMail, label: `Email · ${label}`, value: address, href: `mailto:${address}` })),
+                      { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}` },
+                      { Icon: FiMessageCircle, label: 'WhatsApp', value: siteConfig.contact.phone, href: `https://wa.me/${siteConfig.contact.whatsapp}` },
                       { Icon: FiCalendar, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },
                     ].map(({ Icon, label, value, href }) => (
                       <div key={label} className="flex gap-4 group">

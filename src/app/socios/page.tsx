@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
 import { FiArrowRight, FiCheckCircle, FiSearch } from 'react-icons/fi'
 
 import PageAnimation from '../components/page-animation'
+import { AssociationCtaLink } from '../components/association-cta'
 import { listSociosActivos } from '@/lib/admin/repository'
 import type { Socio } from '@/lib/admin/types'
 import SociosClient from './socios-client'
@@ -55,13 +55,12 @@ export default async function SociosPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href="/socios/asociate"
+              <AssociationCtaLink
                 className="inline-flex h-11 items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.35)] transition hover:-translate-y-0.5 hover:bg-accent-600"
               >
                 Quiero asociarme
                 <FiArrowRight />
-              </Link>
+              </AssociationCtaLink>
               <span className="inline-flex items-center gap-2 text-xs font-medium text-white/60">
                 <FiSearch className="text-[13px]" />
                 {socios.length} socios activos

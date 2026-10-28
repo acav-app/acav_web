@@ -7,6 +7,7 @@ import {
   FiInstagram,
   FiLinkedin,
   FiMail,
+  FiMessageCircle,
   FiMapPin,
   FiPhone,
   FiYoutube,
@@ -19,11 +20,11 @@ import { siteConfig } from '../config/site'
 export const metadata: Metadata = {
   title: 'Contacto | ACAV',
   description:
-    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina. info@acav.org.ar · +54 9 3518 74-7119.',
+    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2, C.P. X5000IAC - Córdoba Argentina. +54 9 3518 74-7119.',
 }
 
-const DIRECCION = 'Obispo Salguero 169, Córdoba'
-const MAPA = `https://www.google.com/maps?q=${encodeURIComponent('Obispo Salguero 169, Córdoba, Argentina')}&output=embed`
+const DIRECCION = siteConfig.contact.address
+const MAPA = `https://www.google.com/maps?q=${encodeURIComponent(DIRECCION)}&output=embed`
 
 const datos = [
   {
@@ -32,8 +33,19 @@ const datos = [
     value: DIRECCION,
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DIRECCION)}`,
   },
-  { Icon: FiMail, label: 'Email', value: 'info@acav.org.ar', href: 'mailto:info@acav.org.ar' },
-  { Icon: FiPhone, label: 'Tel', value: '+54 9 3518 74-7119', href: 'tel:+5493518747119' },
+  ...siteConfig.contact.emails.map(({ label, address }) => ({
+    Icon: FiMail,
+    label: `Email · ${label}`,
+    value: address,
+    href: `mailto:${address}`,
+  })),
+  { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}` },
+  {
+    Icon: FiMessageCircle,
+    label: 'WhatsApp',
+    value: siteConfig.contact.phone,
+    href: `https://wa.me/${siteConfig.contact.whatsapp}`,
+  },
   { Icon: FiClock, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },
 ]
 
@@ -41,7 +53,7 @@ const redes = [
   { label: 'Instagram', Icon: FiInstagram, href: 'https://www.instagram.com/acavoficial/' },
   { label: 'Facebook', Icon: FiFacebook, href: 'https://www.facebook.com/acav.cba/' },
   { label: 'LinkedIn', Icon: FiLinkedin, href: 'https://www.linkedin.com/company/asociaci%C3%B3n-cordobesa-de-agencias-de-viajes/' },
-  { label: 'YouTube', Icon: FiYoutube, href: '' },
+  { label: 'YouTube', Icon: FiYoutube, href: 'https://www.youtube.com/@ACAVok' },
 ]
 
 

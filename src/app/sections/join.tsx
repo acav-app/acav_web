@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useMemo, useState } from "react";
-import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
 import { siteConfig } from "../config/site";
+import { AssociationCtaLink } from "../components/association-cta";
 
 export default function JoinSection() {
   const steps = useMemo(() => siteConfig.sections.join.steps, []);
@@ -85,13 +85,12 @@ export default function JoinSection() {
               </p>
             </div>
 
-            <Link
-              href={siteConfig.sections.join.cta.href}
+            <AssociationCtaLink
               className="mt-8 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-accent-500 px-5 text-xs font-bold uppercase text-white shadow-[0_14px_40px_rgba(249,73,16,0.2)] transition hover:bg-accent-600"
             >
               {siteConfig.sections.join.cta.label}
               <FiArrowRight className="text-sm" />
-            </Link>
+            </AssociationCtaLink>
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
 
 import { siteConfig } from '../config/site'
+import { AssociationCtaLink } from './association-cta'
+import { isAssociationCta } from '@/lib/association-cta'
 
 const easeOutCubic = [0.22, 1, 0.36, 1] as const
 
@@ -87,13 +89,22 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                   <div className="invisible absolute left-0 top-full z-20 w-60 pt-2 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100">
                     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-[0_18px_45px_rgba(15,23,42,0.12)]">
                       {item.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="block px-4 py-2.5 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
-                        >
-                          {child.label}
-                        </Link>
+                        isAssociationCta(child.label, child.href) ? (
+                          <AssociationCtaLink
+                            key={child.href}
+                            className="block px-4 py-2.5 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
+                          >
+                            {child.label}
+                          </AssociationCtaLink>
+                        ) : (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className="block px-4 py-2.5 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-primary-600"
+                          >
+                            {child.label}
+                          </Link>
+                        )
                       ))}
                     </div>
                   </div>
@@ -103,12 +114,11 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href={siteConfig.nav.cta.href}
+            <AssociationCtaLink
               className="hidden h-11 items-center justify-center rounded-full bg-accent-500 px-6 text-[13px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 md:inline-flex"
             >
               {siteConfig.nav.cta.label}
-            </Link>
+            </AssociationCtaLink>
 
             <button
               type="button"
@@ -207,13 +217,12 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                     show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
                   }}
                 >
-                  <Link
-                    href={siteConfig.nav.cta.href}
+                  <AssociationCtaLink
                     onClick={() => setMenuOpen(false)}
                     className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-accent-500 px-5 text-[13px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-accent-600 active:scale-[0.98]"
                   >
                     {siteConfig.nav.cta.label}
-                  </Link>
+                  </AssociationCtaLink>
                 </motion.div>
               </motion.nav>
 

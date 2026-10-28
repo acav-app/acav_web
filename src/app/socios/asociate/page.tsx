@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FiArrowRight, FiCheck, FiDownload, FiFileText } from 'react-icons/fi'
+import { FiCheck, FiFileText } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
 import CategoriasAsociado, { type Categoria } from './categorias-asociado'
-import SolicitudForm from './solicitud-form'
 
 export const metadata: Metadata = {
   title: 'Asociate | ACAV',
@@ -63,8 +62,6 @@ const documentacion = [
   'Aval de 2 asociados activos',
 ]
 
-const SOLICITUD_PDF = '/docs/solicitud-de-ingreso-acav.pdf'
-
 export default function AsociatePage() {
   return (
     <PageAnimation>
@@ -85,13 +82,12 @@ export default function AsociatePage() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="#solicitud"
-                  className="inline-flex h-12 items-center gap-2 rounded-full bg-accent-500 px-7 text-[11px] font-bold uppercase text-white shadow-[0_14px_32px_rgba(249,73,16,0.3)] transition hover:-translate-y-0.5 hover:bg-accent-600"
+                <span
+                  aria-disabled="true"
+                  className="inline-flex h-12 items-center rounded-full bg-slate-200 px-7 text-[11px] font-bold uppercase text-slate-500"
                 >
-                  Quiero asociarme
-                  <FiArrowRight />
-                </Link>
+                  Inscripciones pausadas
+                </span>
                 <Link
                   href="#requisitos"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
@@ -118,14 +114,9 @@ export default function AsociatePage() {
                 ))}
               </ul>
 
-              <a
-                href={SOLICITUD_PDF}
-                download
-                className="mt-8 inline-flex h-11 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 text-[11px] font-bold uppercase text-white transition hover:border-white/30 hover:bg-white/10"
-              >
-                <FiDownload />
-                Descargar solicitud de ingreso
-              </a>
+              <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-white/70">
+                La recepción de solicitudes está pausada temporalmente.
+              </p>
             </div>
           </div>
         </div>
@@ -172,11 +163,14 @@ export default function AsociatePage() {
         </div>
       </section>
 
-      {/* Formulario */}
-      {/* <section id="solicitud" className="pb-section md:pb-section-lg">
+      {/*
+      Formulario de ingreso pausado temporalmente. Para reactivarlo, volver a importar
+      SolicitudIngresoWizard y quitar este comentario, además de habilitar las rutas API.
+
+      <section className="pb-section md:pb-section-lg">
         <div className="container">
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-8 text-center">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-8 text-center" id="solicitud-intro">
               <p className="text-[11px] font-bold uppercase text-primary-600">Solicitud de ingreso</p>
               <h2 className="mt-3 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
                 Sumate a ACAV
@@ -187,10 +181,11 @@ export default function AsociatePage() {
               </p>
             </div>
 
-            <SolicitudForm />
+            <SolicitudIngresoWizard />
           </div>
         </div>
-      </section> */}
+      </section>
+      */}
     </PageAnimation>
   )
 }

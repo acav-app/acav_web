@@ -3,9 +3,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { FiFacebook, FiHeart, FiInstagram, FiLinkedin, FiMail, FiMapPin, FiPhone, FiYoutube } from 'react-icons/fi'
+import { FiFacebook, FiHeart, FiInstagram, FiLinkedin, FiMail, FiMapPin, FiMessageCircle, FiPhone, FiYoutube } from 'react-icons/fi'
 
 import { siteConfig } from '../config/site'
+import { AssociationCtaLink } from './association-cta'
 
 const easeOutCubic = [0.22, 1, 0.36, 1] as const
 
@@ -45,18 +46,31 @@ export default function SiteFooter() {
             <div className="mt-6 space-y-3 text-sm text-white/70">
               <div className="flex items-start gap-2.5">
                 <FiMapPin className="mt-1 text-[14px] text-white/60" />
-                <span>Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2 C.P. X5000IAC - Córdoba Argentina.</span>
+                <span>{siteConfig.contact.address}</span>
               </div>
+              {siteConfig.contact.emails.map(({ label, address }) => (
+                <div key={address} className="flex items-start gap-2.5">
+                  <FiMail className="mt-1 text-[14px] text-white/60" />
+                  <a href={`mailto:${address}`} className="transition hover:text-white">
+                    {label}: {address}
+                  </a>
+                </div>
+              ))}
               <div className="flex items-start gap-2.5">
-                <FiMail className="mt-1 text-[14px] text-white/60" />
-                <a href="mailto:info@acav.org.ar" className="transition hover:text-white">
-                  info@acav.org.ar
+                <FiPhone className="mt-1 text-[14px] text-white/60" />
+                <a href={`tel:${siteConfig.contact.phoneHref}`} className="transition hover:text-white">
+                  Tel: {siteConfig.contact.phone}
                 </a>
               </div>
               <div className="flex items-start gap-2.5">
-                <FiPhone className="mt-1 text-[14px] text-white/60" />
-                <a href="tel:+5493518747119" className="transition hover:text-white">
-                  Tel: +54 9 351 874 7119
+                <FiMessageCircle className="mt-1 text-[14px] text-white/60" />
+                <a
+                  href={`https://wa.me/${siteConfig.contact.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-white"
+                >
+                  WhatsApp: {siteConfig.contact.phone}
                 </a>
               </div>
             </div>
@@ -66,7 +80,7 @@ export default function SiteFooter() {
                 { href: 'https://www.instagram.com/acavoficial/', Icon: FiInstagram, label: 'Instagram' },
                 { href: 'https://www.facebook.com/acav.cba/', Icon: FiFacebook, label: 'Facebook' },
                 { href: 'https://www.linkedin.com/company/asociaci%C3%B3n-cordobesa-de-agencias-de-viajes/', Icon: FiLinkedin, label: 'LinkedIn' },
-                { href: '', Icon: FiYoutube, label: 'YouTube' },
+                { href: 'https://www.youtube.com/@ACAVok', Icon: FiYoutube, label: 'YouTube' },
               ].map((s) => (
                 <a
                   key={s.label}
@@ -86,7 +100,7 @@ export default function SiteFooter() {
               <Link href="/#home" className="transition hover:text-white">Home</Link>
               <Link href="/institucional/quienes-somos" className="transition hover:text-white">Institucional</Link>
               <Link href="/socios" className="transition hover:text-white">Socios</Link>
-              <Link href="/socios/asociate" className="transition hover:text-white">Asociate</Link>
+              <AssociationCtaLink className="transition hover:text-white">Asociate</AssociationCtaLink>
               <Link href="/servicios/capacitaciones" className="transition hover:text-white">Servicios</Link>
               <Link href="/novedades/actualidad" className="transition hover:text-white">Novedades</Link>
               <Link href="/contacto" className="transition hover:text-white">Contacto</Link>

@@ -35,8 +35,13 @@ export default function DataFiscalPage() {
 
   const contacto = [
     { Icon: FiMapPin, label: 'Domicilio fiscal', value: dataFiscal.domicilioFiscal, href: null },
-    { Icon: FiMail, label: 'Email oficial', value: 'info@acav.org.ar', href: 'mailto:info@acav.org.ar' },
-    { Icon: FiPhone, label: 'Teléfono', value: '(0351) 422 4425', href: 'tel:+543514224425' },
+    ...siteConfig.contact.emails.map(({ label, address }) => ({
+      Icon: FiMail,
+      label: `Email · ${label}`,
+      value: address,
+      href: `mailto:${address}`,
+    })),
+    { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}` },
   ]
 
   return (
