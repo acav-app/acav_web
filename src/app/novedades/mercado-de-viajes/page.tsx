@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { FiArrowUpRight, FiCalendar, FiGlobe, FiInstagram, FiUsers } from 'react-icons/fi'
+import { FiArrowUpRight, FiCalendar, FiGlobe, FiUsers } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
 
@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 }
 
 const SITIO = 'https://mercadodeviajes.ar/'
-const INSTAGRAM = 'https://www.instagram.com/mercadodeviajesar/'
 export default function MercadoDeViajesPage() {
   return (
     <PageAnimation>
@@ -57,39 +56,26 @@ export default function MercadoDeViajesPage() {
             </div>
           </div>
 
-          <div className="group mt-10 overflow-hidden rounded-[26px] border border-slate-200 bg-[#04112e] transition hover:-translate-y-1 hover:shadow-[0_26px_60px_rgba(15,23,42,0.18)]">
-            <div className="relative aspect-[21/9] w-full overflow-hidden bg-[linear-gradient(135deg,#0a2d69,#082559_55%,#051a41)] sm:aspect-[3/1]">
+          <div className="mt-10">
+            <div className="relative aspect-[21/9] w-full overflow-hidden rounded-[26px] sm:aspect-[3/1]">
               <Image
                 src="/images/mercado_de_viajes.png"
                 alt="Encuentro profesional de la industria turística"
                 fill
                 sizes="(min-width: 1280px) 1200px, 100vw"
-                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(2,6,23,0.6)_55%,rgba(2,6,23,0.25)_100%)]" />
-
-              <div className="absolute inset-0 flex flex-col justify-center px-8 text-white md:px-12">
-                <div className="mt-5 flex flex-wrap items-center gap-3">
-                  <a
-                    href={SITIO}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase shadow-[0_12px_30px_rgba(249,73,16,0.28)] transition hover:bg-accent-600"
-                  >
-                    Visitar el portal
-                    <FiArrowUpRight className="text-[14px]" />
-                  </a>
-                  <a
-                    href={INSTAGRAM}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Mercado de Viajes en Instagram"
-                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition hover:border-white/50 hover:bg-white/20"
-                  >
-                    <FiInstagram className="text-[17px]" />
-                  </a>
-                </div>
-              </div>
+            </div>
+            <div className="mt-5 flex justify-end">
+              <a
+                href={SITIO}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-accent-500 px-6 text-[11px] font-bold uppercase text-white shadow-[0_12px_30px_rgba(249,73,16,0.2)] transition-colors hover:bg-accent-600"
+              >
+                Ir a Mercado de Viajes
+                <FiArrowUpRight className="text-[14px]" />
+              </a>
             </div>
           </div>
         </div>
