@@ -686,7 +686,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               <div className="mt-10 flex justify-center md:mt-14">
                 <Link
                   href="/institucional/quienes-somos"
-                  className="relative -mb-8 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-slate-900/60 px-6 text-[11px] font-bold uppercase text-white backdrop-blur-md transition duration-300 hover:bg-slate-900/80 md:-mb-12"
+                  className="relative inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-slate-900/60 px-6 text-[11px] font-bold uppercase text-white backdrop-blur-md transition duration-300 hover:bg-slate-900/80"
                 >
                   CONOCE TODA NUESTRA HISTORIA
                   <FiArrowRight className="text-[13px]" />
@@ -758,7 +758,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            JOIN (mobile slider 4 steps / desktop 2 cols horizontal)
         ============================================================= */}
-        <section id="asociate" className="pb-section md:pb-section-lg">
+        <section id="asociate" className="pb-6 sm:pb-8 lg:pb-10">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -851,7 +851,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            CONTACTO (Sección Minimalista antes del Footer)
         ============================================================= */}
-        <section id="contacto" className="py-section md:py-section-lg bg-slate-50/50">
+        <section id="contacto" className="pt-6 pb-section sm:pt-8 md:pb-section-lg lg:pt-10 bg-slate-50/50">
           <div className="container">
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16 xl:gap-20 items-stretch">
               {/* Columna Izquierda: Mensaje y Datos de contacto */}
