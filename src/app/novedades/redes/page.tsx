@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { FiFacebook, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi'
 
+import InstagramFeedWidget from '../../components/instagram-feed-widget'
 import PageAnimation from '../../components/page-animation'
 import { siteConfig } from '../../config/site'
-import ComunidadSlider from './comunidad-slider'
 
 export const metadata: Metadata = {
   title: 'Redes | ACAV',
@@ -34,7 +34,7 @@ export default function RedesPage() {
           </div>
 
           <div className="mt-9">
-            <ComunidadSlider />
+            <InstagramFeedWidget />
           </div>
 
           <div className="mt-12 rounded-[26px] bg-[#04112e] px-8 py-9 text-white md:px-10">

@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
@@ -8,7 +7,6 @@ import CountUp from 'react-countup'
 import { FaWhatsapp } from 'react-icons/fa'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
-import type { Swiper as SwiperType } from 'swiper'
 import { AssociationCtaLink } from './components/association-cta'
 
 import 'swiper/css'
@@ -29,21 +27,19 @@ import {
   FiMail,
   FiPercent,
   FiPhone,
-  FiPlay,
   FiSend,
   FiShoppingBag,
   FiUsers,
-  FiInstagram,
   FiLinkedin,
   FiYoutube,
   FiFacebook,
-  FiCalendar as FiCalendar2,
   FiTarget,
 } from 'react-icons/fi'
 
 import HeroBanner from './components/hero-banner'
 import Navbar from './components/navbar'
 import SiteFooter from './components/site-footer'
+import InstagramFeedWidget from './components/instagram-feed-widget'
 import ContactForm from './contacto/contact-form'
 import { comisionPlana, iniciales } from './data/comision'
 import { siteConfig } from './config/site'
@@ -72,7 +68,6 @@ const fadeUp = {
 const viewportTrigger = { once: true, margin: '-40px 0px -10% 0px' }
 
 export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
-  const communitySwiper = useRef<SwiperType | null>(null)
   const prefersReducedMotion = useReducedMotion()
 
   return (
@@ -552,9 +547,9 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         </section>
 
         {/* =============================================================
-           COMMUNITY SLIDER (mobile auto + desktop horizontal Swiper)
+           INSTAGRAM COMMUNITY FEED
         ============================================================= */}
-        {/* <section id="eventos" className="pb-section md:pb-section-lg">
+        <section id="instagram" className="pb-section md:pb-section-lg">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -562,79 +557,30 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             variants={sectionReveal}
             className="container"
           >
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <p className="text-[11px] font-bold uppercase text-primary-600">
-                ASÍ VIVE LA COMUNIDAD ACAV
-              </p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-primary-600">Instagram</p>
+                <h2 className="mt-2 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
+                  Así vive la comunidad ACAV
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  Workshops, capacitaciones, testimonios y eventos. Personas y experiencias reales.
+                </p>
+              </div>
               <Link
-                href="#"
-                className="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase text-primary-600 transition hover:text-primary-700"
+                href="/novedades/redes"
+                className="inline-flex w-fit shrink-0 items-center gap-2.5 text-[11px] font-bold uppercase text-primary-600 transition hover:text-primary-700"
               >
                 VER MÁS EN REDES
                 <FiArrowRight className="text-[13px]" />
               </Link>
             </div>
 
-            <div className="relative mt-7 md:mt-8 w-full min-w-0 overflow-hidden">
-              <Swiper
-                modules={[Autoplay]}
-                autoplay={{ delay: 3200, disableOnInteraction: false }}
-                loop
-                speed={650}
-                spaceBetween={14}
-                slidesPerView={1.2}
-                breakpoints={{
-                  480: { slidesPerView: 1.7 },
-                  768: { slidesPerView: 2.6, spaceBetween: 18 },
-                  1024: { slidesPerView: 3.6, spaceBetween: 20 },
-                  1280: { slidesPerView: 4.4, spaceBetween: 22 },
-                }}
-                onSwiper={(s) => (communitySwiper.current = s)}
-              >
-                {[
-                  { title: 'Convención anual', fecha: '20 Nov 2024', img: '/images/placeholder.jpg' },
-                  { title: 'Workshop ACAV', fecha: '12 Oct 2024', img: '/images/placeholder.jpg' },
-                  { title: 'Destinos Córdoba', fecha: '08 Sep 2024', img: '/images/placeholder.jpg' },
-                  { title: 'Capacitación', fecha: '24 Ago 2024', img: '/images/placeholder.jpg' },
-                  { title: 'Marketing Turístico', fecha: '15 Jul 2024', img: '/images/placeholder.jpg' },
-                  { title: 'Workshop ventas', fecha: '02 Jul 2024', img: '/images/placeholder.jpg' },
-                ].map((item, i) => (
-                  <SwiperSlide key={i}>
-                    <article className="group relative overflow-hidden rounded-[22px] border border-slate-200 bg-slate-900 shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
-                      <div className="relative aspect-[4/5] w-full">
-                        <Image
-                          src={item.img}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 768px) 70vw, 24vw"
-                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.06)_0%,rgba(2,6,23,0.16)_40%,rgba(2,6,23,0.82)_100%)]" />
-
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          className="absolute left-4 top-4"
-                        >
-                          <span className="flex size-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-md">
-                            <FiPlay className="ml-0.5 text-[14px]" />
-                          </span>
-                        </motion.div>
-
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="flex items-center gap-2 text-[11px] font-bold uppercase text-white/85">
-                            <FiCalendar2 className="text-[12px]" />
-                            {item.fecha}
-                          </div>
-                          <p className="mt-2 text-[13px] font-bold leading-5 text-white">{item.title}</p>
-                        </div>
-                      </div>
-                    </article>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+            <div className="mt-7 w-full min-w-0 md:mt-8">
+              <InstagramFeedWidget />
             </div>
           </motion.div>
-        </section> */}
+        </section>
 
         {/* =============================================================
            HISTORY (mobile slider / desktop grid)
