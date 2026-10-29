@@ -13,13 +13,14 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import {
+  FiArrowUpRight,
   FiArrowRight,
   FiAward,
   FiBookOpen,
   FiCalendar,
   FiCheckCircle,
   FiFileText,
-  FiFlag,
+  FiGift,
   FiGlobe,
   FiHeadphones,
   FiHeart,
@@ -27,6 +28,7 @@ import {
   FiMail,
   FiPercent,
   FiPhone,
+  FiShield,
   FiSend,
   FiShoppingBag,
   FiUsers,
@@ -147,43 +149,81 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             variants={sectionReveal}
             className="container"
           >
-            <motion.div variants={staggerWrap} className="grid gap-10 md:gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20 w-full min-w-0 overflow-hidden">
+            <motion.div variants={staggerWrap} className="grid w-full min-w-0 gap-8 overflow-hidden md:gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
               <motion.div variants={fadeUp} className="w-full min-w-0 overflow-hidden">
-                <p className="w-full min-w-0 break-words text-[11px] font-bold uppercase text-primary-600">SOBRE ACAV</p>
-                <h2 className="mt-4 w-full min-w-0 md:max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-3xl break-words">
-                  Trabajamos por el crecimiento y la profesionalización del sector turístico.
+                <div className="flex min-w-0 items-center gap-3 text-xs font-bold uppercase tracking-wide">
+                  <p className="shrink-0 text-primary-600">SOBRE ACAV</p>
+                  <span aria-hidden="true" className="relative h-px min-w-5 flex-1 bg-primary-200">
+                    <span className="absolute -right-0.5 -top-[2px] size-1 rounded-full bg-primary-500" />
+                  </span>
+                  <p className="shrink-0 font-semibold text-slate-500">DESDE 1963</p>
+                </div>
+
+                <h2 className="mt-5 max-w-xl text-3xl font-bold leading-[1.08] tracking-tight text-slate-900 md:mt-6 md:text-4xl">
+                  Impulsamos el <span className="text-primary-600">futuro del turismo.</span>
                 </h2>
-                <p className="mt-4 w-full min-w-0 md:max-w-lg text-sm leading-7 text-slate-600 break-words">
-                  Desde 1963 representamos a las agencias de viajes, defendiendo sus intereses y generando herramientas, capacitaciones y beneficios exclusivos para que sigan creciendo.
+                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 md:mt-4 md:text-base md:leading-7">
+                  Representamos a las agencias de viajes de Córdoba con herramientas, formación y una comunidad que impulsa su crecimiento.
                 </p>
 
-                <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-3.5">
+                <div className="mt-5 grid grid-cols-2 md:mt-6">
                   {[
-                    { Icon: FiFlag, label: 'Representación' },
-                    { Icon: FiBookOpen, label: 'Capacitación' },
-                    { Icon: FiPercent, label: 'Beneficios' },
-                    { Icon: FiUsers, label: 'Comunidad' },
-                  ].map(({ Icon, label }) => (
-                    <div key={label} className="flex flex-col items-center text-center gap-2">
-                      <div className="flex size-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.05)]">
-                        <Icon className="text-[18px]" />
+                    {
+                      Icon: FiShield,
+                      label: 'Representación',
+                      description: 'Defendemos tus intereses.',
+                    },
+                    {
+                      Icon: FiBookOpen,
+                      label: 'Capacitación',
+                      description: 'Formación para crecer.',
+                    },
+                    {
+                      Icon: FiGift,
+                      label: 'Beneficios',
+                      description: 'Más oportunidades para tu agencia.',
+                    },
+                    {
+                      Icon: FiUsers,
+                      label: 'Comunidad',
+                      description: 'Conexiones que fortalecen el sector.',
+                    },
+                  ].map(({ Icon, label, description }, index) => (
+                    <article
+                      key={label}
+                      className={`flex min-w-0 items-start gap-2.5 py-3.5 sm:gap-3 sm:py-4 ${
+                        index % 2 === 0 ? 'border-r border-slate-200 pr-3 sm:pr-5' : 'pl-3 sm:pl-5'
+                      } ${index < 2 ? 'border-b border-slate-200' : ''}`}
+                    >
+                      <Icon aria-hidden="true" className="mt-0.5 size-[18px] shrink-0 text-primary-600 sm:size-5" />
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-bold leading-5 text-slate-900 sm:text-base">
+                          {label}
+                        </h3>
+                        <p className="mt-1 text-xs leading-5 text-slate-600 sm:text-sm">
+                          {description}
+                        </p>
                       </div>
-                      <p className="w-full text-[10px] sm:text-[12px] font-bold uppercase text-slate-700 leading-snug break-words">{label}</p>
-                    </div>
+                    </article>
                   ))}
                 </div>
 
-                <Link
-                  href="/institucional/quienes-somos"
-                  className="mt-7 inline-flex items-center gap-2.5 text-[11px] font-bold uppercase text-primary-600 transition hover:text-primary-700"
-                >
-                  CONOCE MÁS SOBRE ACAV
-                  <FiArrowRight className="text-[13px]" />
-                </Link>
+                <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3 md:mt-6">
+                  <Link
+                    href="/institucional/quienes-somos"
+                    className="inline-flex h-11 items-center gap-4 rounded-full bg-slate-900 px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)] transition duration-300 hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+                  >
+                    Conocé ACAV
+                    <FiArrowUpRight aria-hidden="true" className="text-base" />
+                  </Link>
+                  <p className="border-l border-slate-200 py-1 pl-4 text-xs leading-5 text-slate-500 sm:text-sm">
+                    Desde 1963, junto a las agencias.
+                  </p>
+                </div>
               </motion.div>
 
               <motion.div variants={fadeUp} className="w-full min-w-0 overflow-hidden">
-                <div className="relative w-full min-w-0 overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)] h-[320px] md:h-[420px]">
+                <div className="relative aspect-video w-full min-w-0 overflow-hidden rounded-[26px] border border-slate-200 bg-slate-900 shadow-[0_22px_55px_rgba(15,23,42,0.1)] lg:aspect-[7/5]">
                   <video
                     className="absolute inset-0 h-full w-full object-cover opacity-90"
                     autoPlay
