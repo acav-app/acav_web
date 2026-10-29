@@ -4,6 +4,7 @@ import { FiArrowRight } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
 import { AssociationCtaLink } from '../../components/association-cta'
+import BenefitsCards from './benefits-cards'
 
 export const metadata: Metadata = {
   title: 'Convenios y Beneficios | ACAV',
@@ -17,7 +18,12 @@ const sociosBeneficios = [
   { title: 'Travel Connect', image: '/images/beneficios/TRAVEL.png' },
   { title: 'Savia Group', image: '/images/beneficios/savia group.jpg' },
   { title: 'Macro', image: '/images/beneficios/MACFRO.jpg' },
-  { title: 'SanCor Salud', image: '/images/beneficios/images.jpg' },
+  {
+    title: 'SANCOR SEGUROS',
+    image: '/images/beneficios/images.jpg',
+    description:
+      'Descuentos de entre el 40% y el 45% sobre el precio de lista al asociarse como empresa. Cada socio de su agencia podrá acceder a precios exclusivos. (Mínimo 5 integrantes por grupo familiar)',
+  },
   { title: 'Howard Johnson Plaza Villa Carlos Paz', image: '/images/beneficios/HOWARD.jpg' },
   { title: 'Hotel 111', image: '/images/beneficios/HOTEL 111.png' },
   { title: 'Hospital Italiano Córdoba', image: '/images/beneficios/hospital italiano.png' },
@@ -78,27 +84,7 @@ export default function ConveniosYBeneficiosPage() {
             </h2>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {sociosBeneficios.map(({ title, image }) => (
-              <article
-                key={title}
-                className="group overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.1)]"
-              >
-                <div className="relative h-32 bg-white sm:h-40">
-                  <Image
-                    src={image}
-                    alt={title}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03] sm:p-5"
-                  />
-                </div>
-                <div className="flex min-h-14 items-center justify-center border-t border-slate-100 bg-slate-50/70 px-3 py-3 text-center">
-                  <h3 className="text-xs font-bold leading-5 text-slate-800 sm:text-sm">{title}</h3>
-                </div>
-              </article>
-            ))}
-          </div>
+          <BenefitsCards items={sociosBeneficios} />
 
           <div className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-[26px] bg-[#04112e] px-8 py-8 text-white md:px-10">
             <div>
