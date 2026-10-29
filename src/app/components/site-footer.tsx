@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { FiFacebook, FiHeart, FiInstagram, FiLinkedin, FiMail, FiMapPin, FiMessageCircle, FiPhone, FiYoutube } from 'react-icons/fi'
+import { FiFacebook, FiHeart, FiInstagram, FiLinkedin, FiMapPin, FiYoutube } from 'react-icons/fi'
 
 import { siteConfig } from '../config/site'
 import { AssociationCtaLink } from './association-cta'
@@ -47,31 +47,6 @@ export default function SiteFooter() {
               <div className="flex items-start gap-2.5">
                 <FiMapPin className="mt-1 text-[14px] text-white/60" />
                 <span>{siteConfig.contact.address}</span>
-              </div>
-              {siteConfig.contact.emails.map(({ label, address }) => (
-                <div key={address} className="flex items-start gap-2.5">
-                  <FiMail className="mt-1 text-[14px] text-white/60" />
-                  <a href={`mailto:${address}`} className="transition hover:text-white">
-                    {label}: {address}
-                  </a>
-                </div>
-              ))}
-              <div className="flex items-start gap-2.5">
-                <FiPhone className="mt-1 text-[14px] text-white/60" />
-                <a href={`tel:${siteConfig.contact.phoneHref}`} className="transition hover:text-white">
-                  Tel: {siteConfig.contact.phone}
-                </a>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <FiMessageCircle className="mt-1 text-[14px] text-white/60" />
-                <a
-                  href={`https://wa.me/${siteConfig.contact.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition hover:text-white"
-                >
-                  WhatsApp: {siteConfig.contact.phone}
-                </a>
               </div>
             </div>
 

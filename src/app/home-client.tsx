@@ -3,7 +3,9 @@
 import { useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
+import CountUp from 'react-countup'
+import { FaWhatsapp } from 'react-icons/fa'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper'
@@ -25,7 +27,6 @@ import {
   FiHeart,
   FiMapPin,
   FiMail,
-  FiMessageCircle,
   FiPercent,
   FiPhone,
   FiPlay,
@@ -72,6 +73,7 @@ const viewportTrigger = { once: true, margin: '-40px 0px -10% 0px' }
 
 export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
   const communitySwiper = useRef<SwiperType | null>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   return (
     <>
@@ -109,9 +111,26 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                       <Icon />
                     </div>
                     <div>
-                      <p className="text-xl font-bold leading-none sm:text-2xl">{stat.value}</p>
+                      <p className="text-xl font-bold leading-none sm:text-2xl">
+                        <span aria-label={stat.value}>
+                          {prefersReducedMotion ? (
+                            stat.value
+                          ) : (
+                            <CountUp
+                              end={Number(stat.value.replace(/[^\d.-]/g, ''))}
+                              prefix={stat.value.startsWith('+') ? '+' : ''}
+                              duration={2.2}
+                              delay={index * 0.12}
+                              enableScrollSpy
+                              scrollSpyOnce
+                            />
+                          )}
+                        </span>
+                      </p>
                       <p className="mt-1.5 text-[10px] font-bold uppercase text-white">{stat.label}</p>
-                      <p className="mt-0.5 text-[10px] font-bold uppercase text-white/60">{stat.detail}</p>
+                      {'detail' in stat && stat.detail ? (
+                        <p className="mt-0.5 text-[10px] font-bold uppercase text-white/60">{stat.detail}</p>
+                      ) : null}
                     </div>
                   </div>
                 )
@@ -230,6 +249,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   title: 'Empleabilidad ACAV',
                   desc: 'Conectamos talento con oportunidades. Publicá búsquedas o postulate a la plataforma líder de empleo turístico en Córdoba.',
                   cta: 'EXPLORAR EMPLEOS',
+                  href: '/servicios/empleabilidad',
                   metrics: [
                     { v: '120+', l: 'Ofertas activas' },
                     { v: '850+', l: 'Perfiles registrados' },
@@ -245,9 +265,10 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   title: 'Cursos ACAV',
                   desc: 'Capacitate docente y crecé profesionalmente. Accedé a cursos, certificaciones y talleres con beneficios exclusivos para socios.',
                   cta: 'VER CURSOS',
+                  href: '/servicios/capacitaciones',
                   metrics: [
                     { v: '35+', l: 'Cursos disponibles' },
-                    { v: '2000+', l: 'Alumnos capacitados' },
+                    { v: '1000+', l: 'Alumnos capacitados' },
                     { v: '15+', l: 'Certificaciones' },
                   ],
                   gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
@@ -265,7 +286,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     <h3 className="mt-2.5 text-[22px] font-bold leading-[1.1] md:text-[28px]">{p.title}</h3>
                     <p className="mt-3 text-[13px] leading-6 text-white/85 md:text-sm md:leading-7">{p.desc}</p>
                     <Link
-                      href="#"
+                      href={p.href}
                       className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-[11px] font-bold uppercase text-white ring-1 ring-inset ring-white/15 transition duration-300 hover:bg-white/15"
                     >
                       {p.cta}
@@ -316,6 +337,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     title: 'Empleabilidad ACAV',
                     desc: 'Conectamos talento con oportunidades.',
                     cta: 'EXPLORAR EMPLEOS',
+                    href: '/servicios/empleabilidad',
                     metrics: [
                       { v: '120+', l: 'Ofertas activas' },
                       { v: '850+', l: 'Perfiles registrados' },
@@ -331,9 +353,10 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     title: 'Cursos ACAV',
                     desc: 'Capacitate docente y crecé profesionalmente.',
                     cta: 'VER CURSOS',
+                    href: '/servicios/capacitaciones',
                     metrics: [
                       { v: '35+', l: 'Cursos disponibles' },
-                      { v: '2000+', l: 'Alumnos capacitados' },
+                      { v: '1000+', l: 'Alumnos capacitados' },
                       { v: '15+', l: 'Certificaciones' },
                     ],
                     gradient: 'from-[#ff7a2d] via-[#f85a16] to-[#e24a0b]',
@@ -370,7 +393,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                         ))}
                       </div>
                       <Link
-                        href="#"
+                        href={p.href}
                         className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-full bg-white/10 px-5 text-[11px] font-bold uppercase text-white ring-1 ring-inset ring-white/15"
                       >
                         {p.cta}
@@ -517,7 +540,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     Accedé a descuentos y condiciones preferenciales en hoteles, aerolíneas, asistencia al viajero y mucho más.
                   </p>
                   <Link
-                    href="#"
+                    href="/servicios/convenios-y-beneficios"
                     className="mt-5 inline-flex h-10 w-fit items-center justify-center gap-2 rounded-full bg-slate-900 px-5 text-[11px] font-bold uppercase text-white transition duration-300 hover:bg-slate-800"
                   >
                     VER BENEFICIOS
@@ -716,7 +739,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
 
               <div className="mt-10 flex justify-center md:mt-14">
                 <Link
-                  href="#"
+                  href="/institucional/quienes-somos"
                   className="relative -mb-8 inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-slate-900/60 px-6 text-[11px] font-bold uppercase text-white backdrop-blur-md transition duration-300 hover:bg-slate-900/80 md:-mb-12"
                 >
                   CONOCE TODA NUESTRA HISTORIA
@@ -896,15 +919,15 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                     Escribinos, llamanos o acercate a nuestra sede en el centro de Córdoba. Estamos para acompañar a las agencias de la provincia y potenciar el sector.
                   </p>
 
-                  <div className="mt-10 space-y-6">
+                  <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
                     {[
-                      { Icon: FiMapPin, label: 'Dirección', value: siteConfig.contact.address, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.contact.address)}` },
-                      ...siteConfig.contact.emails.map(({ label, address }) => ({ Icon: FiMail, label: `Email · ${label}`, value: address, href: `mailto:${address}` })),
-                      { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}` },
-                      { Icon: FiMessageCircle, label: 'WhatsApp', value: siteConfig.contact.phone, href: `https://wa.me/${siteConfig.contact.whatsapp}` },
-                      { Icon: FiCalendar, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },
-                    ].map(({ Icon, label, value, href }) => (
-                      <div key={label} className="flex gap-4 group">
+                      { Icon: FiMapPin, label: 'Dirección', value: siteConfig.contact.address, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.contact.address)}`, wide: true },
+                      ...siteConfig.contact.emails.map(({ label, address }) => ({ Icon: FiMail, label: `Email · ${label}`, value: address, href: `mailto:${address}`, wide: false })),
+                      { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}`, wide: false },
+                      { Icon: FaWhatsapp, label: 'WhatsApp', value: siteConfig.contact.whatsappDisplay, href: `https://wa.me/${siteConfig.contact.whatsapp}`, wide: false },
+                      { Icon: FiCalendar, label: 'Atención', value: 'Lunes a Viernes de 09 a 18 hs', href: null, wide: true },
+                    ].map(({ Icon, label, value, href, wide }) => (
+                      <div key={label} className={`group flex min-w-0 gap-3.5 ${wide ? 'sm:col-span-2' : ''}`}>
                         <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-slate-100 text-primary-500 transition group-hover:text-primary-600">
                           <Icon className="text-[17px]" />
                         </div>

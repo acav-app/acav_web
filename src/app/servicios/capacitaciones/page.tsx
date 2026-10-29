@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const metricas = [
   { value: '35+', label: 'Cursos disponibles' },
-  { value: '2000+', label: 'Alumnos capacitados' },
+  { value: '1000+', label: 'Alumnos capacitados' },
   { value: '15+', label: 'Certificaciones emitidas' },
 ]
 
@@ -50,15 +50,19 @@ const beneficios = [
 export default function CapacitacionesPage() {
   return (
     <PageAnimation>
-      <section className="py-section md:py-section-lg">
-        <div className="container">
+      <section className="service-hero service-hero--training relative isolate overflow-hidden bg-[linear-gradient(145deg,#15203B_0%,#1B2B50_55%,#15203B_100%)] text-white">
+        <div aria-hidden="true" className="service-hero__glow service-hero__glow--training-core" />
+        <div aria-hidden="true" className="service-hero__glow service-hero__glow--training-orbit" />
+        <div aria-hidden="true" className="service-hero__ring service-hero__ring--training" />
+        <div aria-hidden="true" className="service-hero__shade" />
+        <div className="container relative z-10 py-section md:py-section-lg">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
             <div>
-              <p className="text-[11px] font-bold uppercase text-primary-600">Servicios · Campus educativo</p>
-              <h1 className="mt-3 text-[28px] font-bold leading-[1.1] text-slate-900 md:text-[38px]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-300">Servicios · Campus educativo</p>
+              <h1 className="mt-3 text-[28px] font-bold leading-[1.1] text-white md:text-[38px]">
                 Capacitaciones y Cursos
               </h1>
-              <p className="mt-5 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+              <p className="mt-5 text-sm leading-7 text-white/75 md:text-base md:leading-8">
                 Capacitate y crecé profesionalmente. Accedé a cursos, certificaciones y talleres con beneficios
                 exclusivos para socios, dictados por referentes del turismo.
               </p>
@@ -73,14 +77,14 @@ export default function CapacitacionesPage() {
                 </Link>
                 <Link
                   href="mailto:eventos@acav.com.ar"
-                  className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
+                  className="inline-flex h-12 items-center gap-2 rounded-full border border-white/25 bg-white/[0.03] px-7 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   Consultar agenda
                 </Link>
               </div>
             </div>
 
-            <div className="relative h-[280px] sm:h-[360px] md:h-[400px] lg:h-full w-full min-h-[300px] rounded-[26px] overflow-hidden shadow-lg border border-slate-200">
+            <div className="relative h-[280px] min-h-[300px] w-full overflow-hidden rounded-[26px] border border-white/20 shadow-[0_24px_70px_rgba(4,13,36,0.35)] sm:h-[360px] md:h-[400px] lg:h-full">
               <Image
                 src="/images/cursos-banner.jpg"
                 alt="Cursos ACAV"
@@ -94,7 +98,7 @@ export default function CapacitacionesPage() {
         </div>
       </section>
 
-      <section className="pb-section md:pb-section-lg">
+      <section className="pt-8 pb-section sm:pt-10 md:pt-14 md:pb-section-lg">
         <div className="container">
           <div className="max-w-2xl">
             <p className="text-[11px] font-bold uppercase text-primary-600">Propuesta formativa</p>

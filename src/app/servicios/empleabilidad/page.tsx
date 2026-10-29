@@ -40,15 +40,19 @@ const pasos = [
 export default function EmpleabilidadPage() {
   return (
     <PageAnimation>
-      <section className="py-section md:py-section-lg">
-        <div className="container">
+      <section className="service-hero service-hero--employment relative isolate overflow-hidden bg-[linear-gradient(145deg,#15203B_0%,#1B2B50_55%,#15203B_100%)] text-white">
+        <div aria-hidden="true" className="service-hero__glow service-hero__glow--employment-one" />
+        <div aria-hidden="true" className="service-hero__glow service-hero__glow--employment-two" />
+        <div aria-hidden="true" className="service-hero__sweep service-hero__sweep--employment" />
+        <div aria-hidden="true" className="service-hero__shade" />
+        <div className="container relative z-10 py-section md:py-section-lg">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-14">
             <div>
-              <p className="text-[11px] font-bold uppercase text-primary-600">Servicios · Plataforma laboral</p>
-              <h1 className="mt-3 text-[28px] font-bold leading-[1.1] text-slate-900 md:text-[38px]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent-300">Servicios · Plataforma laboral</p>
+              <h1 className="mt-3 text-[28px] font-bold leading-[1.1] text-white md:text-[38px]">
                 Red de Empleabilidad
               </h1>
-              <p className="mt-5 text-sm leading-7 text-slate-600 md:text-base md:leading-8">
+              <p className="mt-5 text-sm leading-7 text-white/75 md:text-base md:leading-8">
                 Conectamos talento con oportunidades. Publicá búsquedas o postulate a la plataforma de empleo
                 turístico de Córdoba, destinada a vincular agencias de viajes con profesionales del sector.
               </p>
@@ -63,14 +67,14 @@ export default function EmpleabilidadPage() {
                 </Link>
                 <Link
                    href="https://acav-empleos.vercel.app/"
-                  className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
+                  className="inline-flex h-12 items-center gap-2 rounded-full border border-white/25 bg-white/[0.03] px-7 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   Publicar una búsqueda
                 </Link>
               </div>
             </div>
 
-            <div className="relative h-[280px] sm:h-[360px] md:h-[400px] lg:h-full w-full min-h-[300px] rounded-[26px] overflow-hidden shadow-lg border border-slate-200">
+            <div className="relative h-[280px] min-h-[300px] w-full overflow-hidden rounded-[26px] border border-white/20 shadow-[0_24px_70px_rgba(4,13,36,0.35)] sm:h-[360px] md:h-[400px] lg:h-full">
               <Image
                 src="/images/red-empleabilidad-500x500.jpg"
                 alt="Empleabilidad ACAV"
@@ -84,7 +88,7 @@ export default function EmpleabilidadPage() {
         </div>
       </section>
 
-      <section className="pb-section md:pb-section-lg">
+      <section className="pt-8 pb-section sm:pt-10 md:pt-14 md:pb-section-lg">
         <div className="container">
           <div className="grid gap-5 md:grid-cols-2">
             {[

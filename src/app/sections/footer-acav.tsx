@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiInstagram, FiLinkedin, FiMail, FiMapPin, FiMessageCircle, FiPhone, FiYoutube } from "react-icons/fi";
+import { FiInstagram, FiLinkedin, FiMail, FiMapPin, FiPhone, FiYoutube } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 import { siteConfig } from "../config/site";
 import { AssociationCtaLink } from "../components/association-cta";
@@ -49,14 +50,14 @@ export default function FooterAcav() {
               ) : null}
               {contact.phone ? (
                 <div className="flex items-start gap-2.5">
-                  <FiMessageCircle className="mt-1 text-sm text-white/70" />
+                  <FaWhatsapp className="mt-1 text-sm text-white/70" />
                   <a
                     href={`https://wa.me/${contact.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition hover:text-white"
                   >
-                    WhatsApp: {contact.phone}
+                    WhatsApp: {contact.whatsappDisplay}
                   </a>
                 </div>
               ) : null}

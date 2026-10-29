@@ -7,11 +7,11 @@ import {
   FiInstagram,
   FiLinkedin,
   FiMail,
-  FiMessageCircle,
   FiMapPin,
   FiPhone,
   FiYoutube,
 } from 'react-icons/fi'
+import { FaWhatsapp } from 'react-icons/fa'
 
 import PageAnimation from '../components/page-animation'
 import ContactForm from './contact-form'
@@ -20,7 +20,7 @@ import { siteConfig } from '../config/site'
 export const metadata: Metadata = {
   title: 'Contacto | ACAV',
   description:
-    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2, C.P. X5000IAC - Córdoba Argentina. +54 9 3518 74-7119.',
+    'Contactate con la Asociación Cordobesa de Agencias de Viajes: Obispo Salguero 169 1º Piso, Oficinas Nº 1 y 2, C.P. X5000IAC - Córdoba Argentina. +54 9 0351 423-1643.',
 }
 
 const DIRECCION = siteConfig.contact.address
@@ -32,21 +32,24 @@ const datos = [
     label: 'Dirección',
     value: DIRECCION,
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(DIRECCION)}`,
+    wide: true,
   },
   ...siteConfig.contact.emails.map(({ label, address }) => ({
     Icon: FiMail,
     label: `Email · ${label}`,
     value: address,
     href: `mailto:${address}`,
+    wide: false,
   })),
-  { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}` },
+  { Icon: FiPhone, label: 'Teléfono', value: siteConfig.contact.phone, href: `tel:${siteConfig.contact.phoneHref}`, wide: false },
   {
-    Icon: FiMessageCircle,
+    Icon: FaWhatsapp,
     label: 'WhatsApp',
-    value: siteConfig.contact.phone,
+    value: siteConfig.contact.whatsappDisplay,
     href: `https://wa.me/${siteConfig.contact.whatsapp}`,
+    wide: false,
   },
-  { Icon: FiClock, label: 'Atención', value: 'Lunes a viernes de 9 a 17 h', href: null },
+  { Icon: FiClock, label: 'Atención', value: 'Lunes a Viernes de 09 a 18 hs', href: null, wide: true },
 ]
 
 const redes = [
@@ -76,9 +79,9 @@ export default function ContactoPage() {
                   Escribinos, llamanos o acercate a nuestra sede en el centro de Córdoba. Estamos para acompañar a las agencias de la provincia y potenciar el sector.
                 </p>
 
-                <div className="mt-10 space-y-6">
-                  {datos.map(({ Icon, label, value, href }) => (
-                    <div key={label} className="flex gap-4 group">
+                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+                  {datos.map(({ Icon, label, value, href, wide }) => (
+                    <div key={label} className={`group flex min-w-0 gap-3.5 ${wide ? 'sm:col-span-2' : ''}`}>
                       <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-slate-100 text-primary-500 transition group-hover:text-primary-600">
                         <Icon className="text-[17px]" />
                       </div>

@@ -135,7 +135,7 @@ export const siteConfig = {
     stats: [
       { value: "+60", label: "años", detail: "de trayectoria" },
       { value: "+300", label: "agencias", detail: "asociadas" },
-      { value: "+120", label: "capacitaciones", detail: "el ultimo año" },
+      { value: "+1000", label: "capacitados" },
       { value: "+3000", label: "turistas", detail: "mercado de viajes" },
     ],
   },
@@ -148,9 +148,10 @@ export const siteConfig = {
       { label: "Socios", address: "socios@acav.com.ar" },
       { label: "Administración", address: "administracion@acav.com.ar" },
     ],
-    phone: "+54 9 3518 74-7119",
-    phoneHref: "+5493518747119",
+    phone: "+54 9 0351 423-1643",
+    phoneHref: "+54903514231643",
     whatsapp: "5493518747119",
+    whatsappDisplay: "+54 9 3518 74-7119",
     social: {
       instagram: null as string | null,
       youtube: null as string | null,
@@ -207,7 +208,7 @@ export const siteConfig = {
       cta: { label: "Ver cursos", href: "https://acav-cursos.vercel.app/" },
       metrics: [
         { value: "35+", label: "Cursos disponibles" },
-        { value: "2000+", label: "Alumnos capacitados" },
+        { value: "1000+", label: "Alumnos capacitados" },
         { value: "15+", label: "Certificaciones emitidas" },
       ],
     },

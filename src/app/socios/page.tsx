@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import { FiArrowRight, FiCheckCircle, FiSearch } from 'react-icons/fi'
 
 import PageAnimation from '../components/page-animation'
@@ -27,16 +26,11 @@ export default async function SociosPage() {
 
   return (
     <PageAnimation>
-      <section className="relative overflow-hidden bg-[#04112e] text-white">
-        <Image
-          src="/images/bg1.png"
-          alt=""
-          fill
-          className="object-cover opacity-40"
-          priority
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.94)_0%,rgba(2,6,23,0.72)_48%,rgba(2,6,23,0.42)_100%)]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#04112e]/80 via-transparent to-transparent" />
+      <section className="relative isolate overflow-hidden bg-[linear-gradient(145deg,#15203B_0%,#1B2B50_55%,#15203B_100%)] text-white">
+        <div aria-hidden="true" className="socios-hero-orb socios-hero-orb--primary" />
+        <div aria-hidden="true" className="socios-hero-orb socios-hero-orb--secondary" />
+        <div aria-hidden="true" className="socios-hero-orb socios-hero-orb--tertiary" />
+        <div aria-hidden="true" className="socios-hero-shade" />
 
         <div className="container relative z-10 py-section md:py-section-lg">
           <div className="max-w-2xl">

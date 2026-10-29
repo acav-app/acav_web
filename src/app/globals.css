@@ -2,3 +2,290 @@
 @tailwind components;
 @tailwind utilities;
 
+.socios-hero-orb {
+  position: absolute;
+  z-index: 0;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(clamp(48px, 8vw, 112px));
+  will-change: transform;
+}
+
+.socios-hero-orb--primary {
+  top: -48%;
+  right: -4%;
+  width: clamp(19rem, 43vw, 42rem);
+  background: radial-gradient(circle, rgb(249 73 16 / 38%) 0%, rgb(249 73 16 / 18%) 36%, transparent 72%);
+  animation: socios-hero-drift-one 18s ease-in-out infinite alternate;
+}
+
+.socios-hero-orb--secondary {
+  bottom: -82%;
+  left: 20%;
+  width: clamp(23rem, 48vw, 46rem);
+  background: radial-gradient(circle, rgb(255 112 77 / 27%) 0%, rgb(249 73 16 / 12%) 42%, transparent 72%);
+  animation: socios-hero-drift-two 22s ease-in-out -8s infinite alternate;
+}
+
+.socios-hero-orb--tertiary {
+  top: -95%;
+  left: 37%;
+  width: clamp(15rem, 28vw, 27rem);
+  background: radial-gradient(circle, rgb(249 73 16 / 19%) 0%, transparent 70%);
+  animation: socios-hero-drift-three 20s ease-in-out -5s infinite alternate;
+}
+
+.socios-hero-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(21 32 59 / 34%) 0%, transparent 62%),
+    linear-gradient(0deg, rgb(21 32 59 / 24%), transparent 45%);
+}
+
+@keyframes socios-hero-drift-one {
+  from { transform: translate3d(0, 0, 0) scale(0.94); }
+  to { transform: translate3d(-8%, 12%, 0) scale(1.08); }
+}
+
+@keyframes socios-hero-drift-two {
+  from { transform: translate3d(0, 0, 0) scale(0.96); }
+  to { transform: translate3d(12%, -14%, 0) scale(1.08); }
+}
+
+@keyframes socios-hero-drift-three {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-16%, 20%, 0) scale(0.88); }
+}
+
+@media (max-width: 640px) {
+  .socios-hero-orb {
+    filter: blur(58px);
+  }
+
+  .socios-hero-orb--primary {
+    top: -24%;
+    right: -42%;
+    width: 27rem;
+  }
+
+  .socios-hero-orb--secondary {
+    bottom: -64%;
+    left: -36%;
+    width: 30rem;
+  }
+
+  .socios-hero-orb--tertiary {
+    top: -82%;
+    left: 4%;
+    width: 20rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .socios-hero-orb {
+    animation: none;
+  }
+}
+
+.service-hero__glow,
+.service-hero__sweep,
+.service-hero__ring {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.service-hero__glow {
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  filter: blur(clamp(52px, 8vw, 112px));
+  will-change: transform, opacity;
+}
+
+.service-hero__glow--employment-one {
+  top: -54%;
+  left: 10%;
+  width: clamp(22rem, 40vw, 40rem);
+  background: radial-gradient(circle, rgb(249 73 16 / 30%) 0%, rgb(249 73 16 / 13%) 40%, transparent 72%);
+  animation: employment-glow-flow 17s ease-in-out infinite alternate;
+}
+
+.service-hero__glow--employment-two {
+  right: -8%;
+  bottom: -75%;
+  width: clamp(25rem, 45vw, 44rem);
+  background: radial-gradient(circle, rgb(255 112 77 / 27%) 0%, rgb(249 73 16 / 10%) 43%, transparent 72%);
+  animation: employment-glow-counterflow 21s ease-in-out -6s infinite alternate;
+}
+
+.service-hero__sweep--employment {
+  top: -35%;
+  bottom: -35%;
+  left: -38%;
+  width: clamp(12rem, 22vw, 22rem);
+  transform: rotate(22deg);
+  background: linear-gradient(90deg, transparent, rgb(249 73 16 / 8%), transparent);
+  filter: blur(22px);
+  animation: employment-light-sweep 24s ease-in-out infinite;
+}
+
+.service-hero__glow--training-core {
+  top: -66%;
+  right: 7%;
+  width: clamp(22rem, 38vw, 38rem);
+  background: radial-gradient(circle, rgb(249 73 16 / 31%) 0%, rgb(249 73 16 / 12%) 42%, transparent 72%);
+  animation: training-glow-pulse 9s ease-in-out infinite;
+}
+
+.service-hero__glow--training-orbit {
+  bottom: -88%;
+  left: 22%;
+  width: clamp(25rem, 43vw, 42rem);
+  background: radial-gradient(circle, rgb(255 112 77 / 24%) 0%, rgb(249 73 16 / 9%) 45%, transparent 72%);
+  animation: training-glow-orbit 16s ease-in-out -4s infinite alternate;
+}
+
+.service-hero__ring--training {
+  top: 50%;
+  left: 70%;
+  width: clamp(24rem, 48vw, 48rem);
+  aspect-ratio: 1.9;
+  border: 1px solid rgb(255 160 128 / 14%);
+  border-radius: 50%;
+  box-shadow: 0 0 48px rgb(249 73 16 / 7%), inset 0 0 42px rgb(249 73 16 / 6%);
+  transform: translate(-50%, -50%) rotate(-18deg);
+  animation: training-ring-breathe 12s ease-in-out infinite alternate;
+}
+
+.service-hero__glow--benefits-one {
+  top: -62%;
+  right: 16%;
+  width: clamp(22rem, 39vw, 39rem);
+  background: radial-gradient(circle, rgb(249 73 16 / 29%) 0%, rgb(249 73 16 / 12%) 42%, transparent 72%);
+  animation: benefits-glow-diagonal 19s ease-in-out infinite alternate;
+}
+
+.service-hero__glow--benefits-two {
+  bottom: -78%;
+  left: -6%;
+  width: clamp(26rem, 45vw, 44rem);
+  background: radial-gradient(circle, rgb(255 112 77 / 24%) 0%, rgb(249 73 16 / 9%) 44%, transparent 72%);
+  animation: benefits-glow-bloom 23s ease-in-out -7s infinite alternate;
+}
+
+.service-hero__shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(21 32 59 / 36%) 0%, transparent 65%),
+    linear-gradient(0deg, rgb(21 32 59 / 20%), transparent 48%);
+}
+
+@keyframes employment-glow-flow {
+  from { transform: translate3d(-5%, 0, 0) scale(0.92); }
+  to { transform: translate3d(20%, 18%, 0) scale(1.1); }
+}
+
+@keyframes employment-glow-counterflow {
+  from { transform: translate3d(0, 0, 0) scale(0.94); }
+  to { transform: translate3d(-18%, -12%, 0) scale(1.08); }
+}
+
+@keyframes employment-light-sweep {
+  0%, 12% { left: -38%; opacity: 0; }
+  28% { opacity: 1; }
+  72% { opacity: 0.8; }
+  100% { left: 112%; opacity: 0; }
+}
+
+@keyframes training-glow-pulse {
+  0%, 100% { opacity: 0.68; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes training-glow-orbit {
+  from { transform: translate3d(0, 0, 0) scale(0.94); }
+  to { transform: translate3d(13%, -15%, 0) scale(1.1); }
+}
+
+@keyframes training-ring-breathe {
+  from { opacity: 0.42; transform: translate(-50%, -50%) rotate(-18deg) scale(0.94); }
+  to { opacity: 0.9; transform: translate(-50%, -50%) rotate(4deg) scale(1.06); }
+}
+
+@keyframes benefits-glow-diagonal {
+  from { transform: translate3d(0, -2%, 0) scale(0.94); }
+  to { transform: translate3d(-13%, 17%, 0) scale(1.08); }
+}
+
+@keyframes benefits-glow-bloom {
+  from { opacity: 0.62; transform: translate3d(0, 0, 0) scale(0.92); }
+  to { opacity: 0.96; transform: translate3d(14%, -10%, 0) scale(1.08); }
+}
+
+@media (max-width: 640px) {
+  .service-hero__glow {
+    filter: blur(58px);
+  }
+
+  .service-hero__glow--employment-one {
+    top: -24%;
+    left: -38%;
+    width: 27rem;
+  }
+
+  .service-hero__glow--employment-two {
+    right: -48%;
+    bottom: -64%;
+    width: 30rem;
+  }
+
+  .service-hero__sweep--employment {
+    left: -58%;
+    width: 10rem;
+    opacity: 0.65;
+  }
+
+  .service-hero__glow--training-core {
+    top: -24%;
+    right: -42%;
+    width: 28rem;
+  }
+
+  .service-hero__glow--training-orbit {
+    bottom: -64%;
+    left: -42%;
+    width: 29rem;
+  }
+
+  .service-hero__ring--training {
+    left: 78%;
+    width: 28rem;
+    opacity: 0.65;
+  }
+
+  .service-hero__glow--benefits-one {
+    top: -24%;
+    right: -42%;
+    width: 27rem;
+  }
+
+  .service-hero__glow--benefits-two {
+    bottom: -62%;
+    left: -42%;
+    width: 29rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-hero__glow,
+  .service-hero__sweep,
+  .service-hero__ring {
+    animation: none;
+  }
+}
+
