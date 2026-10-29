@@ -27,6 +27,15 @@ const fadeUp = {
 
 const viewportTrigger = { once: true, margin: '-40px 0px -10% 0px' }
 
+const associationNavGroup = siteConfig.nav.items.find((item) =>
+  item.children?.some((child) => child.href === siteConfig.nav.cta.href),
+)
+
+const footerNavColumns = Array.from(
+  { length: Math.ceil(siteConfig.nav.items.length / 2) },
+  (_, columnIndex) => siteConfig.nav.items.slice(columnIndex * 2, columnIndex * 2 + 2),
+)
+
 export default function SiteFooter() {
   return (
     <footer className="bg-[#04112e] pt-section text-white">
@@ -72,41 +81,52 @@ export default function SiteFooter() {
           <motion.nav
             variants={staggerWrap}
             aria-label="Navegación del pie de página"
-            className="grid min-w-0 grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid min-w-0 grid-cols-1 gap-x-8 gap-y-8 xs:grid-cols-2 xl:grid-cols-3"
           >
-            {siteConfig.nav.items.map((item) => (
-              <motion.div key={item.label} variants={fadeUp} className="min-w-0">
-                <Link
-                  href={item.href}
-                  className="text-[11px] font-bold uppercase text-white/80 transition hover:text-white"
-                >
-                  {item.label}
-                </Link>
-                {item.children ? (
-                  <div className="mt-4 flex flex-col gap-2.5 text-sm text-white/70">
-                    {item.children
-                      .filter((child) => !(child.href === item.href && child.label === item.label))
-                      .map((child) =>
-                        child.href === siteConfig.nav.cta.href ? (
-                          <AssociationCtaLink key={child.href} className="transition hover:text-white">
+            {footerNavColumns.map((column, columnIndex) => (
+              <motion.div
+                key={columnIndex}
+                variants={fadeUp}
+                className="flex min-w-0 flex-col gap-7"
+              >
+                {column.map((item) => (
+                  <div key={item.href} className="min-w-0">
+                    <Link
+                      href={item.href}
+                      className="text-[11px] font-bold uppercase text-white/80 transition hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                    {item.children ? (
+                      <div className="mt-3 flex flex-col items-start gap-2.5 text-sm text-white/70">
+                        {item.children
+                          .filter(
+                            (child) =>
+                              !(child.href === item.href && child.label === item.label) &&
+                              child.href !== siteConfig.nav.cta.href,
+                          )
+                          .map((child) => (
+                            <Link key={child.href} href={child.href} className="transition hover:text-white">
+                              {child.label}
+                            </Link>
+                          ))}
+                        {associationNavGroup === item ? (
+                          <AssociationCtaLink className="mt-1 inline-flex h-9 items-center justify-center rounded-full bg-accent-500 px-4 text-[11px] font-bold uppercase text-white shadow-[0_8px_20px_rgba(249,73,16,0.22)] transition hover:-translate-y-0.5 hover:bg-accent-600">
                             {siteConfig.nav.cta.label}
                           </AssociationCtaLink>
-                        ) : (
-                          <Link key={child.href} href={child.href} className="transition hover:text-white">
-                            {child.label}
-                          </Link>
-                        ),
-                      )}
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
+                ))}
+
+                {!associationNavGroup && columnIndex === footerNavColumns.length - 1 ? (
+                  <AssociationCtaLink className="inline-flex h-9 w-fit items-center justify-center rounded-full bg-accent-500 px-4 text-[11px] font-bold uppercase text-white shadow-[0_8px_20px_rgba(249,73,16,0.22)] transition hover:-translate-y-0.5 hover:bg-accent-600">
+                    {siteConfig.nav.cta.label}
+                  </AssociationCtaLink>
                 ) : null}
               </motion.div>
             ))}
-
-            <motion.div variants={fadeUp}>
-              <AssociationCtaLink className="inline-flex h-10 items-center justify-center rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white shadow-[0_10px_24px_rgba(249,73,16,0.24)] transition hover:-translate-y-0.5 hover:bg-accent-600">
-                {siteConfig.nav.cta.label}
-              </AssociationCtaLink>
-            </motion.div>
           </motion.nav>
         </motion.div>
 
