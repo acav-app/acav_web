@@ -37,6 +37,7 @@ import {
 } from 'react-icons/fi'
 
 import HeroBanner from './components/hero-banner'
+import HomeEventsPopup from './components/home-events-popup'
 import Navbar from './components/navbar'
 import SiteFooter from './components/site-footer'
 import InstagramFeedWidget from './components/instagram-feed-widget'
@@ -73,6 +74,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
   return (
     <>
       <Navbar />
+      <HomeEventsPopup />
 
       <main className="bg-white pt-16 md:pt-[72px]">
         {/* =============================================================
@@ -229,7 +231,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            PROJECTS ACAV
         ============================================================= */}
-        <section id="servicios" className="pb-8 sm:pb-10 md:pb-section-lg">
+        <section id="servicios" className="pb-[clamp(3rem,7vw,6rem)]">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -274,7 +276,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               ].map((p) => (
                 <article
                   key={p.title}
-                  className={`relative isolate overflow-hidden rounded-[24px] border border-slate-900/10 bg-gradient-to-br ${p.gradient} px-5 pb-6 pt-6 text-white shadow-[0_24px_60px_rgba(6,28,74,0.28)] sm:px-6 sm:pt-7 md:px-7 md:pb-7 md:pt-8`}
+                  className={`relative isolate overflow-hidden rounded-[24px] border border-slate-900/10 bg-gradient-to-br ${p.gradient} p-4 text-white shadow-[0_24px_60px_rgba(6,28,74,0.28)] md:p-5 lg:p-6`}
                 >
                   <div className="relative z-10 max-w-full sm:max-w-[46%]">
                     <p className="text-[10px] font-bold uppercase text-white/70">{p.eyebrow}</p>
@@ -362,7 +364,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                 ].map((p) => (
                   <SwiperSlide key={p.title}>
                     <article
-                      className={`relative isolate overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br ${p.gradient} px-5 pb-5 pt-5 text-white`}
+                      className={`relative isolate overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br ${p.gradient} p-4 text-white`}
                     >
                       <p className="text-[10px] font-bold uppercase text-white/70">{p.eyebrow}</p>
                       <h3 className="mt-2 text-2xl font-bold leading-[1.1]">{p.title}</h3>
@@ -517,7 +519,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             </div>
 
             <div className="relative mt-8 md:mt-10">
-              <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] sm:px-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 md:px-7 md:py-6 min-w-0">
+              <div className="grid gap-4 overflow-hidden rounded-[26px] border border-slate-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] md:p-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-5 lg:p-6 min-w-0">
                 <div className="relative h-[220px] overflow-hidden rounded-[22px] sm:h-[260px] md:h-full">
                   <Image
                     src="/images/descuentos_exclusivos.jpg"
@@ -529,7 +531,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02)_0%,rgba(15,23,42,0.18)_50%,rgba(15,23,42,0.38)_100%)]" />
                 </div>
 
-                <div className="flex flex-col justify-center rounded-[22px] border border-slate-100 bg-slate-50/50 px-4 py-5 sm:px-5 sm:py-6 md:p-8">
+                <div className="flex flex-col justify-center rounded-[22px] border border-slate-100 bg-slate-50/50 p-4 md:p-5 lg:p-6">
                   <h3 className="text-lg font-bold text-slate-900 md:text-xl">Descuentos exclusivos</h3>
                   <p className="mt-3 text-sm leading-7 text-slate-600">
                     Accedé a descuentos y condiciones preferenciales en hoteles, aerolíneas, asistencia al viajero y mucho más.
@@ -585,7 +587,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
         {/* =============================================================
            HISTORY (mobile slider / desktop grid)
         ============================================================= */}
-        <section id="historia" className="pb-section md:pb-section-lg">
+        <section id="historia" className="pb-6 md:pb-8">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -593,7 +595,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             variants={sectionReveal}
             className="container"
           >
-            <div className="relative overflow-hidden rounded-[28px] md:rounded-[32px] bg-[linear-gradient(135deg,#0a2e6d_0%,#071f4e_45%,#040f2d_100%)] px-5 pb-8 pt-8 text-white shadow-[0_30px_70px_rgba(4,15,45,0.35)] md:px-10 md:pb-12 md:pt-12">
+            <div className="relative overflow-hidden rounded-[28px] md:rounded-[32px] bg-[linear-gradient(135deg,#0a2e6d_0%,#071f4e_45%,#040f2d_100%)] p-4 text-white shadow-[0_30px_70px_rgba(4,15,45,0.35)] md:p-5 lg:p-6">
               <div className="mb-10 max-w-lg md:mb-14">
                 <p className="text-[11px] font-bold uppercase text-primary-200">NUESTRA HISTORIA</p>
                 <h2 className="mt-4 text-[26px] font-bold leading-[1.1] md:text-[32px]">
@@ -766,7 +768,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
             variants={sectionReveal}
             className="container"
           >
-            <div className="grid gap-7 rounded-[24px] md:rounded-[28px] border border-slate-200 bg-slate-50/70 px-4 py-6 shadow-[0_22px_60px_rgba(15,23,42,0.06)] overflow-hidden sm:px-5 sm:py-7 md:gap-10 md:px-10 md:py-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.6fr)] lg:gap-12">
+            <div className="grid gap-7 rounded-[24px] md:rounded-[28px] border border-slate-200 bg-slate-50/70 p-4 shadow-[0_22px_60px_rgba(15,23,42,0.06)] overflow-hidden md:gap-10 md:p-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.6fr)] lg:gap-12 lg:p-6">
               <div className="w-full min-w-0">
                 <p className="text-[11px] font-bold uppercase text-primary-600">ASOCIATE A ACAV</p>
                 <h2 className="mt-4 max-w-md text-[26px] font-bold leading-[1.1] text-slate-900 md:text-[30px]">
@@ -901,7 +903,7 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
               </div>
 
               {/* Columna Derecha: Formulario Minimalista */}
-              <div className="flex flex-col justify-center rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm md:p-8">
+              <div className="flex flex-col justify-center rounded-3xl border border-slate-200/80 bg-white p-4 shadow-sm md:p-5 lg:p-6">
                 <div className="mb-6 text-left">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-primary-500">¿Tienes dudas?</p>
                   <h2 className="mt-1.5 text-xl font-extrabold text-slate-900 md:text-2xl">Enviá un mensaje</h2>
