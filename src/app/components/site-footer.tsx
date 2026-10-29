@@ -27,19 +27,6 @@ const fadeUp = {
 
 const viewportTrigger = { once: true, margin: '-40px 0px -10% 0px' }
 
-const sociosNavGroup = siteConfig.nav.items.find((item) =>
-  item.children?.some((child) => child.href === siteConfig.nav.cta.href),
-)
-
-const footerNavigationItems = siteConfig.nav.items.flatMap((item) => {
-  if (!item.children) return [item]
-  return item === sociosNavGroup ? item.children : []
-})
-
-const footerNavGroups = siteConfig.nav.items.filter(
-  (item) => item.children && item !== sociosNavGroup,
-)
-
 export default function SiteFooter() {
   return (
     <footer className="bg-[#04112e] pt-section text-white">
@@ -52,7 +39,7 @@ export default function SiteFooter() {
       >
         <motion.div
           variants={staggerWrap}
-          className="grid gap-8 pb-section sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-[1.4fr_repeat(5,minmax(0,1fr))]"
+          className="grid gap-10 pb-section lg:grid-cols-[minmax(0,0.85fr)_minmax(0,2fr)] lg:gap-12"
         >
           <motion.div variants={fadeUp}>
             <Image src="/images/logo.png" alt="ACAV" width={180} height={56} className="h-11 w-auto" />
@@ -82,61 +69,45 @@ export default function SiteFooter() {
             </div>
           </motion.div>
 
-          <motion.div variants={fadeUp}>
-            <p className="text-[11px] font-bold uppercase text-white/80">Navegación</p>
-            <div className="mt-5 flex flex-col gap-2.5 text-sm text-white/70">
-              {footerNavigationItems.map((item) =>
-                item.href === siteConfig.nav.cta.href ? (
-                  <AssociationCtaLink key={item.href} className="transition hover:text-white">
-                    {siteConfig.nav.cta.label}
-                  </AssociationCtaLink>
-                ) : (
-                  <Link key={item.href} href={item.href} className="transition hover:text-white">
-                    {item.label}
-                  </Link>
-                ),
-              )}
-            </div>
-          </motion.div>
-
-          {footerNavGroups.map((group) => (
-            <motion.div key={group.href} variants={fadeUp}>
-              <Link
-                href={group.href}
-                className="text-[11px] font-bold uppercase text-white/80 transition hover:text-white"
-              >
-                {group.label}
-              </Link>
-              <div className="mt-5 flex flex-col gap-2.5 text-sm text-white/70">
-                {group.children?.map((link) =>
-                  link.href === siteConfig.nav.cta.href ? (
-                    <AssociationCtaLink key={link.href} className="transition hover:text-white">
-                      {siteConfig.nav.cta.label}
-                    </AssociationCtaLink>
-                  ) : (
-                    <Link key={link.href} href={link.href} className="transition hover:text-white">
-                      {link.label}
-                    </Link>
-                  ),
-                )}
-              </div>
-            </motion.div>
-          ))}
-
-          <motion.div variants={fadeUp}>
-            <p className="text-[11px] font-bold uppercase text-white/80">Alianzas institucionales</p>
-            <div className="mt-5 grid grid-cols-1 gap-2.5">
-              {(siteConfig.contact.institutionalLogos ?? []).map((l) => (
-                <a
-                  key={l.label}
-                  href={l.href ?? '#'}
-                  className="inline-flex h-12 items-center justify-start rounded-xl border border-white/10 bg-white/5 px-4 transition hover:border-white/20 hover:bg-white/10"
+          <motion.nav
+            variants={staggerWrap}
+            aria-label="Navegación del pie de página"
+            className="grid min-w-0 grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
+          >
+            {siteConfig.nav.items.map((item) => (
+              <motion.div key={item.label} variants={fadeUp} className="min-w-0">
+                <Link
+                  href={item.href}
+                  className="text-[11px] font-bold uppercase text-white/80 transition hover:text-white"
                 >
-                  <Image src={l.src} alt={l.label} width={100} height={30} className="h-6 w-auto" />
-                </a>
-              ))}
-            </div>
-          </motion.div>
+                  {item.label}
+                </Link>
+                {item.children ? (
+                  <div className="mt-4 flex flex-col gap-2.5 text-sm text-white/70">
+                    {item.children
+                      .filter((child) => !(child.href === item.href && child.label === item.label))
+                      .map((child) =>
+                        child.href === siteConfig.nav.cta.href ? (
+                          <AssociationCtaLink key={child.href} className="transition hover:text-white">
+                            {siteConfig.nav.cta.label}
+                          </AssociationCtaLink>
+                        ) : (
+                          <Link key={child.href} href={child.href} className="transition hover:text-white">
+                            {child.label}
+                          </Link>
+                        ),
+                      )}
+                  </div>
+                ) : null}
+              </motion.div>
+            ))}
+
+            <motion.div variants={fadeUp}>
+              <AssociationCtaLink className="inline-flex h-10 items-center justify-center rounded-full bg-accent-500 px-5 text-[11px] font-bold uppercase text-white shadow-[0_10px_24px_rgba(249,73,16,0.24)] transition hover:-translate-y-0.5 hover:bg-accent-600">
+                {siteConfig.nav.cta.label}
+              </AssociationCtaLink>
+            </motion.div>
+          </motion.nav>
         </motion.div>
 
         <div className="h-px w-full bg-white/10" />
