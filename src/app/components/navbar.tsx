@@ -14,6 +14,7 @@ const easeOutCubic = [0.22, 1, 0.36, 1] as const
 
 export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean; bgLight?: boolean; navCenter?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [expandedMobileItem, setExpandedMobileItem] = useState<number | null>(null)
 
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -122,9 +123,12 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
 
             <button
               type="button"
-              onClick={() => setMenuOpen((v) => !v)}
+              onClick={() => {
+                setExpandedMobileItem(null)
+                setMenuOpen((v) => !v)
+              }}
               className="relative z-30 inline-flex size-11 items-center justify-center rounded-full bg-slate-900 text-white transition duration-300 hover:bg-slate-800 md:hidden"
-              aria-label="Abrir menú"
+              aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menuOpen}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -175,41 +179,62 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                 }}
                 className="flex flex-col"
               >
-                {siteConfig.nav.items.map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    variants={{
-                      hidden: { opacity: 0, y: 14 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: easeOutCubic } },
-                    }}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="group flex items-center justify-between rounded-xl px-2 py-3.5 text-base font-bold text-slate-900 border-b border-slate-200 transition-colors duration-200 hover:bg-slate-50 active:bg-slate-100"
-                    >
-                      <span>{item.label}</span>
-                      {item.children ? (
-                        <FiChevronDown className="text-[11px] text-slate-400 transition group-hover:text-primary-600 group-hover:-translate-y-0.5" />
-                      ) : null}
-                    </Link>
+                {siteConfig.nav.items.map((item, i) => {
+                  const isExpanded = expandedMobileItem === i
+                  const itemClassName = 'flex w-full items-center justify-between rounded-xl border-b border-slate-200 px-2 py-3.5 text-left text-base font-bold text-slate-900 transition-colors duration-200 hover:bg-slate-50 active:bg-slate-100'
 
-                    {item.children ? (
-                      <div className="flex flex-col border-b border-slate-200 bg-slate-50/60">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            onClick={() => setMenuOpen(false)}
-                            className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    ) : null}
-                  </motion.div>
-                ))}
+                  return (
+                    <motion.div
+                      key={item.label}
+                      variants={{
+                        hidden: { opacity: 0, y: 14 },
+                        show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: easeOutCubic } },
+                      }}
+                    >
+                      {item.children ? (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedMobileItem(isExpanded ? null : i)}
+                          aria-expanded={isExpanded}
+                          aria-controls={`mobile-submenu-${i}`}
+                          className={itemClassName}
+                        >
+                          <span>{item.label}</span>
+                          <FiChevronDown
+                            aria-hidden="true"
+                            className={`text-[11px] text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-primary-600' : ''}`}
+                          />
+                        </button>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          onClick={() => setMenuOpen(false)}
+                          className={itemClassName}
+                        >
+                          <span>{item.label}</span>
+                        </Link>
+                      )}
+
+                      {item.children ? (
+                        <div
+                          id={`mobile-submenu-${i}`}
+                          className={`${isExpanded ? 'flex' : 'hidden'} flex-col border-b border-slate-200 bg-slate-50/60`}
+                        >
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => setMenuOpen(false)}
+                              className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      ) : null}
+                    </motion.div>
+                  )
+                })}
 
                 <motion.div
                   variants={{
