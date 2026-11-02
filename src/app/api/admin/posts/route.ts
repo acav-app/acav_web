@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 
 import { handleApiError } from '@/lib/admin/api-error'
 import { requireSessionUser } from '@/lib/admin/session'
@@ -20,6 +21,8 @@ export async function POST(request: Request) {
   try {
     await requireSessionUser()
     const post = await createPost(normalizePost(await request.json()))
+    revalidatePath('/novedades/actualidad')
+    revalidatePath(`/novedades/actualidad/${post.slug}`)
     return NextResponse.json({ item: post }, { status: 201 })
   } catch (error) {
     return handleApiError(error)

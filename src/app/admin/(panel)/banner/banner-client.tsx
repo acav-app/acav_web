@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { FiEdit2, FiFilm, FiImage, FiPlus, FiTrash2 } from 'react-icons/fi'
 
 import { emptyBannerSlide, type BannerSlide, type BannerSlideInput } from '@/lib/admin/types'
+import { ASSOCIATION_FORM_PATH, isAssociationCtaLabel } from '@/lib/association-cta'
 import Drawer from '../drawer'
 import MediaUploader from '../media-uploader'
 import { useCollection } from '../use-collection'
@@ -29,8 +30,18 @@ export default function BannerClient() {
   function openEdit(slide: BannerSlide) {
     setEditing(slide)
     const { id, createdAt, updatedAt, ...rest } = slide
-    setForm(structuredClone(rest))
+    const form = structuredClone(rest)
+    if (isAssociationCtaLabel(form.ctaPrimario.label)) form.ctaPrimario.href = ASSOCIATION_FORM_PATH
+    if (isAssociationCtaLabel(form.ctaSecundario.label)) form.ctaSecundario.href = ASSOCIATION_FORM_PATH
+    setForm(form)
     setFormError(null)
+  }
+
+  function updateCta(which: 'ctaPrimario' | 'ctaSecundario', field: 'label' | 'href', value: string) {
+    if (!form) return
+    const cta = { ...form[which], [field]: value }
+    if (isAssociationCtaLabel(cta.label)) cta.href = ASSOCIATION_FORM_PATH
+    setForm({ ...form, [which]: cta })
   }
 
   function closeDrawer() {
@@ -230,38 +241,44 @@ export default function BannerClient() {
               <Field label="Botón principal · texto">
                 <Input
                   value={form.ctaPrimario.label}
-                  onChange={(event) =>
-                    setForm({ ...form, ctaPrimario: { ...form.ctaPrimario, label: event.target.value } })
-                  }
+                  onChange={(event) => updateCta('ctaPrimario', 'label', event.target.value)}
                   placeholder="Sumate a ACAV"
                 />
               </Field>
-              <Field label="Botón principal · link">
-                <Input
-                  value={form.ctaPrimario.href}
-                  onChange={(event) =>
-                    setForm({ ...form, ctaPrimario: { ...form.ctaPrimario, href: event.target.value } })
-                  }
-                  placeholder="/socios/asociate"
-                />
+              <Field
+                label="Botón principal · link"
+                hint={isAssociationCtaLabel(form.ctaPrimario.label) ? 'Los CTA de asociación siempre llevan al formulario.' : undefined}
+              >
+                {isAssociationCtaLabel(form.ctaPrimario.label) ? (
+                  <div className="rounded-xl border border-primary-100 bg-primary-50 px-3.5 py-2.5 text-sm font-semibold text-primary-700">{ASSOCIATION_FORM_PATH} · destino fijo</div>
+                ) : (
+                  <Input
+                    value={form.ctaPrimario.href}
+                    onChange={(event) => updateCta('ctaPrimario', 'href', event.target.value)}
+                    placeholder="/ruta o https://…"
+                  />
+                )}
               </Field>
               <Field label="Botón secundario · texto">
                 <Input
                   value={form.ctaSecundario.label}
-                  onChange={(event) =>
-                    setForm({ ...form, ctaSecundario: { ...form.ctaSecundario, label: event.target.value } })
-                  }
+                  onChange={(event) => updateCta('ctaSecundario', 'label', event.target.value)}
                   placeholder="Asociate"
                 />
               </Field>
-              <Field label="Botón secundario · link">
-                <Input
-                  value={form.ctaSecundario.href}
-                  onChange={(event) =>
-                    setForm({ ...form, ctaSecundario: { ...form.ctaSecundario, href: event.target.value } })
-                  }
-                  placeholder="/socios"
-                />
+              <Field
+                label="Botón secundario · link"
+                hint={isAssociationCtaLabel(form.ctaSecundario.label) ? 'Los CTA de asociación siempre llevan al formulario.' : undefined}
+              >
+                {isAssociationCtaLabel(form.ctaSecundario.label) ? (
+                  <div className="rounded-xl border border-primary-100 bg-primary-50 px-3.5 py-2.5 text-sm font-semibold text-primary-700">{ASSOCIATION_FORM_PATH} · destino fijo</div>
+                ) : (
+                  <Input
+                    value={form.ctaSecundario.href}
+                    onChange={(event) => updateCta('ctaSecundario', 'href', event.target.value)}
+                    placeholder="/ruta o https://…"
+                  />
+                )}
               </Field>
             </div>
 

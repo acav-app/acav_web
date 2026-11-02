@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FiAlertTriangle, FiArrowLeft, FiArrowRight, FiCheck, FiCheckCircle, FiLoader, FiSave, FiSend } from 'react-icons/fi'
+import { FiArrowLeft, FiArrowRight, FiCheck, FiCheckCircle, FiLoader, FiSave, FiSend } from 'react-icons/fi'
 
 import { validarCuit, solicitudIngresoSchema } from '@/lib/solicitudes/schema'
 import { esUrlValida, validarFechaNacimiento, validarTelefonoArgentino, validarUrls } from '@/lib/solicitudes/validation'
@@ -283,7 +283,7 @@ export default function SolicitudIngresoWizard() {
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [formError, setFormError] = useState('')
-  const [success, setSuccess] = useState<{ numero: string; emailEnviado: boolean } | null>(null)
+  const [success, setSuccess] = useState<{ numero: string; emailEnviado: boolean; emailSolicitanteEnviado: boolean } | null>(null)
   const initPromise = useRef<Promise<InitializedDraft> | null>(null)
   const saveQueue = useRef<Promise<unknown>>(Promise.resolve())
   const initialized = useRef(false)
@@ -452,7 +452,7 @@ export default function SolicitudIngresoWizard() {
       await saveData(data)
       setErrors({})
       setStep((current) => Math.min(current + 1, STEPS.length - 1))
-      window.scrollTo({ top: document.getElementById('solicitud')?.offsetTop ?? 0, behavior: 'smooth' })
+      document.getElementById('solicitud')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : 'No se pudo guardar el borrador.')
       setFormError('No pudimos guardar tus cambios. Revisá tu conexión y volvé a intentar.')
@@ -467,9 +467,9 @@ export default function SolicitudIngresoWizard() {
       return
     }
     if (!signature) { setFormError('Agregá tu firma manuscrita para continuar.'); return }
-    if (!signerApellidos.trim() || !signerNombres.trim()) { setFormError('Indicá los apellidos y nombres de quien firma por la agencia.'); return }
+    if (!signerNombres.trim() || !signerApellidos.trim()) { setFormError('Indicá los nombres y apellidos de quien firma por la agencia.'); return }
     if (!accepted) { setFormError('Aceptá la declaración y el tratamiento de datos para enviar.'); return }
-    if (documentCount !== DOCUMENTOS_INGRESO.length) { setFormError('Completá los 12 adjuntos requeridos.'); setStep(3); return }
+    if (documentCount !== DOCUMENTOS_INGRESO.length) { setFormError('Adjuntá los 12 documentos requeridos antes de enviar.'); setStep(3); return }
     if (!draft) return
 
     setSending(true)
@@ -482,7 +482,11 @@ export default function SolicitudIngresoWizard() {
       })
       const body = await response.json()
       if (!response.ok) throw new Error(body.error ?? 'No se pudo enviar la solicitud.')
-      setSuccess({ numero: body.numero, emailEnviado: body.emailEnviado })
+      setSuccess({
+        numero: body.numero,
+        emailEnviado: body.emailEnviado,
+        emailSolicitanteEnviado: body.emailSolicitanteEnviado === true,
+      })
       clearDraftCredentials()
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'No se pudo enviar la solicitud. Tus datos guardados siguen disponibles para reintentar.')
@@ -505,6 +509,11 @@ export default function SolicitudIngresoWizard() {
         <p className="mt-4 text-xs font-bold uppercase tracking-widest text-emerald-700">Solicitud enviada</p>
         <h3 className="mt-2 text-2xl font-bold text-slate-900">¡Recibimos tu solicitud!</h3>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">Tu trámite quedó registrado con el número <strong>{success.numero}</strong>. {success.emailEnviado ? 'El primer aval recibirá un correo con un enlace seguro para continuar.' : 'El equipo de ACAV revisará el trámite y gestionará el envío del enlace al primer aval.'}</p>
+        <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-600">
+          {success.emailSolicitanteEnviado
+            ? `Enviamos un resumen al correo principal de la agencia: ${data.email}.`
+            : `No pudimos enviar el resumen al correo ${data.email}. Revisá la dirección o contactá a ACAV.`}
+        </p>
         <div className="mx-auto mt-7 max-w-md rounded-2xl bg-white p-4 text-left text-sm text-slate-600 shadow-sm">
           <p className="font-semibold text-slate-800">Próximos pasos</p>
           <ol className="mt-3 space-y-2">
@@ -521,7 +530,7 @@ export default function SolicitudIngresoWizard() {
     <div id="solicitud" className="scroll-mt-24">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-primary-600">Solicitud de ingreso</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-primary-600">Tu trámite</p>
           <p className="mt-1 text-xs text-slate-500">Trámite {draft?.numero} · Borrador privado</p>
         </div>
         <div className="inline-flex items-center gap-2 text-xs text-slate-500" aria-live="polite">
@@ -567,7 +576,9 @@ export default function SolicitudIngresoWizard() {
                 if (value === 'No') setField('cantidadSucursales', '0')
                 else if (data.cantidadSucursales === '0') setField('cantidadSucursales', '')
               }} options={[{ value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }]} error={errors.poseeSucursales} />
-              <TextField label="Cantidad de sucursales" value={data.cantidadSucursales} onChange={(value) => setField('cantidadSucursales', value.replace(/\D/g, '').slice(0, 3))} error={errors.cantidadSucursales} inputMode="numeric" hint="Ingresá 0 si no posee sucursales." />
+              {data.poseeSucursales === 'Sí' ? (
+                <TextField label="Cantidad de sucursales" value={data.cantidadSucursales} onChange={(value) => setField('cantidadSucursales', value.replace(/\D/g, '').slice(0, 3))} error={errors.cantidadSucursales} inputMode="numeric" hint="Indicá cuántas sucursales posee la agencia." />
+              ) : null}
               <TextField label="Empleados en Córdoba" value={data.empleadosCordoba} onChange={(value) => setField('empleadosCordoba', value.replace(/\D/g, '').slice(0, 5))} required={false} error={errors.empleadosCordoba} inputMode="numeric" />
               <SelectField label="Condición ante el IVA" value={data.condicionIva} onChange={(value) => setField('condicionIva', value)} options={[
                 { value: 'Responsable Inscripto', label: 'Responsable Inscripto' }, { value: 'Exento', label: 'Exento' },
@@ -590,8 +601,8 @@ export default function SolicitudIngresoWizard() {
                 <div key={index} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
                   <h4 className="font-bold text-slate-800">Titular {index + 1}</h4>
                   <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <TextField label="Apellidos" value={person.apellidos} onChange={(value) => setPersona(index as 0 | 1, 'apellidos', value)} error={errors[`titulares.${index}.apellidos`]} />
                     <TextField label="Nombres" value={person.nombres} onChange={(value) => setPersona(index as 0 | 1, 'nombres', value)} error={errors[`titulares.${index}.nombres`]} />
+                    <TextField label="Apellidos" value={person.apellidos} onChange={(value) => setPersona(index as 0 | 1, 'apellidos', value)} error={errors[`titulares.${index}.apellidos`]} />
                     <FechaArgentina value={person.fechaNacimiento} onChange={(value) => setPersona(index as 0 | 1, 'fechaNacimiento', value)} error={errors[`titulares.${index}.fechaNacimiento`]} />
                     <TextField label="DNI" value={person.dni} onChange={(value) => setPersona(index as 0 | 1, 'dni', value.replace(/\D/g, '').slice(0, 8))} error={errors[`titulares.${index}.dni`]} inputMode="numeric" />
                     <TextField label="Celular" value={person.telefono} onChange={(value) => setPersona(index as 0 | 1, 'telefono', value)} error={errors[`titulares.${index}.telefono`]} inputMode="tel" />
@@ -604,8 +615,8 @@ export default function SolicitudIngresoWizard() {
                 <div key={role} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
                   <h4 className="font-bold capitalize text-slate-800">{role === 'delegado' ? 'Delegado ante ACAV' : 'Subdelegado ante ACAV'}</h4>
                   <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <TextField label="Apellidos" value={data[role].apellidos} onChange={(value) => setRepresentante(role, 'apellidos', value)} error={errors[`${role}.apellidos`]} />
                     <TextField label="Nombres" value={data[role].nombres} onChange={(value) => setRepresentante(role, 'nombres', value)} error={errors[`${role}.nombres`]} />
+                    <TextField label="Apellidos" value={data[role].apellidos} onChange={(value) => setRepresentante(role, 'apellidos', value)} error={errors[`${role}.apellidos`]} />
                     <TextField label="DNI" value={data[role].dni} onChange={(value) => setRepresentante(role, 'dni', value.replace(/\D/g, '').slice(0, 8))} error={errors[`${role}.dni`]} inputMode="numeric" />
                     <TextField label="Celular" value={data[role].telefono} onChange={(value) => setRepresentante(role, 'telefono', value)} error={errors[`${role}.telefono`]} inputMode="tel" />
                     <TextField label="Email" type="email" value={data[role].email} onChange={(value) => setRepresentante(role, 'email', value)} error={errors[`${role}.email`]} />
@@ -638,9 +649,9 @@ export default function SolicitudIngresoWizard() {
         {step === 3 && draft ? (
           <section aria-labelledby="step-documentos">
             <h3 id="step-documentos" className="text-xl font-bold text-slate-900">Documentación requerida</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-500">Cargá cada documento en R2. Para cada DNI pedimos frente y dorso por separado. En celular podés sacar la foto directamente.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-500">Adjuntá los documentos solicitados para completar tu inscripción.</p>
             <div className="mt-5 flex items-center justify-between rounded-xl bg-primary-50 px-4 py-3 text-sm">
-              <span className="font-semibold text-primary-900">Archivos listos</span><span className="font-bold text-primary-700">{documentCount} / {DOCUMENTOS_INGRESO.length}</span>
+              <span className="font-semibold text-primary-900">Documentos cargados</span><span className="font-bold text-primary-700">{documentCount} / {DOCUMENTOS_INGRESO.length}</span>
             </div>
             <div className="mt-5 space-y-6">
               <div>
@@ -672,37 +683,71 @@ export default function SolicitudIngresoWizard() {
         {step === 4 ? (
           <section aria-labelledby="step-revision">
             <h3 id="step-revision" className="text-xl font-bold text-slate-900">Revisá y firmá la solicitud</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-500">Antes de enviar, confirmá los datos, los archivos y la persona que firma.</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <p className="mt-2 text-sm leading-6 text-slate-500">Confirmá tus datos y completá la firma para enviar la solicitud.</p>
+            <div className="mt-5 grid items-start gap-3 lg:grid-cols-3">
               <ReviewCard title="Agencia" onEdit={() => setStep(0)}>
-                <p><strong>{data.razonSocial || '—'}</strong> · {data.designacionComercial || '—'}</p>
-                <p>{data.categoria} · Legajo {data.legajo}</p><p>{data.email}</p><p>CUIT {formatCuit(data.cuit)}</p>
+                <p className="font-semibold text-slate-800">{data.razonSocial || '—'}</p>
+                <p>{data.designacionComercial || '—'}</p>
+                <p>{data.categoria} · Legajo {data.legajo}</p>
+                <p>{data.email}</p>
+                <p>CUIT {formatCuit(data.cuit)}</p>
               </ReviewCard>
-              <ReviewCard title="Titulares y representantes" onEdit={() => setStep(1)}>
-                {data.titulares.map((person, index) => <p key={index}>Titular {index + 1}: {nombreCompleto(person) || '—'}</p>)}
-                <p>Delegado: {nombreCompleto(data.delegado) || '—'}</p><p>Subdelegado: {nombreCompleto(data.subdelegado) || '—'}</p>
+              <ReviewCard title="Personas" onEdit={() => setStep(1)}>
+                <ul className="space-y-2">
+                  {data.titulares.map((person, index) => (
+                    <li key={index}><span className="block text-[11px] font-semibold uppercase tracking-wide text-slate-400">Titular {index + 1}</span>{nombreCompleto(person) || '—'}</li>
+                  ))}
+                  <li><span className="block text-[11px] font-semibold uppercase tracking-wide text-slate-400">Delegado</span>{nombreCompleto(data.delegado) || '—'}</li>
+                  <li><span className="block text-[11px] font-semibold uppercase tracking-wide text-slate-400">Subdelegado</span>{nombreCompleto(data.subdelegado) || '—'}</li>
+                </ul>
               </ReviewCard>
               <ReviewCard title="Avales" onEdit={() => setStep(2)}>
-                {data.avales.map((aval, index) => <p key={index}>Aval {index + 1}: {aval.agencia || '—'} · {aval.email || '—'}</p>)}
-              </ReviewCard>
-              <ReviewCard title={`Documentos (${documentCount}/${DOCUMENTOS_INGRESO.length})`} onEdit={() => setStep(3)}>
-                <ul className="space-y-1">{DOCUMENTOS_INGRESO.map((slot) => <li key={slot} className="flex gap-1.5">{documents[slot] ? <FiCheck className="mt-0.5 shrink-0 text-emerald-600" /> : <span className="text-red-500">•</span>}{ETIQUETAS_DOCUMENTO[slot]}</li>)}</ul>
+                <ul className="space-y-3">
+                  {data.avales.map((aval, index) => (
+                    <li key={index} className="min-w-0">
+                      <span className="block text-[11px] font-semibold uppercase tracking-wide text-slate-400">Aval {index + 1}</span>
+                      <span className="block font-medium text-slate-700">{aval.agencia || '—'}</span>
+                      <span className="block break-all text-xs text-slate-500">{aval.email || '—'}</span>
+                    </li>
+                  ))}
+                </ul>
               </ReviewCard>
             </div>
 
-            <div className="mt-7 rounded-2xl bg-slate-50 p-4 sm:p-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <TextField label="Apellidos de quien firma por la agencia" value={signerApellidos} onChange={setSignerApellidos} placeholder="Apellidos" />
-                <TextField label="Nombres de quien firma por la agencia" value={signerNombres} onChange={setSignerNombres} placeholder="Nombres" />
-                <div className="text-xs leading-5 text-slate-500 sm:col-span-2">La firma quedará asociada al nombre completo y se registrarán fecha, hora, IP y navegador.</div>
-              </div>
-              <div className="mt-5"><SignaturePad value={signature} onChange={setSignature} label="Firma manuscrita del solicitante" /></div>
-              <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
-                <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 size-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500" />
-                <span>Declaro que la información y documentación aportadas son correctas, solicito el ingreso a ACAV y acepto que esta firma manuscrita electrónica se incorpore al expediente digital. También autorizo el tratamiento de los datos para gestionar este trámite.</span>
-              </label>
+            <div className="mt-3">
+              <ReviewCard title="Documentación" badge={`${documentCount}/${DOCUMENTOS_INGRESO.length} completos`} onEdit={() => setStep(3)}>
+                <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+                  {DOCUMENTOS_INGRESO.map((slot) => (
+                    <li key={slot} className="grid min-w-0 grid-cols-[1rem_minmax(0,1fr)] items-start gap-2">
+                      <span className={`mt-0.5 flex size-4 items-center justify-center rounded-full ${documents[slot] ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                        {documents[slot] ? <FiCheck className="text-[11px]" aria-hidden="true" /> : <span className="size-1 rounded-full bg-current" />}
+                      </span>
+                      <span className="min-w-0 text-sm leading-5 text-slate-600">{ETIQUETAS_DOCUMENTO[slot]}</span>
+                    </li>
+                  ))}
+                </ul>
+              </ReviewCard>
             </div>
-            <div className="mt-5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs leading-5 text-amber-900"><FiAlertTriangle className="mt-0.5 shrink-0" />Los documentos se guardan en el bucket R2 configurado. Si el bucket tiene acceso público, podrían ser accesibles mediante su URL. Los avales reciben enlaces temporales de firma.</div>
+
+            <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              <div className="border-b border-slate-100 px-4 py-4 sm:px-5">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-primary-600">Firma</p>
+                <h4 className="mt-1 text-base font-bold text-slate-900">Datos de quien firma</h4>
+                <p className="mt-1 text-sm leading-6 text-slate-500">La persona indicada debe firmar la solicitud.</p>
+              </div>
+              <div className="space-y-5 p-4 sm:p-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <TextField label="Nombres" value={signerNombres} onChange={setSignerNombres} placeholder="Nombres" />
+                  <TextField label="Apellidos" value={signerApellidos} onChange={setSignerApellidos} placeholder="Apellidos" />
+                  <p className="text-xs leading-5 text-slate-500 sm:col-span-2">La firma queda asociada al nombre completo y se registra con fecha, hora, IP y navegador.</p>
+                </div>
+                <SignaturePad value={signature} onChange={setSignature} label="Firma manuscrita" />
+                <label className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm leading-6 transition ${accepted ? 'border-primary-200 bg-primary-50/60 text-slate-700' : 'border-slate-200 bg-slate-50 text-slate-600'}`}>
+                  <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 size-4 shrink-0 rounded border-slate-300 text-primary-600 focus:ring-primary-500" />
+                  <span>Declaro que la información y documentación aportadas son correctas, solicito el ingreso a ACAV y acepto que esta firma manuscrita electrónica se incorpore al expediente digital. También autorizo el tratamiento de los datos para gestionar este trámite.</span>
+                </label>
+              </div>
+            </div>
           </section>
         ) : null}
 
@@ -724,14 +769,17 @@ export default function SolicitudIngresoWizard() {
   )
 }
 
-function ReviewCard({ title, onEdit, children }: { title: string; onEdit: () => void; children: React.ReactNode }) {
+function ReviewCard({ title, badge, onEdit, children }: { title: string; badge?: string; onEdit: () => void; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-slate-200 p-4">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h4 className="font-bold text-slate-800">{title}</h4>
-        <button type="button" onClick={onEdit} className="text-xs font-semibold text-primary-600 hover:underline">Editar</button>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <h4 className="text-sm font-bold text-slate-800">{title}</h4>
+          {badge ? <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700">{badge}</span> : null}
+        </div>
+        <button type="button" onClick={onEdit} className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-primary-700 transition hover:bg-primary-50">Editar</button>
       </div>
-      <div className="space-y-1 break-words text-xs leading-5 text-slate-600">{children}</div>
+      <div className="break-words text-xs leading-5 text-slate-600">{children}</div>
     </div>
   )
 }

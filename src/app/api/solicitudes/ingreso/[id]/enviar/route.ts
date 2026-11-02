@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { allowRequest, clientKey } from '@/lib/admin/rate-limit'
 import { draftTokenFromRequest, setDraftCookie } from '@/lib/solicitudes/draft-cookie'
-import { enviarAvisoAdministrativo, enviarInvitacionAval } from '@/lib/solicitudes/email'
+import { enviarAvisoAdministrativo, enviarInvitacionAval, enviarResumenSolicitante } from '@/lib/solicitudes/email'
 import { guardarNotificacion, enviarSolicitudIngreso } from '@/lib/solicitudes/service'
 import { INSCRIPCIONES_HABILITADAS, MENSAJE_INSCRIPCIONES_PAUSADAS } from '@/lib/solicitudes/availability'
 
@@ -48,6 +48,22 @@ export async function POST(request: Request, { params }: Params) {
       console.error('[resend-aval-1]', error)
     }
     await guardarNotificacion(params.id, 'aval1', emailEnviado).catch((error) => console.error('[save-notification-aval1]', error))
+    let emailSolicitanteEnviado = false
+    try {
+      await enviarResumenSolicitante({
+        email: invite.emailSolicitante,
+        numero: invite.numero,
+        agencia: invite.agencia,
+        tipo: 'recibida',
+        estado: emailEnviado ? 'Pendiente de firma del Aval 1' : 'Solicitud recibida',
+        mensaje: emailEnviado
+          ? 'La invitación para el primer aval fue enviada. Cuando firme, le llegará la invitación al segundo aval.'
+          : 'La solicitud ya está registrada. El equipo de ACAV continuará con la gestión de la invitación al primer aval.',
+      })
+      emailSolicitanteEnviado = true
+    } catch (error) {
+      console.error('[email-confirmacion-solicitante]', error)
+    }
     const adminEmail = process.env.SOLICITUD_ADMIN_EMAIL
     if (adminEmail) {
       await enviarAvisoAdministrativo({ email: adminEmail, numero: invite.numero, agencia: invite.agencia, etapa: 'Pendiente de firma del Aval 1' }).catch((error) => console.error('[resend-admin-solicitud]', error))
@@ -57,6 +73,7 @@ export async function POST(request: Request, { params }: Params) {
       ok: true,
       numero: invite.numero,
       emailEnviado,
+      emailSolicitanteEnviado,
       message: emailEnviado
         ? 'Solicitud recibida. El Aval 1 ya recibió un enlace seguro para firmar.'
         : 'Solicitud recibida. El aviso por email está demorado; el equipo de ACAV podrá reenviarlo desde el panel.',

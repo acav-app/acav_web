@@ -1,11 +1,16 @@
 export type PostStatus = 'borrador' | 'publicado'
 
+export type PostBlock =
+  | { id: string; tipo: 'texto'; contenido: string }
+  | { id: string; tipo: 'imagen'; url: string; alt: string; epigrafe: string }
+
 export interface Post {
   id: string
   titulo: string
   slug: string
   resumen: string
   contenido: string
+  bloques: PostBlock[]
   categoria: string
   imagen: string
   autor: string
@@ -49,6 +54,7 @@ export const emptyPost: PostInput = {
   slug: '',
   resumen: '',
   contenido: '',
+  bloques: [],
   categoria: '',
   imagen: '',
   autor: '',

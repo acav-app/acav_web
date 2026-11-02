@@ -7,6 +7,7 @@ import { FiFacebook, FiHeart, FiInstagram, FiLinkedin, FiMapPin, FiYoutube } fro
 
 import { siteConfig } from '../config/site'
 import { AssociationCtaLink } from './association-cta'
+import { isAssociationCta } from '@/lib/association-cta'
 
 const easeOutCubic = [0.22, 1, 0.36, 1] as const
 
@@ -28,7 +29,7 @@ const fadeUp = {
 const viewportTrigger = { once: true, margin: '-40px 0px -10% 0px' }
 
 const associationNavGroup = siteConfig.nav.items.find((item) =>
-  item.children?.some((child) => child.href === siteConfig.nav.cta.href),
+  item.children?.some((child) => isAssociationCta(child.label, child.href)),
 )
 
 const footerNavColumns = Array.from(
@@ -103,7 +104,7 @@ export default function SiteFooter() {
                           .filter(
                             (child) =>
                               !(child.href === item.href && child.label === item.label) &&
-                              child.href !== siteConfig.nav.cta.href,
+                              !isAssociationCta(child.label, child.href),
                           )
                           .map((child) => (
                             <Link key={child.href} href={child.href} className="transition hover:text-white">

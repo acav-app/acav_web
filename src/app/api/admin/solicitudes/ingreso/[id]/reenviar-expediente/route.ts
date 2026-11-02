@@ -23,7 +23,7 @@ export async function POST(_request: Request, { params }: Params) {
     const key = item.pdfKey || await saveSolicitudPdf(item.id, pdf)
     await agregarExpedienteYNotificacion(item.id, key, false)
     await enviarExpediente({
-      emails: [item.datos.email, item.datos.avales[0].email, item.datos.avales[1].email, adminEmail],
+      emails: Array.from(new Set([item.datos.email, adminEmail])),
       numero: item.numero,
       agencia: item.datos.razonSocial,
       pdf,

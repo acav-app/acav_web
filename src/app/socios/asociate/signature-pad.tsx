@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { FiRotateCcw, FiTrash2 } from 'react-icons/fi'
+import { FiEdit3, FiRotateCcw, FiTrash2 } from 'react-icons/fi'
 
 export default function SignaturePad({ value, onChange, label = 'Firma manuscrita' }: {
   value: string
@@ -108,19 +108,27 @@ export default function SignaturePad({ value, onChange, label = 'Firma manuscrit
     <div>
       <p className="mb-2 text-sm font-semibold text-slate-700">{label}</p>
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <canvas
-          ref={canvasRef}
-          onPointerDown={start}
-          onPointerMove={move}
-          onPointerUp={finish}
-          onPointerCancel={finish}
-          onLostPointerCapture={finish}
-          aria-label={`${label}. Firmá dentro del recuadro.`}
-          className="block h-40 w-full touch-none cursor-crosshair"
-          style={{ touchAction: 'none' }}
-        />
+        <div className="relative">
+          <canvas
+            ref={canvasRef}
+            onPointerDown={start}
+            onPointerMove={move}
+            onPointerUp={finish}
+            onPointerCancel={finish}
+            onLostPointerCapture={finish}
+            aria-label={`${label}. Firmá dentro del recuadro.`}
+            className="block h-36 w-full touch-none cursor-crosshair"
+            style={{ touchAction: 'none' }}
+          />
+          {isEmpty ? (
+            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 text-slate-300" aria-hidden="true">
+              <FiEdit3 className="text-lg" />
+              <span className="text-xs font-medium">Firmá aquí</span>
+            </div>
+          ) : null}
+        </div>
         <div className="flex items-center justify-between border-t border-slate-100 px-3 py-2">
-          <span className="text-xs text-slate-400">{tooShort ? 'Trazá una firma más completa para continuar.' : 'Firmá con el dedo o el mouse'}</span>
+          <span className="text-xs text-slate-400">{tooShort ? 'Trazá una firma más completa para continuar.' : 'Usá el dedo o el mouse'}</span>
           <button type="button" onClick={clear} className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-600">
             {isEmpty ? <FiRotateCcw /> : <FiTrash2 />} Limpiar
           </button>

@@ -47,6 +47,33 @@ export async function enviarInvitacionAval(input: {
   if (error) throw new Error(error.message)
 }
 
+export async function enviarResumenSolicitante(input: {
+  email: string
+  numero: string
+  agencia: string
+  tipo: 'recibida' | 'avance'
+  estado: string
+  mensaje: string
+}) {
+  const recibida = input.tipo === 'recibida'
+  const { error } = await resend().emails.send({
+    from: fromEmail(),
+    to: [input.email],
+    subject: recibida ? `Solicitud recibida — ${input.numero}` : `Actualización de solicitud — ${input.numero}`,
+    html: shell(recibida ? 'Recibimos tu solicitud' : 'Actualización de tu solicitud', `
+      <p>${recibida ? 'Tu solicitud de ingreso fue registrada correctamente.' : 'Te compartimos una actualización sobre tu solicitud de ingreso.'}</p>
+      <div style="margin:24px 0;padding:18px 20px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
+        <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px">Resumen del trámite</p>
+        <p style="margin:6px 0"><strong>Número:</strong> ${escapeHtml(input.numero)}</p>
+        <p style="margin:6px 0"><strong>Agencia:</strong> ${escapeHtml(input.agencia)}</p>
+        <p style="margin:6px 0"><strong>Estado:</strong> ${escapeHtml(input.estado)}</p>
+      </div>
+      <p>${escapeHtml(input.mensaje)}</p>
+      <p>Conservá este correo como referencia. Para consultar por tu solicitud, indicá el número <strong>${escapeHtml(input.numero)}</strong>.</p>`),
+  })
+  if (error) throw new Error(error.message)
+}
+
 export async function enviarExpediente(input: {
   emails: string[]
   numero: string
@@ -64,7 +91,15 @@ export async function enviarExpediente(input: {
         from: fromEmail(),
         to: [recipient],
         subject: `Solicitud ${input.numero} completada — ${input.agencia}`,
-        html: shell('Trámite completado', `<p>El circuito de firmas de la solicitud <strong>${escapeHtml(input.numero)}</strong> de <strong>${escapeHtml(input.agencia)}</strong> finalizó.</p><p>Adjuntamos el expediente PDF consolidado.</p>`),
+        html: shell('Trámite completado', `
+          <p>El circuito de firmas de tu solicitud finalizó correctamente.</p>
+          <div style="margin:24px 0;padding:18px 20px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
+            <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px">Resumen del trámite</p>
+            <p style="margin:6px 0"><strong>Número:</strong> ${escapeHtml(input.numero)}</p>
+            <p style="margin:6px 0"><strong>Agencia:</strong> ${escapeHtml(input.agencia)}</p>
+            <p style="margin:6px 0"><strong>Estado:</strong> Completado</p>
+          </div>
+          <p>Adjuntamos el expediente PDF consolidado. Guardalo para futuras consultas.</p>`),
         attachments: [{ filename: `${input.numero}-expediente.pdf`, content: Buffer.from(input.pdf) }],
       })
       if (error) failures.push(`${recipient}: ${error.message}`)

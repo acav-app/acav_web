@@ -114,13 +114,13 @@ export async function saveSolicitudPdf(solicitudId: string, bytes: Uint8Array): 
   return key
 }
 
-export async function signedSolicitudDownload(key: string, filename: string, contentType: string) {
+export async function signedSolicitudDownload(key: string, filename: string, contentType: string, inline = false) {
   const safeFilename = filename.replace(/[\r\n"\\]/g, '_').slice(0, 150)
   return getSignedUrl(client(), new GetObjectCommand({
     Bucket: solicitudesBucket(),
     Key: key,
     ResponseContentType: contentType,
-    ResponseContentDisposition: `attachment; filename="${safeFilename}"`,
+    ResponseContentDisposition: `${inline ? 'inline' : 'attachment'}; filename="${safeFilename}"`,
     ResponseCacheControl: 'private, no-store',
   }), { expiresIn: 60 })
 }

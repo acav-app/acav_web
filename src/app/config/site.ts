@@ -71,7 +71,7 @@ export const siteConfig = {
       href: string
       children?: readonly { label: string; href: string }[]
     }[],
-    cta: { label: "Asociate", href: "/socios/asociate" },
+    cta: { label: "Asociate" },
   },
   servicios: {
     links: [
@@ -117,8 +117,8 @@ export const siteConfig = {
     description:
       "Representamos, conectamos y fortalecemos a las agencias de viajes de Córdoba con una agenda activa de capacitación, networking, eventos y oportunidades para el sector.",
     actions: {
-      primary: { label: "Sumate a ACAV", href: "#institucional" },
-      tertiary: { label: "Asociarse", href: "#asociate" },
+      primary: { label: "Sumate a ACAV", href: "/socios/asociate" },
+      tertiary: { label: "Asociarse", href: "/socios/asociate" },
     },
     video: {
       src: "/videos/acav-hero.mp4",
@@ -298,7 +298,7 @@ export const siteConfig = {
           description: "Completá el formulario y recibí seguimiento del equipo ACAV.",
         },
       ],
-      cta: { label: "Comenzar ahora", href: "#asociate" },
+      cta: { label: "Comenzar ahora", href: "/socios/asociate" },
     },
   },
 } as const;

@@ -11,7 +11,8 @@ type Params = { params: { id: string; slot: string } }
 export async function GET(request: Request, { params }: Params) {
   try {
     if (!esDocumentoIngreso(params.slot)) return NextResponse.json({ error: 'Documento no encontrado.' }, { status: 404 })
-    const url = await urlDocumentoBorrador(params.id, draftTokenFromRequest(request, params.id), params.slot)
+    const inline = new URL(request.url).searchParams.get('preview') === '1'
+    const url = await urlDocumentoBorrador(params.id, draftTokenFromRequest(request, params.id), params.slot, inline)
     return NextResponse.json({ url }, { headers: { 'Cache-Control': 'no-store' } })
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'No se pudo abrir el archivo.' }, { status: 401 })

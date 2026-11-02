@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { enviarAvisoAdministrativo, enviarExpediente, enviarInvitacionAval } from '@/lib/solicitudes/email'
+import { enviarAvisoAdministrativo, enviarExpediente, enviarInvitacionAval, enviarResumenSolicitante } from '@/lib/solicitudes/email'
 import { generarExpedientePdf } from '@/lib/solicitudes/pdf'
 import {
   agregarExpedienteYNotificacion,
@@ -55,6 +55,22 @@ export async function POST(request: Request, { params }: Params) {
         console.error('[resend-aval-2]', error)
       }
       await guardarNotificacion(result.solicitud.id, 'aval2', sent).catch((error) => console.error('[save-notification-aval2]', error))
+      let solicitanteNotificado = false
+      try {
+        await enviarResumenSolicitante({
+          email: result.solicitud.datos.email,
+          numero: result.solicitud.numero,
+          agencia: result.solicitud.datos.razonSocial,
+          tipo: 'avance',
+          estado: sent ? 'Pendiente de firma del Aval 2' : 'Firma del Aval 1 completada',
+          mensaje: sent
+            ? 'El primer aval firmó la solicitud y la invitación para el segundo aval ya fue enviada.'
+            : 'El primer aval firmó la solicitud. El equipo de ACAV continuará con el envío de la invitación al segundo aval.',
+        })
+        solicitanteNotificado = true
+      } catch (error) {
+        console.error('[email-avance-solicitante]', error)
+      }
       const adminEmail = process.env.SOLICITUD_ADMIN_EMAIL
       if (adminEmail) {
         await enviarAvisoAdministrativo({
@@ -64,7 +80,7 @@ export async function POST(request: Request, { params }: Params) {
           etapa: sent ? 'Pendiente de firma del Aval 2' : 'Aval 1 firmó; el aviso al Aval 2 está pendiente de reenvío',
         }).catch((error) => console.error('[resend-admin-solicitud]', error))
       }
-      return NextResponse.json({ ok: true, completed: false, nextEmailSent: sent }, { headers: noStore })
+      return NextResponse.json({ ok: true, completed: false, nextEmailSent: sent, solicitanteNotificado }, { headers: noStore })
     }
 
     if (result.completed) {
@@ -81,7 +97,7 @@ export async function POST(request: Request, { params }: Params) {
         let sent = false
         try {
           if (!adminEmail) throw new Error('Falta configurar SOLICITUD_ADMIN_EMAIL para distribuir el expediente completo.')
-          const recipients = [result.solicitud.datos.email, result.solicitud.datos.avales[0].email, result.solicitud.datos.avales[1].email, adminEmail]
+          const recipients = Array.from(new Set([result.solicitud.datos.email, adminEmail]))
           await enviarExpediente({ emails: recipients, numero: result.solicitud.numero, agencia: result.solicitud.datos.razonSocial, pdf })
           sent = true
         } catch (error) {

@@ -11,6 +11,7 @@ type DocumentData = firebase.firestore.DocumentData
 type QueryDocumentSnapshot<T = firebase.firestore.DocumentData> = firebase.firestore.QueryDocumentSnapshot<T>
 
 import { adminDb } from '@/lib/firebase/admin'
+import { ASSOCIATION_FORM_PATH, isAssociationCta } from '@/lib/association-cta'
 import {
   ESTADOS_SOLICITUD,
   slugify,
@@ -23,6 +24,7 @@ import {
   type ContactoInput,
   type EstadoSolicitud,
   type Post,
+  type PostBlock,
   type PostInput,
   type Socio,
   type SocioInput,
@@ -66,6 +68,51 @@ function str(value: unknown, fallback = ''): string {
   return typeof value === 'string' ? value.trim() : fallback
 }
 
+function safeImageUrl(value: unknown) {
+  const candidate = str(value)
+  try {
+    const parsed = new URL(candidate)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? candidate : ''
+  } catch {
+    return ''
+  }
+}
+
+function postBlocks(value: unknown, strict = false): PostBlock[] {
+  if (!Array.isArray(value)) return []
+  if (strict && value.length > 80) throw new Error('Una nota puede tener hasta 80 bloques de contenido.')
+
+  const result: PostBlock[] = []
+  const blocks = value.slice(0, 80)
+  for (let index = 0; index < blocks.length; index++) {
+    const rawBlock = blocks[index]
+    if (!rawBlock || typeof rawBlock !== 'object' || Array.isArray(rawBlock)) continue
+    const block = rawBlock as Record<string, unknown>
+    const id = str(block.id).slice(0, 100) || `bloque-${index + 1}`
+    if (block.tipo === 'texto') {
+      result.push({ id, tipo: 'texto', contenido: html(block.contenido) })
+      continue
+    }
+    if (block.tipo === 'imagen') {
+      const url = safeImageUrl(block.url)
+      if (!url) {
+        if (strict) throw new Error('Cada bloque de imagen debe tener una imagen cargada válida.')
+        continue
+      }
+      result.push({
+        id,
+        tipo: 'imagen',
+        url,
+        alt: str(block.alt).slice(0, 300),
+        epigrafe: str(block.epigrafe).slice(0, 500),
+      })
+      continue
+    }
+    if (strict) throw new Error('El contenido incluye un tipo de bloque no compatible.')
+  }
+  return result
+}
+
 /* ------------------------------- Blog / Posts ------------------------------ */
 
 function mapPost(doc: QueryDocumentSnapshot<DocumentData>): Post {
@@ -76,6 +123,7 @@ function mapPost(doc: QueryDocumentSnapshot<DocumentData>): Post {
     slug: str(data.slug),
     resumen: str(data.resumen),
     contenido: str(data.contenido),
+    bloques: postBlocks(data.bloques),
     categoria: str(data.categoria),
     imagen: str(data.imagen),
     autor: str(data.autor),
@@ -91,12 +139,21 @@ export function normalizePost(payload: unknown): PostInput {
 
   if (!titulo) throw new Error('El título es obligatorio.')
 
+  const resumen = html(raw.resumen)
+  const legacyContent = html(raw.contenido)
+  const bloques = Array.isArray(raw.bloques)
+    ? postBlocks(raw.bloques, true)
+    : legacyContent ? [{ id: 'texto-legado', tipo: 'texto' as const, contenido: legacyContent }] : []
+
   return {
     titulo,
     // El slug siempre se deriva del título; no es editable desde el panel.
     slug: slugify(titulo),
-    resumen: html(raw.resumen),
-    contenido: html(raw.contenido),
+    resumen,
+    contenido: Array.isArray(raw.bloques)
+      ? bloques.filter((block) => block.tipo === 'texto').map((block) => block.contenido).filter(Boolean).join('\n')
+      : legacyContent,
+    bloques,
     categoria: str(raw.categoria),
     imagen: str(raw.imagen),
     autor: str(raw.autor),
@@ -491,6 +548,11 @@ function mapBannerSlide(doc: QueryDocumentSnapshot<DocumentData>): BannerSlide {
   const data = doc.data()
   const ctaPrimario = (data.ctaPrimario ?? {}) as Record<string, unknown>
   const ctaSecundario = (data.ctaSecundario ?? {}) as Record<string, unknown>
+  const mapCta = (cta: Record<string, unknown>) => {
+    const label = str(cta.label)
+    const href = str(cta.href)
+    return { label, href: isAssociationCta(label, href) ? ASSOCIATION_FORM_PATH : href }
+  }
 
   return {
     id: doc.id,
@@ -499,8 +561,8 @@ function mapBannerSlide(doc: QueryDocumentSnapshot<DocumentData>): BannerSlide {
     tipo: data.tipo === 'video' ? 'video' : 'imagen',
     media: str(data.media),
     poster: str(data.poster),
-    ctaPrimario: { label: str(ctaPrimario.label), href: str(ctaPrimario.href) },
-    ctaSecundario: { label: str(ctaSecundario.label), href: str(ctaSecundario.href) },
+    ctaPrimario: mapCta(ctaPrimario),
+    ctaSecundario: mapCta(ctaSecundario),
     orden: typeof data.orden === 'number' ? data.orden : 0,
     activo: data.activo !== false,
     createdAt: toIso(data.createdAt),
@@ -514,6 +576,11 @@ export function normalizeBannerSlide(payload: unknown): BannerSlideInput {
   const ctaSecundario = (raw.ctaSecundario ?? {}) as Record<string, unknown>
   const titulo = str(raw.titulo)
   const media = str(raw.media)
+  const normalizeCta = (cta: Record<string, unknown>) => {
+    const label = str(cta.label)
+    const href = str(cta.href)
+    return { label, href: isAssociationCta(label, href) ? ASSOCIATION_FORM_PATH : href }
+  }
 
   if (!titulo) throw new Error('El título del banner es obligatorio.')
   if (!media) throw new Error('Subí una imagen o un video para el banner.')
@@ -524,8 +591,8 @@ export function normalizeBannerSlide(payload: unknown): BannerSlideInput {
     tipo: (raw.tipo === 'video' ? 'video' : 'imagen') satisfies BannerTipo,
     media,
     poster: str(raw.poster),
-    ctaPrimario: { label: str(ctaPrimario.label), href: str(ctaPrimario.href) },
-    ctaSecundario: { label: str(ctaSecundario.label), href: str(ctaSecundario.href) },
+    ctaPrimario: normalizeCta(ctaPrimario),
+    ctaSecundario: normalizeCta(ctaSecundario),
     orden: Number.isFinite(Number(raw.orden)) ? Number(raw.orden) : 0,
     activo: raw.activo !== false,
   }

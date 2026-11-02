@@ -266,23 +266,27 @@ export async function confirmarDocumentoIngreso(input: {
   return { nombre: documento.nombre, contentType: documento.contentType, size: documento.size, uploadedAt: documento.uploadedAt }
 }
 
-export async function urlDocumentoIngreso(id: string, slot: DocumentoIngreso) {
+export async function urlDocumentoIngreso(id: string, slot: DocumentoIngreso, inline = false) {
   const solicitud = await obtenerSolicitudIngreso(id)
   const stored = await collection().doc(id).get()
   if (!solicitud || !stored.exists) throw new Error('No se encontró la solicitud.')
   const documento = solicitud.documentos[slot]
   if (!documento?.key) throw new Error('El documento no está disponible.')
-  return signedSolicitudDownload(documento.key, documento.nombre, documento.contentType)
+  if (inline && !['application/pdf', 'image/jpeg', 'image/png'].includes(documento.contentType)) {
+    throw new Error('La vista previa no está disponible para este formato.')
+  }
+  return signedSolicitudDownload(documento.key, documento.nombre, documento.contentType, inline)
 }
 
-export async function urlDocumentoBorrador(id: string, token: string, slot: DocumentoIngreso) {
+export async function urlDocumentoBorrador(id: string, token: string, slot: DocumentoIngreso, inline = false) {
   const snapshot = await collection().doc(id).get()
   if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
   const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
   assertDraft(stored, token)
   const documento = stored.documentos[slot]
   if (!documento?.key) throw new Error('El documento todavía no está cargado.')
-  return signedSolicitudDownload(documento.key, documento.nombre, documento.contentType)
+  if (inline && !documento.contentType.startsWith('image/')) throw new Error('La vista previa solo está disponible para imágenes.')
+  return signedSolicitudDownload(documento.key, documento.nombre, documento.contentType, inline)
 }
 
 export async function urlExpedienteIngreso(id: string) {
@@ -341,7 +345,7 @@ export async function enviarSolicitudIngreso(input: {
       notificaciones: { aval1: 'fallida' },
       updatedAt: FieldValue.serverTimestamp(),
     })
-    return { token: invite, email: datos.avales[0].email, numero: stored.numero, agencia: datos.razonSocial }
+    return { token: invite, email: datos.avales[0].email, emailSolicitante: datos.email, numero: stored.numero, agencia: datos.razonSocial }
   })
 
   // `signatureBytes` validates the PNG data URL and intentionally is not persisted separately.

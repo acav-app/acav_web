@@ -51,7 +51,7 @@ export default function FirmaAvalClient({ token }: { token: string }) {
 
   async function submit() {
     setError('')
-    if (!apellidos.trim() || !nombres.trim()) { setError('Ingresá tus apellidos y nombres.'); return }
+    if (!nombres.trim() || !apellidos.trim()) { setError('Ingresá tus nombres y apellidos.'); return }
     if (!signature) { setError('Firmá dentro del recuadro para continuar.'); return }
     if (!accepted) { setError('Aceptá la declaración de aval para firmar.'); return }
     setSending(true)
@@ -126,8 +126,8 @@ export default function FirmaAvalClient({ token }: { token: string }) {
 
           <div className="mt-7 grid gap-4 sm:grid-cols-3">
             <Info label="Aval solicitado a" value={`${summary.nombreAval} · ${summary.emailAval}`} />
-            <label className="block"><span className="mb-1.5 block text-sm font-semibold text-slate-700">Apellidos <span className="text-accent-500">*</span></span><input value={apellidos} onChange={(event) => setApellidos(event.target.value)} autoComplete="family-name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" placeholder="Apellidos" /></label>
             <label className="block"><span className="mb-1.5 block text-sm font-semibold text-slate-700">Nombres <span className="text-accent-500">*</span></span><input value={nombres} onChange={(event) => setNombres(event.target.value)} autoComplete="given-name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" placeholder="Nombres" /></label>
+            <label className="block"><span className="mb-1.5 block text-sm font-semibold text-slate-700">Apellidos <span className="text-accent-500">*</span></span><input value={apellidos} onChange={(event) => setApellidos(event.target.value)} autoComplete="family-name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100" placeholder="Apellidos" /></label>
           </div>
 
           <div className="mt-6"><SignaturePad value={signature} onChange={setSignature} label="Tu firma manuscrita" /></div>

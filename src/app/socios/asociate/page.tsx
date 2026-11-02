@@ -4,6 +4,7 @@ import { FiCheck, FiFileText } from 'react-icons/fi'
 
 import PageAnimation from '../../components/page-animation'
 import CategoriasAsociado, { type Categoria } from './categorias-asociado'
+import SolicitudIngresoWizard from './solicitud-ingreso-wizard'
 
 export const metadata: Metadata = {
   title: 'Asociate | ACAV',
@@ -41,25 +42,14 @@ const categorias: Categoria[] = [
   },
 ]
 
-const pasos = [
-  { n: '01', title: 'Completar la Solicitud de Ingreso.' },
-  { n: '02', title: 'Reunir la documentación requerida.' },
-  { n: '03', title: 'Presentar toda la documentación.' },
-  {
-    n: '04',
-    title: 'La Comisión Directiva evaluará la solicitud según el procedimiento establecido por el Estatuto.',
-  },
-]
-
 const documentacion = [
-  'Solicitud de ingreso',
-  'DNI de titulares, delegado y subdelegado',
+  'DNI de titulares, delegado y subdelegado (frente y dorso)',
   'Contrato / Estatuto social o documentación equivalente',
   'Inscripción en ARCA',
   'Informe comercial (Nosis o Veraz)',
-  'Legajo habilitante (cuando corresponda)',
+  'Legajo habilitante (si corresponde)',
   'Inscripción en el Registro Nacional de Agencias de Viajes',
-  'Aval de 2 asociados activos',
+  'Datos de 2 asociados activos que puedan avalar la solicitud',
 ]
 
 export default function AsociatePage() {
@@ -82,12 +72,12 @@ export default function AsociatePage() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <span
-                  aria-disabled="true"
-                  className="inline-flex h-12 items-center rounded-full bg-slate-200 px-7 text-[11px] font-bold uppercase text-slate-500"
+                <Link
+                  href="#solicitud-intro"
+                  className="inline-flex h-12 items-center rounded-full bg-accent-500 px-7 text-[11px] font-bold uppercase text-white transition hover:-translate-y-0.5 hover:bg-accent-600"
                 >
-                  Inscripciones pausadas
-                </span>
+                  Iniciar solicitud
+                </Link>
                 <Link
                   href="#requisitos"
                   className="inline-flex h-12 items-center gap-2 rounded-full border border-slate-200 px-7 text-[11px] font-bold uppercase text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50"
@@ -115,7 +105,7 @@ export default function AsociatePage() {
               </ul>
 
               <p className="mt-8 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-white/70">
-                La recepción de solicitudes está pausada temporalmente.
+                Completá la solicitud en línea y seguí el avance del trámite paso a paso.
               </p>
             </div>
           </div>
@@ -123,7 +113,7 @@ export default function AsociatePage() {
       </section>
 
       {/* Categorías */}
-      <section className="pb-section md:pb-section-lg">
+      <section className="pb-12 md:pb-16">
         <div className="container">
           <div className="max-w-2xl">
             <p className="text-[11px] font-bold uppercase text-primary-600">Categorías</p>
@@ -138,46 +128,44 @@ export default function AsociatePage() {
         </div>
       </section>
 
-      {/* Proceso */}
-      <section id="requisitos" className="pb-section md:pb-section-lg">
+      {/* Requisitos */}
+      <section id="requisitos" className="scroll-mt-24 pb-6 md:pb-8">
         <div className="container">
-          <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase text-primary-600">Proceso</p>
-            <h2 className="mt-3 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
-              Quiero asociarme
-            </h2>
+          <div className="rounded-[26px] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="max-w-2xl">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-primary-600">Antes de comenzar</p>
+              <h2 className="mt-3 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
+                Documentación que vas a necesitar
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                Prepará la documentación y los datos de dos asociados activos; los vas a necesitar para completar el trámite.
+              </p>
+            </div>
+
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {documentacion.map((item) => (
+                <li key={item} className="flex items-start gap-3 rounded-xl bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-700">
+                  <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700">
+                    <FiFileText className="text-[13px]" aria-hidden="true" />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-
-          <ol className="relative mt-9 grid gap-6 md:grid-cols-4 md:gap-5">
-            <div className="absolute left-0 right-0 top-[22px] hidden h-[3px] rounded-full bg-slate-200 md:block" />
-
-            {pasos.map((paso) => (
-              <li key={paso.n} className="relative">
-                <span className="relative z-10 flex size-11 items-center justify-center rounded-full bg-primary-500 text-[13px] font-bold text-white ring-8 ring-white">
-                  {paso.n}
-                </span>
-                <p className="mt-4 text-sm leading-6 text-slate-600">{paso.title}</p>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 
-      {/*
-      Formulario de ingreso pausado temporalmente. Para reactivarlo, volver a importar
-      SolicitudIngresoWizard y quitar este comentario, además de habilitar las rutas API.
-
-      <section className="pb-section md:pb-section-lg">
+      <section className="scroll-mt-24 bg-slate-50 pb-12 pt-8 md:pb-16 md:pt-10">
         <div className="container">
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-8 text-center" id="solicitud-intro">
-              <p className="text-[11px] font-bold uppercase text-primary-600">Solicitud de ingreso</p>
-              <h2 className="mt-3 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
-                Sumate a ACAV
+          <div className="mx-auto">
+            <div className="mb-7 max-w-3xl scroll-mt-28" id="solicitud-intro">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-primary-600">Solicitud de ingreso</p>
+              <h2 className="mt-3 text-[26px] font-bold leading-tight text-slate-900 md:text-[34px]">
+                Completá tu solicitud paso a paso
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-600">
-                Completá el formulario y el equipo de ACAV se va a contactar con vos para continuar con el
-                proceso de asociación.
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
+                El trámite tiene cinco pasos. Podés avanzar a tu ritmo: tus cambios se guardan automáticamente.
               </p>
             </div>
 
@@ -185,7 +173,6 @@ export default function AsociatePage() {
           </div>
         </div>
       </section>
-      */}
     </PageAnimation>
   )
 }

@@ -221,14 +221,24 @@ export default function Navbar(_props?: { navLight?: boolean; playBtn?: boolean;
                           className={`${isExpanded ? 'flex' : 'hidden'} flex-col border-b border-slate-200 bg-slate-50/60`}
                         >
                           {item.children.map((child) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() => setMenuOpen(false)}
-                              className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
-                            >
-                              {child.label}
-                            </Link>
+                            isAssociationCta(child.label, child.href) ? (
+                              <AssociationCtaLink
+                                key={child.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
+                              >
+                                {child.label}
+                              </AssociationCtaLink>
+                            ) : (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-primary-600"
+                              >
+                                {child.label}
+                              </Link>
+                            )
                           ))}
                         </div>
                       ) : null}
