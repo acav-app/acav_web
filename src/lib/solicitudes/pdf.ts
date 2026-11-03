@@ -5,7 +5,7 @@ import path from 'node:path'
 
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from 'pdf-lib'
 
-import { DOCUMENTOS_INGRESO, ETIQUETAS_DOCUMENTO, nombreCompleto, type FirmaGuardada, type SolicitudIngreso } from './types'
+import { DOCUMENTOS_INGRESO, ETIQUETAS_DOCUMENTO, nombreCompleto, redesSocialesComoTexto, type FirmaGuardada, type SolicitudIngreso } from './types'
 
 const PAGE_WIDTH = 595.28
 const PAGE_HEIGHT = 841.89
@@ -184,7 +184,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
     { label: 'WHATSAPP', value: d.whatsapp },
     { label: 'EMAIL PRINCIPAL', value: d.email },
     { label: 'SITIO WEB', value: d.sitioWeb },
-    { label: 'REDES SOCIALES', value: d.redesSociales },
+    { label: 'REDES SOCIALES', value: redesSocialesComoTexto(d.redesSociales) },
   ])
 
   drawSection('Titulares', 'B')

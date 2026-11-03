@@ -35,6 +35,23 @@ export function normalizarUrls(value: string) {
   return value.split(',').map((part) => normalizarUrl(part)).join(', ')
 }
 
+export function normalizarPerfilSocial(value: string) {
+  return value.split(',').map((item) => {
+    const trimmed = item.trim()
+    if (!trimmed || trimmed.startsWith('@')) return trimmed
+    return normalizarUrl(trimmed)
+  }).join(', ')
+}
+
+export function validarPerfilSocial(value: string) {
+  const trimmed = value.trim()
+  if (!trimmed) return true
+  const profiles = trimmed.split(',').map((item) => item.trim()).filter(Boolean)
+  return profiles.length > 0 && profiles.every((item) => (
+    item.startsWith('@') ? /^@[a-zA-Z0-9._-]{1,80}$/.test(item) : esUrlValida(item)
+  ))
+}
+
 export function validarUrls(value: string) {
   const items = value.split(',').map((part) => part.trim()).filter(Boolean)
   return items.length > 0 && items.every(esUrlValida)

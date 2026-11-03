@@ -27,6 +27,33 @@ export const DOCUMENTOS_INGRESO = [
 ] as const
 export type DocumentoIngreso = (typeof DOCUMENTOS_INGRESO)[number]
 
+export const DOCUMENTOS_OPCIONALES = [
+  'titular2_dni_frente',
+  'titular2_dni_dorso',
+  'subdelegado_dni_frente',
+  'subdelegado_dni_dorso',
+] as const satisfies readonly DocumentoIngreso[]
+export const DOCUMENTOS_OBLIGATORIOS = DOCUMENTOS_INGRESO.filter(
+  (slot) => !(DOCUMENTOS_OPCIONALES as readonly string[]).includes(slot),
+)
+
+export const REDES_SOCIALES_CAMPOS = [
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'facebook', label: 'Facebook' },
+  { key: 'linkedin', label: 'LinkedIn' },
+  { key: 'tiktok', label: 'TikTok' },
+  { key: 'otra', label: 'Otra red social' },
+] as const
+export type RedesSociales = Record<(typeof REDES_SOCIALES_CAMPOS)[number]['key'], string>
+
+export const REDES_SOCIALES_VACIAS: RedesSociales = {
+  instagram: '',
+  facebook: '',
+  linkedin: '',
+  tiktok: '',
+  otra: '',
+}
+
 export interface PersonaTitular {
   apellidos: string
   nombres: string
@@ -67,7 +94,7 @@ export interface DatosIngreso {
   whatsapp: string
   email: string
   sitioWeb: string
-  redesSociales: string
+  redesSociales: RedesSociales
   titulares: [PersonaTitular, PersonaTitular]
   delegado: RepresentanteIngreso
   subdelegado: RepresentanteIngreso
@@ -153,7 +180,7 @@ export const DATOS_INGRESO_VACIOS: DatosIngreso = {
   whatsapp: '',
   email: '',
   sitioWeb: '',
-  redesSociales: '',
+  redesSociales: { ...REDES_SOCIALES_VACIAS },
   titulares: [
     { ...PERSONA_TITULAR_VACIA },
     { ...PERSONA_TITULAR_VACIA },
@@ -188,6 +215,26 @@ function migrarPersona<T extends { apellidos: string; nombres: string }>(value: 
   return { ...empty, ...fields, apellidos, nombres } as T
 }
 
+export function migrarRedesSociales(value: unknown): RedesSociales {
+  // Older drafts stored every profile as one comma-separated string. Keep it visible
+  // in the "Otra red social" field rather than discarding it during migration.
+  if (typeof value === 'string') return { ...REDES_SOCIALES_VACIAS, otra: value }
+  const raw = value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {}
+  return Object.fromEntries(
+    REDES_SOCIALES_CAMPOS.map(({ key }) => [key, typeof raw[key] === 'string' ? raw[key] : '']),
+  ) as RedesSociales
+}
+
+export function redesSocialesComoTexto(value: unknown) {
+  const redes = migrarRedesSociales(value)
+  return REDES_SOCIALES_CAMPOS
+    .filter(({ key }) => redes[key].trim())
+    .map(({ key, label }) => `${label}: ${redes[key].trim()}`)
+    .join(' · ')
+}
+
 /** Convierte registros anteriores al nuevo formato y descarta campos retirados. */
 export function migrarDatosIngreso(value: unknown): DatosIngreso {
   const raw = value && typeof value === 'object' && !Array.isArray(value)
@@ -196,9 +243,11 @@ export function migrarDatosIngreso(value: unknown): DatosIngreso {
   const fields = { ...raw }
   delete fields.domicilioVirtual
   const { titulares, delegado, subdelegado } = fields
+  const redesSociales = migrarRedesSociales(fields.redesSociales)
   delete fields.titulares
   delete fields.delegado
   delete fields.subdelegado
+  delete fields.redesSociales
   const oldTitulares = Array.isArray(titulares) ? titulares : []
   const oldDelegado = delegado && typeof delegado === 'object' ? delegado : undefined
   const oldSubdelegado = subdelegado && typeof subdelegado === 'object' ? subdelegado : undefined
@@ -206,6 +255,7 @@ export function migrarDatosIngreso(value: unknown): DatosIngreso {
   return {
     ...DATOS_INGRESO_VACIOS,
     ...fields,
+    redesSociales,
     titulares: [
       migrarPersona(oldTitulares[0], PERSONA_TITULAR_VACIA),
       migrarPersona(oldTitulares[1], PERSONA_TITULAR_VACIA),
@@ -224,12 +274,12 @@ export function migrarDatosIngreso(value: unknown): DatosIngreso {
 export const ETIQUETAS_DOCUMENTO: Record<DocumentoIngreso, string> = {
   titular1_dni_frente: 'DNI titular 1 — frente',
   titular1_dni_dorso: 'DNI titular 1 — dorso',
-  titular2_dni_frente: 'DNI titular 2 — frente',
-  titular2_dni_dorso: 'DNI titular 2 — dorso',
+  titular2_dni_frente: 'DNI titular 2 — frente (opcional)',
+  titular2_dni_dorso: 'DNI titular 2 — dorso (opcional)',
   delegado_dni_frente: 'DNI delegado — frente',
   delegado_dni_dorso: 'DNI delegado — dorso',
-  subdelegado_dni_frente: 'DNI subdelegado — frente',
-  subdelegado_dni_dorso: 'DNI subdelegado — dorso',
+  subdelegado_dni_frente: 'DNI subdelegado — frente (opcional)',
+  subdelegado_dni_dorso: 'DNI subdelegado — dorso (opcional)',
   contrato_social: 'Contrato social o documentación equivalente',
   arca: 'Constancia de inscripción en ARCA',
   informe_comercial: 'Informe comercial (Nosis o Veraz)',

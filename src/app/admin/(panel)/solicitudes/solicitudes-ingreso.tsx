@@ -25,6 +25,7 @@ import type { IconType } from 'react-icons'
 
 import {
   DOCUMENTOS_INGRESO,
+  redesSocialesComoTexto,
   ETIQUETAS_DOCUMENTO,
   nombreCompleto,
   type DocumentoGuardado,
@@ -402,7 +403,7 @@ export default function SolicitudesIngresoAdmin() {
                     <QuickInfo label="Email principal" value={item.datos.email} href={item.datos.email ? `mailto:${item.datos.email}` : undefined} />
                     <QuickInfo label="WhatsApp" value={item.datos.whatsapp} />
                     <QuickInfo label="Legajo" value={item.datos.legajo} />
-                    <QuickInfo label="Documentación" value={`${item.documentCount} de ${DOCUMENTOS_INGRESO.length} archivos`} />
+                    <QuickInfo label="Documentación" value={`${item.documentCount} archivos cargados`} />
                   </div>
 
                   <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -445,7 +446,7 @@ export default function SolicitudesIngresoAdmin() {
                                 ['WhatsApp', detail.datos.whatsapp],
                                 ['Email principal', detail.datos.email],
                                 ['Sitio web', detail.datos.sitioWeb],
-                                ['Redes sociales', detail.datos.redesSociales],
+                                ['Redes sociales', redesSocialesComoTexto(detail.datos.redesSociales)],
                                 ['Es franquicia', detail.datos.esFranquicia],
                                 ['Es sucursal', detail.datos.esSucursal],
                                 ['Posee sucursales', detail.datos.poseeSucursales],
@@ -704,7 +705,7 @@ function DocumentGallery({ itemId, documents, onPreview, onDownload, previewBusy
   const attachedCount = DOCUMENTOS_INGRESO.filter((slot) => documents[slot]).length
 
   return (
-    <DetailSection title="Documentación presentada" badge={`${attachedCount} de ${DOCUMENTOS_INGRESO.length} archivos`}>
+    <DetailSection title="Documentación presentada" badge={`${attachedCount} archivos cargados`}>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {DOCUMENTOS_INGRESO.map((slot) => {
           const document = documents[slot]

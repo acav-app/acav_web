@@ -10,6 +10,7 @@ import { borradorIngresoSchema, normalizarDatosIngreso } from './schema'
 import {
   DATOS_INGRESO_VACIOS,
   DOCUMENTOS_INGRESO,
+  DOCUMENTOS_OBLIGATORIOS,
   migrarDatosIngreso,
   nombreCompleto,
   type DatosIngreso,
@@ -321,7 +322,7 @@ export async function enviarSolicitudIngreso(input: {
     if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
     const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
     assertDraft(stored, input.token)
-    const missing = DOCUMENTOS_INGRESO.filter((slot) => !stored.documentos[slot])
+    const missing = DOCUMENTOS_OBLIGATORIOS.filter((slot) => !stored.documentos[slot])
     if (missing.length) throw new Error(`Falta adjuntar: ${missing.map((slot) => slot.replaceAll('_', ' ')).join(', ')}.`)
     if (!stored.datos) throw new Error('Completá los datos antes de enviar la solicitud.')
     const invite = tokenSeguro()

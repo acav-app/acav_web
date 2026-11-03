@@ -4,17 +4,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FiArrowLeft, FiArrowRight, FiCheck, FiCheckCircle, FiLoader, FiSave, FiSend } from 'react-icons/fi'
 
 import { validarCuit, solicitudIngresoSchema } from '@/lib/solicitudes/schema'
-import { esUrlValida, validarFechaNacimiento, validarTelefonoArgentino, validarUrls } from '@/lib/solicitudes/validation'
+import { esUrlValida, validarFechaNacimiento, validarPerfilSocial, validarTelefonoArgentino } from '@/lib/solicitudes/validation'
 import {
   DATOS_INGRESO_VACIOS,
   DOCUMENTOS_INGRESO,
+  DOCUMENTOS_OBLIGATORIOS,
+  DOCUMENTOS_OPCIONALES,
   ETIQUETAS_DOCUMENTO,
+  REDES_SOCIALES_CAMPOS,
   migrarDatosIngreso,
   nombreCompleto,
   type DatosIngreso,
   type DocumentoGuardado,
   type DocumentoIngreso,
   type PersonaTitular,
+  type RedesSociales,
   type RepresentanteIngreso,
 } from '@/lib/solicitudes/types'
 import PrivateDocumentInput from './private-document-input'
@@ -121,7 +125,7 @@ function fechaArgentinaAIso(value: string) {
   return `${match[3]}-${match[2]}-${match[1]}`
 }
 
-function FechaArgentina({ value, onChange, error }: { value: string; onChange: (value: string) => void; error?: string }) {
+function FechaArgentina({ value, onChange, error, required = true }: { value: string; onChange: (value: string) => void; error?: string; required?: boolean }) {
   const [displayValue, setDisplayValue] = useState(() => fechaIsoAArgentina(value))
 
   useEffect(() => {
@@ -129,7 +133,7 @@ function FechaArgentina({ value, onChange, error }: { value: string; onChange: (
   }, [value])
 
   return (
-    <Campo label="Fecha de nacimiento" required error={error} hint="Día / mes / año.">
+    <Campo label="Fecha de nacimiento" required={required} error={error} hint="Día / mes / año.">
       <input
         type="text"
         value={displayValue}
@@ -197,12 +201,16 @@ function validateStep(step: number, data: DatosIngreso, docs: Partial<Record<Doc
       ['esFranquicia', data.esFranquicia, 'La respuesta de franquicia'],
       ['esSucursal', data.esSucursal, 'La respuesta de sucursal'], ['poseeSucursales', data.poseeSucursales, 'La respuesta de sucursales'],
       ['cuit', data.cuit, 'El CUIT'], ['condicionIva', data.condicionIva, 'La condición ante el IVA'], ['whatsapp', data.whatsapp, 'El WhatsApp'],
-      ['email', data.email, 'El email principal'], ['sitioWeb', data.sitioWeb, 'El sitio web'], ['redesSociales', data.redesSociales, 'Las redes sociales'],
+      ['email', data.email, 'El email principal'], ['sitioWeb', data.sitioWeb, 'El sitio web'],
     ]
     requiredFields.forEach(([key, value, label]) => required(String(key), value, label))
     if (data.email && !emailValid(data.email)) errors.email = 'Ingresá un email válido.'
     if (data.sitioWeb && !esUrlValida(data.sitioWeb)) errors.sitioWeb = 'Ingresá una URL válida.'
-    if (data.redesSociales && !validarUrls(data.redesSociales)) errors.redesSociales = 'Ingresá URLs válidas separadas por coma.'
+    REDES_SOCIALES_CAMPOS.forEach(({ key, label }) => {
+      if (!validarPerfilSocial(data.redesSociales[key])) {
+        errors[`redesSociales.${key}`] = `Ingresá un @usuario o una URL válida para ${label}.`
+      }
+    })
     if (data.whatsapp && !validarTelefonoArgentino(data.whatsapp)) errors.whatsapp = 'Usá un celular argentino de 10 dígitos, con código de área y sin 0 ni 15.'
     if (data.cuit && !validarCuit(data.cuit.replace(/\D/g, ''))) errors.cuit = 'El CUIT no es válido; revisá sus dígitos.'
     if (data.poseeSucursales === 'Sí' && Number(data.cantidadSucursales) < 1) errors.cantidadSucursales = 'Indicá cuántas sucursales tiene.'
@@ -211,13 +219,16 @@ function validateStep(step: number, data: DatosIngreso, docs: Partial<Record<Doc
   if (step === 1) {
     data.titulares.forEach((person, index) => {
       const prefix = `titulares.${index}`
-      required(`${prefix}.apellidos`, person.apellidos, `Los apellidos del titular ${index + 1}`)
-      required(`${prefix}.nombres`, person.nombres, `Los nombres del titular ${index + 1}`)
-      required(`${prefix}.fechaNacimiento`, person.fechaNacimiento, `La fecha de nacimiento del titular ${index + 1}`)
-      required(`${prefix}.dni`, person.dni, `El DNI del titular ${index + 1}`)
-      required(`${prefix}.telefono`, person.telefono, `El celular del titular ${index + 1}`)
-      required(`${prefix}.email`, person.email, `El email del titular ${index + 1}`)
-      required(`${prefix}.ocupacion`, person.ocupacion, `La profesión del titular ${index + 1}`)
+      const hasData = Object.values(person).some((value) => value.trim())
+      if (index === 0 || hasData) {
+        required(`${prefix}.apellidos`, person.apellidos, `Los apellidos del titular ${index + 1}`)
+        required(`${prefix}.nombres`, person.nombres, `Los nombres del titular ${index + 1}`)
+        required(`${prefix}.fechaNacimiento`, person.fechaNacimiento, `La fecha de nacimiento del titular ${index + 1}`)
+        required(`${prefix}.dni`, person.dni, `El DNI del titular ${index + 1}`)
+        required(`${prefix}.telefono`, person.telefono, `El celular del titular ${index + 1}`)
+        required(`${prefix}.email`, person.email, `El email del titular ${index + 1}`)
+        required(`${prefix}.ocupacion`, person.ocupacion, `La profesión del titular ${index + 1}`)
+      }
       if (person.dni && !/^\d{7,8}$/.test(person.dni.replace(/\D/g, ''))) errors[`${prefix}.dni`] = 'El DNI debe tener 7 u 8 números.'
       if (person.email && !emailValid(person.email)) errors[`${prefix}.email`] = 'Ingresá un email válido.'
       if (person.telefono && !validarTelefonoArgentino(person.telefono)) errors[`${prefix}.telefono`] = 'Ingresá un celular argentino válido, sin 0 ni 15.'
@@ -226,11 +237,14 @@ function validateStep(step: number, data: DatosIngreso, docs: Partial<Record<Doc
     ;(['delegado', 'subdelegado'] as const).forEach((role) => {
       const person = data[role]
       const prefix = role
-      required(`${prefix}.apellidos`, person.apellidos, `Los apellidos del ${role}`)
-      required(`${prefix}.nombres`, person.nombres, `Los nombres del ${role}`)
-      required(`${prefix}.dni`, person.dni, `El DNI del ${role}`)
-      required(`${prefix}.telefono`, person.telefono, `El celular del ${role}`)
-      required(`${prefix}.email`, person.email, `El email del ${role}`)
+      const hasData = Object.values(person).some((value) => value.trim())
+      if (hasData) {
+        required(`${prefix}.apellidos`, person.apellidos, `Los apellidos del ${role}`)
+        required(`${prefix}.nombres`, person.nombres, `Los nombres del ${role}`)
+        required(`${prefix}.dni`, person.dni, `El DNI del ${role}`)
+        required(`${prefix}.telefono`, person.telefono, `El celular del ${role}`)
+        required(`${prefix}.email`, person.email, `El email del ${role}`)
+      }
       if (person.dni && !/^\d{7,8}$/.test(person.dni.replace(/\D/g, ''))) errors[`${prefix}.dni`] = 'El DNI debe tener 7 u 8 números.'
       if (person.email && !emailValid(person.email)) errors[`${prefix}.email`] = 'Ingresá un email válido.'
       if (person.telefono && !validarTelefonoArgentino(person.telefono)) errors[`${prefix}.telefono`] = 'Ingresá un celular argentino válido, sin 0 ni 15.'
@@ -248,7 +262,7 @@ function validateStep(step: number, data: DatosIngreso, docs: Partial<Record<Doc
     }
   }
   if (step === 3) {
-    DOCUMENTOS_INGRESO.forEach((slot) => {
+    DOCUMENTOS_OBLIGATORIOS.forEach((slot) => {
       if (!docs[slot]) errors[`documentos.${slot}`] = `Falta adjuntar ${ETIQUETAS_DOCUMENTO[slot].toLowerCase()}.`
     })
   }
@@ -400,7 +414,8 @@ export default function SolicitudIngresoWizard() {
     return () => window.removeEventListener('pagehide', savePendingOnExit)
   }, [draft, success])
 
-  const documentCount = useMemo(() => DOCUMENTOS_INGRESO.filter((slot) => documents[slot]).length, [documents])
+  const requiredDocumentCount = useMemo(() => DOCUMENTOS_OBLIGATORIOS.filter((slot) => documents[slot]).length, [documents])
+  const optionalDocumentCount = useMemo(() => DOCUMENTOS_OPCIONALES.filter((slot) => documents[slot]).length, [documents])
   const progress = success ? 100 : ((step + 1) / STEPS.length) * 100
 
   function updateData(updater: (current: DatosIngreso) => DatosIngreso) {
@@ -427,6 +442,15 @@ export default function SolicitudIngresoWizard() {
   function setRepresentante(role: 'delegado' | 'subdelegado', key: keyof RepresentanteIngreso, value: string) {
     updateData((current) => ({ ...current, [role]: { ...current[role], [key]: value } }))
     setErrors((current) => { const next = { ...current }; delete next[`${role}.${key}`]; return next })
+  }
+
+  function setRedSocial(key: keyof RedesSociales, value: string) {
+    updateData((current) => ({ ...current, redesSociales: { ...current.redesSociales, [key]: value } }))
+    setErrors((current) => {
+      const next = { ...current }
+      delete next[`redesSociales.${key}`]
+      return next
+    })
   }
 
   function setAval(index: 0 | 1, key: 'agencia' | 'email', value: string) {
@@ -469,7 +493,7 @@ export default function SolicitudIngresoWizard() {
     if (!signature) { setFormError('Agregá tu firma manuscrita para continuar.'); return }
     if (!signerNombres.trim() || !signerApellidos.trim()) { setFormError('Indicá los nombres y apellidos de quien firma por la agencia.'); return }
     if (!accepted) { setFormError('Aceptá la declaración y el tratamiento de datos para enviar.'); return }
-    if (documentCount !== DOCUMENTOS_INGRESO.length) { setFormError('Adjuntá los 12 documentos requeridos antes de enviar.'); setStep(3); return }
+    if (requiredDocumentCount !== DOCUMENTOS_OBLIGATORIOS.length) { setFormError(`Adjuntá los ${DOCUMENTOS_OBLIGATORIOS.length} documentos obligatorios antes de enviar.`); setStep(3); return }
     if (!draft) return
 
     setSending(true)
@@ -587,7 +611,18 @@ export default function SolicitudIngresoWizard() {
               <TextField label="WhatsApp principal" value={data.whatsapp} onChange={(value) => setField('whatsapp', value)} error={errors.whatsapp} placeholder="3512345678" inputMode="tel" hint="Código de área sin 0 y sin 15." />
               <TextField label="Email principal" value={data.email} onChange={(value) => setField('email', value)} error={errors.email} type="email" placeholder="agencia@ejemplo.com.ar" />
               <TextField label="Sitio web" value={data.sitioWeb} onChange={(value) => setField('sitioWeb', value)} error={errors.sitioWeb} placeholder="https://www.ejemplo.com.ar" />
-              <TextField label="Redes sociales" value={data.redesSociales} onChange={(value) => setField('redesSociales', value)} error={errors.redesSociales} placeholder="URLs de perfiles institucionales" hint="Podés ingresar varias URLs separadas por coma." />
+              {REDES_SOCIALES_CAMPOS.map(({ key, label }) => (
+                <TextField
+                  key={key}
+                  label={label}
+                  value={data.redesSociales[key]}
+                  onChange={(value) => setRedSocial(key, value)}
+                  required={false}
+                  error={errors[`redesSociales.${key}`]}
+                  placeholder="@usuario o URL del perfil"
+                />
+              ))}
+              <p className="text-xs leading-5 text-slate-500 sm:col-span-2">Las redes son opcionales. Podés escribir @usuario o pegar el enlace completo del perfil.</p>
             </div>
           </section>
         ) : null}
@@ -595,34 +630,41 @@ export default function SolicitudIngresoWizard() {
         {step === 1 ? (
           <section aria-labelledby="step-personas">
             <h3 id="step-personas" className="text-xl font-bold text-slate-900">Titulares y representantes</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-500">Todos los datos de titulares, delegado y subdelegado son obligatorios.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-500">El Titular 2, el Delegado y el Subdelegado son opcionales. Si completás los datos de una persona, completá todos sus campos.</p>
             <div className="mt-6 space-y-6">
-              {data.titulares.map((person, index) => (
-                <div key={index} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
-                  <h4 className="font-bold text-slate-800">Titular {index + 1}</h4>
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <TextField label="Nombres" value={person.nombres} onChange={(value) => setPersona(index as 0 | 1, 'nombres', value)} error={errors[`titulares.${index}.nombres`]} />
-                    <TextField label="Apellidos" value={person.apellidos} onChange={(value) => setPersona(index as 0 | 1, 'apellidos', value)} error={errors[`titulares.${index}.apellidos`]} />
-                    <FechaArgentina value={person.fechaNacimiento} onChange={(value) => setPersona(index as 0 | 1, 'fechaNacimiento', value)} error={errors[`titulares.${index}.fechaNacimiento`]} />
-                    <TextField label="DNI" value={person.dni} onChange={(value) => setPersona(index as 0 | 1, 'dni', value.replace(/\D/g, '').slice(0, 8))} error={errors[`titulares.${index}.dni`]} inputMode="numeric" />
-                    <TextField label="Celular" value={person.telefono} onChange={(value) => setPersona(index as 0 | 1, 'telefono', value)} error={errors[`titulares.${index}.telefono`]} inputMode="tel" />
-                    <TextField label="Email" type="email" value={person.email} onChange={(value) => setPersona(index as 0 | 1, 'email', value)} error={errors[`titulares.${index}.email`]} />
-                    <TextField label="Profesión / ocupación" value={person.ocupacion} onChange={(value) => setPersona(index as 0 | 1, 'ocupacion', value)} error={errors[`titulares.${index}.ocupacion`]} />
+              {data.titulares.map((person, index) => {
+                const hasData = Object.values(person).some((value) => value.trim())
+                const required = index === 0 || hasData
+                return (
+                  <div key={index} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
+                    <h4 className="font-bold text-slate-800">Titular {index + 1}{index === 1 ? ' (opcional)' : ''}</h4>
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <TextField label="Nombres" value={person.nombres} onChange={(value) => setPersona(index as 0 | 1, 'nombres', value)} required={required} error={errors[`titulares.${index}.nombres`]} />
+                      <TextField label="Apellidos" value={person.apellidos} onChange={(value) => setPersona(index as 0 | 1, 'apellidos', value)} required={required} error={errors[`titulares.${index}.apellidos`]} />
+                      <FechaArgentina value={person.fechaNacimiento} onChange={(value) => setPersona(index as 0 | 1, 'fechaNacimiento', value)} required={required} error={errors[`titulares.${index}.fechaNacimiento`]} />
+                      <TextField label="DNI" value={person.dni} onChange={(value) => setPersona(index as 0 | 1, 'dni', value.replace(/\D/g, '').slice(0, 8))} required={required} error={errors[`titulares.${index}.dni`]} inputMode="numeric" />
+                      <TextField label="Celular" value={person.telefono} onChange={(value) => setPersona(index as 0 | 1, 'telefono', value)} required={required} error={errors[`titulares.${index}.telefono`]} inputMode="tel" />
+                      <TextField label="Email" type="email" value={person.email} onChange={(value) => setPersona(index as 0 | 1, 'email', value)} required={required} error={errors[`titulares.${index}.email`]} />
+                      <TextField label="Profesión / ocupación" value={person.ocupacion} onChange={(value) => setPersona(index as 0 | 1, 'ocupacion', value)} required={required} error={errors[`titulares.${index}.ocupacion`]} />
+                    </div>
                   </div>
-                </div>
-              ))}
-              {(['delegado', 'subdelegado'] as const).map((role) => (
-                <div key={role} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
-                  <h4 className="font-bold capitalize text-slate-800">{role === 'delegado' ? 'Delegado ante ACAV' : 'Subdelegado ante ACAV'}</h4>
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <TextField label="Nombres" value={data[role].nombres} onChange={(value) => setRepresentante(role, 'nombres', value)} error={errors[`${role}.nombres`]} />
-                    <TextField label="Apellidos" value={data[role].apellidos} onChange={(value) => setRepresentante(role, 'apellidos', value)} error={errors[`${role}.apellidos`]} />
-                    <TextField label="DNI" value={data[role].dni} onChange={(value) => setRepresentante(role, 'dni', value.replace(/\D/g, '').slice(0, 8))} error={errors[`${role}.dni`]} inputMode="numeric" />
-                    <TextField label="Celular" value={data[role].telefono} onChange={(value) => setRepresentante(role, 'telefono', value)} error={errors[`${role}.telefono`]} inputMode="tel" />
-                    <TextField label="Email" type="email" value={data[role].email} onChange={(value) => setRepresentante(role, 'email', value)} error={errors[`${role}.email`]} />
+                )
+              })}
+              {(['delegado', 'subdelegado'] as const).map((role) => {
+                const hasData = Object.values(data[role]).some((value) => value.trim())
+                return (
+                  <div key={role} className="rounded-2xl bg-slate-50 p-4 sm:p-5">
+                    <h4 className="font-bold capitalize text-slate-800">{role === 'delegado' ? 'Delegado ante ACAV (opcional)' : 'Subdelegado ante ACAV (opcional)'}</h4>
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <TextField label="Nombres" value={data[role].nombres} onChange={(value) => setRepresentante(role, 'nombres', value)} required={hasData} error={errors[`${role}.nombres`]} />
+                      <TextField label="Apellidos" value={data[role].apellidos} onChange={(value) => setRepresentante(role, 'apellidos', value)} required={hasData} error={errors[`${role}.apellidos`]} />
+                      <TextField label="DNI" value={data[role].dni} onChange={(value) => setRepresentante(role, 'dni', value.replace(/\D/g, '').slice(0, 8))} required={hasData} error={errors[`${role}.dni`]} inputMode="numeric" />
+                      <TextField label="Celular" value={data[role].telefono} onChange={(value) => setRepresentante(role, 'telefono', value)} required={hasData} error={errors[`${role}.telefono`]} inputMode="tel" />
+                      <TextField label="Email" type="email" value={data[role].email} onChange={(value) => setRepresentante(role, 'email', value)} required={hasData} error={errors[`${role}.email`]} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
         ) : null}
@@ -651,8 +693,9 @@ export default function SolicitudIngresoWizard() {
             <h3 id="step-documentos" className="text-xl font-bold text-slate-900">Documentación requerida</h3>
             <p className="mt-2 text-sm leading-6 text-slate-500">Adjuntá los documentos solicitados para completar tu inscripción.</p>
             <div className="mt-5 flex items-center justify-between rounded-xl bg-primary-50 px-4 py-3 text-sm">
-              <span className="font-semibold text-primary-900">Documentos cargados</span><span className="font-bold text-primary-700">{documentCount} / {DOCUMENTOS_INGRESO.length}</span>
+              <span className="font-semibold text-primary-900">Obligatorios cargados</span><span className="font-bold text-primary-700">{requiredDocumentCount} / {DOCUMENTOS_OBLIGATORIOS.length}</span>
             </div>
+            <p className="mt-2 text-xs text-slate-500">También podés adjuntar los DNI del Titular 2 y del Subdelegado, pero son opcionales ({optionalDocumentCount}/{DOCUMENTOS_OPCIONALES.length} cargados).</p>
             <div className="mt-5 space-y-6">
               <div>
                 <h4 className="mb-3 font-bold text-slate-800">DNI — frente y dorso</h4>
@@ -715,7 +758,7 @@ export default function SolicitudIngresoWizard() {
             </div>
 
             <div className="mt-3">
-              <ReviewCard title="Documentación" badge={`${documentCount}/${DOCUMENTOS_INGRESO.length} completos`} onEdit={() => setStep(3)}>
+              <ReviewCard title="Documentación" badge={`${requiredDocumentCount}/${DOCUMENTOS_OBLIGATORIOS.length} obligatorios · ${optionalDocumentCount} opcionales`} onEdit={() => setStep(3)}>
                 <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
                   {DOCUMENTOS_INGRESO.map((slot) => (
                     <li key={slot} className="grid min-w-0 grid-cols-[1rem_minmax(0,1fr)] items-start gap-2">

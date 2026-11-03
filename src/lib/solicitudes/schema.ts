@@ -1,13 +1,39 @@
 import { z } from 'zod'
 
-import { CATEGORIAS_INGRESO, migrarDatosIngreso, type DatosIngreso } from './types'
-import { esUrlValida, normalizarUrl, normalizarUrls, validarFechaNacimiento, validarTelefonoArgentino, validarUrls } from './validation'
+import { CATEGORIAS_INGRESO, migrarDatosIngreso, REDES_SOCIALES_CAMPOS, type DatosIngreso } from './types'
+import { esUrlValida, normalizarPerfilSocial, normalizarUrl, validarFechaNacimiento, validarPerfilSocial, validarTelefonoArgentino } from './validation'
 
 const email = z.string().trim().email('Ingresá un email válido.').max(160).transform((value) => value.toLowerCase())
 const requiredText = (label: string, max = 180) => z.string().trim().min(1, `${label} es obligatorio.`).max(max)
 const phone = z.string().trim().max(24).refine(validarTelefonoArgentino, 'Ingresá un celular argentino de 10 dígitos, sin 0 ni 15 (ej.: 3512345678).')
 const website = z.string().trim().min(1, 'Este campo es obligatorio.').max(300).transform(normalizarUrl).refine(esUrlValida, 'Ingresá una URL válida, por ejemplo https://www.ejemplo.com.ar.')
-const socialUrls = z.string().trim().min(1, 'Este campo es obligatorio.').max(1000).transform(normalizarUrls).refine(validarUrls, 'Ingresá una o más URLs válidas separadas por coma.')
+const socialProfile = z.string().trim().max(300).refine(validarPerfilSocial, 'Ingresá un @usuario o una URL válida.').transform(normalizarPerfilSocial)
+const optionalPhone = z.string().trim().max(24).refine((value) => !value || validarTelefonoArgentino(value), 'Ingresá un celular argentino válido, sin 0 ni 15.')
+const optionalEmail = z.string().trim().max(160).refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value), 'Ingresá un email válido.').transform((value) => value.toLowerCase())
+const optionalDni = z.string().trim().max(20).refine((value) => !value || /^\d{7,8}$/.test(value.replace(/\D/g, '')), 'El DNI debe tener 7 u 8 números.')
+const optionalDate = z.string().trim().max(20).refine((value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value), 'Ingresá una fecha válida.')
+const optionalText = (max: number) => z.string().trim().max(max)
+
+const personaTitularOpcional = z.object({
+  apellidos: optionalText(100),
+  nombres: optionalText(100),
+  fechaNacimiento: optionalDate,
+  dni: optionalDni,
+  telefono: optionalPhone,
+  email: optionalEmail,
+  ocupacion: optionalText(120),
+}).superRefine((person, ctx) => {
+  const fields: Array<[keyof typeof person, string]> = [
+    ['apellidos', 'Los apellidos del titular 2'], ['nombres', 'Los nombres del titular 2'],
+    ['fechaNacimiento', 'La fecha de nacimiento del titular 2'], ['dni', 'El DNI del titular 2'],
+    ['telefono', 'El celular del titular 2'], ['email', 'El email del titular 2'],
+    ['ocupacion', 'La profesión del titular 2'],
+  ]
+  if (!fields.some(([key]) => person[key].trim())) return
+  fields.forEach(([key, label]) => {
+    if (!person[key].trim()) ctx.addIssue({ code: 'custom', path: [key], message: `${label} es obligatorio si completás el titular 2.` })
+  })
+})
 const personaTitular = z.object({
   apellidos: requiredText('Los apellidos', 100),
   nombres: requiredText('Los nombres', 100),
@@ -18,13 +44,26 @@ const personaTitular = z.object({
   ocupacion: requiredText('La profesión u ocupación', 120),
 })
 
-const representante = z.object({
-  apellidos: requiredText('Los apellidos', 100),
-  nombres: requiredText('Los nombres', 100),
-  dni: z.string().trim().regex(/^\d{7,8}$/, 'El DNI debe tener 7 u 8 números.'),
-  telefono: phone,
-  email,
+const representanteOpcional = z.object({
+  apellidos: optionalText(100),
+  nombres: optionalText(100),
+  dni: optionalDni,
+  telefono: optionalPhone,
+  email: optionalEmail,
+}).superRefine((person, ctx) => {
+  const fields: Array<[keyof typeof person, string]> = [
+    ['apellidos', 'Los apellidos'], ['nombres', 'Los nombres'], ['dni', 'El DNI'],
+    ['telefono', 'El celular'], ['email', 'El email'],
+  ]
+  if (!fields.some(([key]) => person[key].trim())) return
+  fields.forEach(([key, label]) => {
+    if (!person[key].trim()) ctx.addIssue({ code: 'custom', path: [key], message: `${label} es obligatorio si completás los datos del representante.` })
+  })
 })
+
+const redesSociales = z.object(Object.fromEntries(
+  REDES_SOCIALES_CAMPOS.map(({ key }) => [key, socialProfile]),
+) as Record<(typeof REDES_SOCIALES_CAMPOS)[number]['key'], typeof socialProfile>)
 
 const aval = z.object({ agencia: requiredText('El nombre de la agencia', 160), email })
 
@@ -45,10 +84,10 @@ const agenciaSchema = z.object({
   whatsapp: phone,
   email,
   sitioWeb: website,
-  redesSociales: socialUrls,
-  titulares: z.tuple([personaTitular, personaTitular]),
-  delegado: representante,
-  subdelegado: representante,
+  redesSociales,
+  titulares: z.tuple([personaTitular, personaTitularOpcional]),
+  delegado: representanteOpcional,
+  subdelegado: representanteOpcional,
   avales: z.tuple([aval, aval]),
 }).superRefine((data, ctx) => {
   const aval1 = data.avales[0].email
@@ -98,7 +137,16 @@ export const borradorIngresoSchema = z.preprocess((input) => {
   whatsapp: z.string().max(30).optional(),
   email: z.string().max(160).optional(),
   sitioWeb: z.string().max(300).optional(),
-  redesSociales: z.string().max(300).optional(),
+  redesSociales: z.union([
+    z.string().max(1000),
+    z.object({
+      instagram: z.string().max(300).optional(),
+      facebook: z.string().max(300).optional(),
+      linkedin: z.string().max(300).optional(),
+      tiktok: z.string().max(300).optional(),
+      otra: z.string().max(300).optional(),
+    }),
+  ]).optional(),
   titulares: z.array(z.object({
     apellidos: z.string().max(100).optional(), nombres: z.string().max(100).optional(), nombre: z.string().max(160).optional(), fechaNacimiento: z.string().max(20).optional(),
     dni: z.string().max(20).optional(), telefono: z.string().max(24).optional(),

@@ -43,7 +43,7 @@ const categorias: Categoria[] = [
 ]
 
 const documentacion = [
-  'DNI de titulares, delegado y subdelegado (frente y dorso)',
+  'DNI del Titular 1 y del Delegado (frente y dorso); DNI del Titular 2 y del Subdelegado (opcional)',
   'Contrato / Estatuto social o documentación equivalente',
   'Inscripción en ARCA',
   'Informe comercial (Nosis o Veraz)',
