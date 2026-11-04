@@ -5,20 +5,23 @@ import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { FiArrowUpRight, FiX } from 'react-icons/fi'
 
+import workshopImage from '../../../public/images/popup_work.jpg'
+import mercadoImage from '../../../public/images/popup_mdv.jpg'
+
 const events = [
   {
     title: 'Workshop',
     eyebrow: 'ENCUENTRO PROFESIONAL',
     description: 'Conectá con quienes impulsan la industria turística.',
-    image: '/images/popup_work.jpg',
-    imageAlt: 'Profesionales participando de un encuentro de turismo',
+    image: workshopImage,
+    imageAlt: 'Afiche del 66 Workshop Turístico de ACAV',
     href: 'https://acreditacion.rafarearte.com/registro/registro-publico.html?eventId=48',
   },
   {
     title: 'Mercado de Viajes',
     eyebrow: 'DESTINOS Y EXPERIENCIAS',
     description: 'Descubrí propuestas, destinos y experiencias para viajar.',
-    image: '/images/popup_mdv.jpg',
+    image: mercadoImage,
     imageAlt: 'Gráfica promocional de Mercado de Viajes',
     href: 'https://acreditacion.rafarearte.com/registro/registro-publico.html?eventId=47',
   },
@@ -138,17 +141,19 @@ export default function HomeEventsPopup() {
                     }}
                     className="group flex min-w-0 flex-col overflow-hidden rounded-[20px] border border-slate-200/90 bg-white text-left shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
                   >
-                    <div className="relative aspect-[3/1] w-full overflow-hidden bg-slate-100 sm:aspect-[2/1]">
+                    <div className="relative w-full overflow-hidden bg-slate-100 sm:aspect-[2/1]">
                       <Image
                         src={event.image}
                         alt={event.imageAlt}
-                        fill
                         sizes="(max-width: 639px) 90vw, (max-width: 900px) 42vw, 390px"
-                        className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                        className="h-auto w-full object-contain transition duration-700 sm:absolute sm:inset-0 sm:h-full sm:object-cover sm:group-hover:scale-[1.03]"
                       />
+                      <span aria-hidden="true" className="absolute bottom-3 right-3 inline-flex size-9 items-center justify-center rounded-full bg-slate-900 text-white shadow-lg ring-2 ring-white/80 sm:hidden">
+                        <FiArrowUpRight className="text-[17px]" />
+                      </span>
                     </div>
 
-                    <div className="flex flex-1 items-end justify-between gap-3 p-3 sm:gap-4 sm:p-5">
+                    <div className="hidden flex-1 items-end justify-between gap-3 p-3 sm:flex sm:gap-4 sm:p-5">
                       <div className="min-w-0">
                         <p className="text-[8px] font-bold uppercase tracking-[0.15em] text-primary-600 sm:text-[9px]">
                           {event.eyebrow}

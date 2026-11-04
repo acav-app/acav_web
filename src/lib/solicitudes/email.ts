@@ -2,6 +2,10 @@ import 'server-only'
 
 import { Resend } from 'resend'
 
+import { emailAction, emailNotice, emailParagraph, emailSummary, renderSolicitudEmail, solicitudEmailText } from './email-template'
+
+export { escapeHtml } from './email-template'
+
 function resend() {
   const key = process.env.RESEND_API_KEY
   if (!key) throw new Error('Falta configurar RESEND_API_KEY.')
@@ -22,10 +26,6 @@ export function siteUrl() {
   return (configured || 'http://localhost:3000').replace(/\/$/, '')
 }
 
-function shell(title: string, content: string) {
-  return `<!doctype html><html lang="es"><body style="margin:0;background:#f1f5f9;font-family:Arial,sans-serif;color:#0f172a"><div style="max-width:620px;margin:32px auto;padding:32px;background:#fff;border-radius:18px"><p style="font-size:12px;font-weight:bold;letter-spacing:2px;color:#2563eb">A.C.A.V.</p><h1 style="font-size:24px">${title}</h1>${content}<p style="margin-top:32px;color:#64748b;font-size:12px">Asociación Cordobesa de Agencias de Viajes</p></div></body></html>`
-}
-
 export async function enviarInvitacionAval(input: {
   email: string
   agencia: string
@@ -34,15 +34,25 @@ export async function enviarInvitacionAval(input: {
   token: string
 }) {
   const link = `${siteUrl()}/firmar/${encodeURIComponent(input.token)}`
+  const intro = `La agencia ${input.agencia} te incluyó como Aval ${input.paso} en su solicitud de ingreso a ACAV.`
+  const security = 'El enlace es personal, de un solo uso y vence en 10 días. No lo compartas con otras personas.'
+  const reason = 'Recibís este correo porque una agencia indicó tu email como aval. Si no reconocés esta solicitud, podés ignorarlo.'
   const { error } = await resend().emails.send({
     from: fromEmail(),
     to: [input.email],
     subject: `Firma de aval ${input.paso} — Solicitud ${input.numero}`,
-    html: shell(`Te invitaron a avalar una solicitud`, `
-      <p>La agencia <strong>${escapeHtml(input.agencia)}</strong> te incluyó como Aval ${input.paso} en la solicitud <strong>${escapeHtml(input.numero)}</strong>.</p>
-      <p>Revisá el resumen y firmá desde el siguiente enlace seguro. El enlace es personal, de un solo uso y vence en 10 días.</p>
-      <p style="margin:28px 0"><a href="${link}" style="display:inline-block;padding:14px 22px;border-radius:999px;background:#f97316;color:#fff;text-decoration:none;font-weight:bold">Revisar y firmar</a></p>
-      <p style="color:#64748b;font-size:12px">Si no reconocés esta solicitud, podés ignorar este correo.</p>`),
+    html: renderSolicitudEmail({
+      title: 'Te invitaron a avalar una solicitud',
+      preheader: `${input.agencia} solicita tu firma como Aval ${input.paso}. Revisá la solicitud ${input.numero}.`,
+      eyebrow: `AVAL ${input.paso} · FIRMA PENDIENTE`,
+      siteUrl: siteUrl(), footerReason: reason,
+      content: emailParagraph(intro)
+        + emailSummary([['Agencia solicitante', input.agencia], ['Número de solicitud', input.numero], ['Tu participación', `Aval ${input.paso}`]])
+        + emailParagraph('Revisá los datos de la agencia y, si corresponde, registrá tu firma desde el siguiente enlace seguro.')
+        + emailNotice('Enlace personal · válido por 10 días', security)
+        + emailAction('Revisar y firmar', link),
+    }),
+    text: solicitudEmailText([intro, `Solicitud: ${input.numero}`, security, `Revisar y firmar: ${link}`, reason]),
   })
   if (error) throw new Error(error.message)
 }
@@ -56,20 +66,23 @@ export async function enviarResumenSolicitante(input: {
   mensaje: string
 }) {
   const recibida = input.tipo === 'recibida'
+  const title = recibida ? 'Recibimos tu solicitud' : 'Tu solicitud tiene novedades'
+  const intro = recibida ? 'Tu solicitud de ingreso fue registrada correctamente. Te acompañamos durante los próximos pasos del trámite.' : 'Te compartimos una actualización sobre tu solicitud de ingreso a ACAV.'
+  const reference = `Conservá este correo como referencia. Para consultar por tu solicitud, indicá el número ${input.numero}.`
   const { error } = await resend().emails.send({
     from: fromEmail(),
     to: [input.email],
     subject: recibida ? `Solicitud recibida — ${input.numero}` : `Actualización de solicitud — ${input.numero}`,
-    html: shell(recibida ? 'Recibimos tu solicitud' : 'Actualización de tu solicitud', `
-      <p>${recibida ? 'Tu solicitud de ingreso fue registrada correctamente.' : 'Te compartimos una actualización sobre tu solicitud de ingreso.'}</p>
-      <div style="margin:24px 0;padding:18px 20px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
-        <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px">Resumen del trámite</p>
-        <p style="margin:6px 0"><strong>Número:</strong> ${escapeHtml(input.numero)}</p>
-        <p style="margin:6px 0"><strong>Agencia:</strong> ${escapeHtml(input.agencia)}</p>
-        <p style="margin:6px 0"><strong>Estado:</strong> ${escapeHtml(input.estado)}</p>
-      </div>
-      <p>${escapeHtml(input.mensaje)}</p>
-      <p>Conservá este correo como referencia. Para consultar por tu solicitud, indicá el número <strong>${escapeHtml(input.numero)}</strong>.</p>`),
+    html: renderSolicitudEmail({
+      title, preheader: `${input.numero} · ${input.estado}. ${input.mensaje}`,
+      eyebrow: recibida ? 'SOLICITUD REGISTRADA' : 'SEGUIMIENTO DEL TRÁMITE',
+      siteUrl: siteUrl(), footerReason: 'Recibís esta notificación porque tu email está asociado a una solicitud de ingreso a ACAV.',
+      content: emailParagraph(intro)
+        + emailSummary([['Agencia', input.agencia], ['Número de solicitud', input.numero], ['Estado actual', input.estado]])
+        + emailNotice('Próximos pasos', input.mensaje)
+        + emailParagraph(reference),
+    }),
+    text: solicitudEmailText([title, intro, `Agencia: ${input.agencia}`, `Solicitud: ${input.numero}`, `Estado: ${input.estado}`, input.mensaje, reference]),
   })
   if (error) throw new Error(error.message)
 }
@@ -82,6 +95,19 @@ export async function enviarExpediente(input: {
 }) {
   const recipients = Array.from(new Set(input.emails.map((email) => email.trim().toLowerCase()).filter(Boolean)))
   if (!recipients.length) throw new Error('No hay destinatarios para el expediente.')
+  const intro = 'El circuito de firmas de la solicitud de ingreso finalizó correctamente. El expediente reúne los datos y las firmas registrados durante el trámite.'
+  const attachmentNote = 'Adjuntamos el expediente PDF consolidado a este correo. Descargalo y guardalo para futuras consultas.'
+  const html = renderSolicitudEmail({
+    title: 'El expediente está completo',
+    preheader: `${input.numero} · Finalizó el circuito de firmas. Encontrá el expediente PDF adjunto.`,
+    eyebrow: 'CIRCUITO DE FIRMAS FINALIZADO', siteUrl: siteUrl(),
+    footerReason: 'Recibís este correo porque participaste como solicitante o aval en este trámite. El mensaje se envía individualmente para proteger los datos de los participantes.',
+    content: emailParagraph(intro)
+      + emailSummary([['Agencia', input.agencia], ['Número de solicitud', input.numero], ['Estado', 'Completado']])
+      + emailNotice('Expediente PDF adjunto', attachmentNote, true)
+      + emailParagraph(`Para cualquier consulta sobre este expediente, indicá el número ${input.numero}.`),
+  })
+  const text = solicitudEmailText(['El expediente está completo', intro, `Agencia: ${input.agencia}`, `Solicitud: ${input.numero}`, 'Estado: Completado', attachmentNote])
   const client = resend()
   const failures: string[] = []
   // Send separate messages so the parties do not see one another's email addresses.
@@ -91,15 +117,8 @@ export async function enviarExpediente(input: {
         from: fromEmail(),
         to: [recipient],
         subject: `Solicitud ${input.numero} completada — ${input.agencia}`,
-        html: shell('Trámite completado', `
-          <p>El circuito de firmas de tu solicitud finalizó correctamente.</p>
-          <div style="margin:24px 0;padding:18px 20px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
-            <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px">Resumen del trámite</p>
-            <p style="margin:6px 0"><strong>Número:</strong> ${escapeHtml(input.numero)}</p>
-            <p style="margin:6px 0"><strong>Agencia:</strong> ${escapeHtml(input.agencia)}</p>
-            <p style="margin:6px 0"><strong>Estado:</strong> Completado</p>
-          </div>
-          <p>Adjuntamos el expediente PDF consolidado. Guardalo para futuras consultas.</p>`),
+        html,
+        text,
         attachments: [{ filename: `${input.numero}-expediente.pdf`, content: Buffer.from(input.pdf) }],
       })
       if (error) failures.push(`${recipient}: ${error.message}`)
@@ -116,11 +135,16 @@ export async function enviarAvisoAdministrativo(input: { email: string; numero: 
     from: fromEmail(),
     to: [input.email],
     subject: `Solicitud ${input.numero}: ${input.etapa}`,
-    html: shell('Nueva actividad en una solicitud', `<p>La solicitud <strong>${escapeHtml(input.numero)}</strong> de <strong>${escapeHtml(input.agencia)}</strong> pasó a la etapa: ${escapeHtml(input.etapa)}.</p><p><a href="${adminLink}">Ingresá al panel administrativo</a> para revisar el trámite.</p>`),
+    html: renderSolicitudEmail({
+      title: 'Una solicitud tiene novedades',
+      preheader: `${input.numero} · ${input.agencia} · ${input.etapa}`,
+      eyebrow: 'NOTIFICACIÓN ADMINISTRATIVA', siteUrl: siteUrl(),
+      footerReason: 'Notificación interna enviada a la cuenta administrativa configurada en el portal de ACAV. El acceso al panel requiere autorización.',
+      content: emailParagraph('Se registró una nueva actividad en una solicitud de ingreso. Ingresá al panel para consultar los datos y revisar la documentación.')
+        + emailSummary([['Agencia', input.agencia], ['Número de solicitud', input.numero], ['Etapa actual', input.etapa]])
+        + emailAction('Revisar en el administrador', adminLink),
+    }),
+    text: solicitudEmailText(['Nueva actividad en una solicitud', `Agencia: ${input.agencia}`, `Solicitud: ${input.numero}`, `Etapa: ${input.etapa}`, `Revisar en el administrador: ${adminLink}`]),
   })
   if (error) throw new Error(error.message)
-}
-
-export function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!)
 }

@@ -78,3 +78,9 @@ El PDF de cierre consolida los datos del trámite, la documentación declarada y
 **Exportación desde el administrador:** “Exportar PDF actualizado” consulta la solicitud y genera un PDF nuevo en cada descarga, con los datos, firmas y plantilla vigentes. No depende de que exista un PDF guardado y no reemplaza el archivo histórico almacenado ni modifica los correos enviados previamente.
 
 La rúbrica capturada en pantalla queda registrada como evidencia electrónica con timestamp, IP y navegador; no debe anunciarse como firma digital certificada ni como garantía de validez jurídica sin revisión legal específica.
+
+### Diseño de las notificaciones por email
+
+Las invitaciones de aval, las confirmaciones y actualizaciones del solicitante, el expediente final y los avisos administrativos comparten una plantilla institucional adaptable, con logo, resumen, preencabezado y versión de texto simple. Los emails con acciones incluyen un enlace alternativo al botón. `NEXT_PUBLIC_SITE_URL` debe apuntar al origen público HTTPS del portal para los enlaces y el logo; algunos clientes bloquean las imágenes externas hasta que el destinatario las autoriza.
+
+Ejecutar `npm run test:emails` para probar las plantillas y los envíos con Resend simulado, sin enviar mensajes reales. Si se define `ACAV_EMAIL_PREVIEW_DIR` con una carpeta local, las pruebas también guardan seis vistas previas HTML con datos de ejemplo y el logo incrustado para abrirlas sin conexión. Los cambios de diseño se aplican a nuevos envíos; no modifican emails ya recibidos.
