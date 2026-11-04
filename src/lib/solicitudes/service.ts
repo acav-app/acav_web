@@ -154,11 +154,16 @@ export async function crearBorradorIngreso() {
 }
 
 export async function obtenerBorradorIngreso(id: string, token: string) {
-  const snapshot = await collection().doc(id).get()
-  if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
-  const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
-  assertDraft(stored, token)
-  return { id, numero: stored.numero, datos: stored.datos, documentos: stored.documentos, borradorExpira: stored.draftExpiresAt }
+  const ref = collection().doc(id)
+  return solicitudesDb().runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ref)
+    if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
+    const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
+    assertDraft(stored, token)
+    // Resuming a valid draft is activity, even before the next autosave.
+    transaction.update(ref, { updatedAt: FieldValue.serverTimestamp() })
+    return { id, numero: stored.numero, datos: stored.datos, documentos: stored.documentos, borradorExpira: stored.draftExpiresAt }
+  })
 }
 
 export async function guardarDatosBorrador(id: string, token: string, input: unknown) {

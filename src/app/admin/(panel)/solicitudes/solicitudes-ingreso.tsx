@@ -243,6 +243,33 @@ export default function SolicitudesIngresoAdmin() {
     }
   }
 
+  async function exportExpediente(item: SolicitudIngresoResumen) {
+    setBusy(`${item.id}:export`)
+    setMessages((current) => ({ ...current, [item.id]: '' }))
+    try {
+      const response = await fetch(`/api/admin/solicitudes/ingreso/${item.id}/expediente`, { cache: 'no-store' })
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}))
+        throw new Error(body.error ?? 'No se pudo generar el PDF actualizado.')
+      }
+      const url = URL.createObjectURL(await response.blob())
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${item.numero.replace(/[^A-Za-z0-9_-]/g, '_')}-expediente.pdf`
+      document.body.appendChild(link)
+      try {
+        link.click()
+      } finally {
+        link.remove()
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+      }
+    } catch (cause) {
+      setMessages((current) => ({ ...current, [item.id]: cause instanceof Error ? cause.message : 'No se pudo generar el PDF actualizado.' }))
+    } finally {
+      setBusy('')
+    }
+  }
+
   async function openDownload(url: string) {
     const tab = window.open('about:blank', '_blank')
     if (tab) tab.opener = null
@@ -373,12 +400,14 @@ export default function SolicitudesIngresoAdmin() {
                           Reenviar invitación
                         </button>
                       ) : null}
-                      {item.estado === 'COMPLETADO_APROBADO' && item.pdfDisponible ? (
+                      {item.estado === 'COMPLETADO_APROBADO' ? (
                         <button
                           type="button"
-                          onClick={() => void openDownload(`/api/admin/solicitudes/ingreso/${item.id}/expediente`)}
-                          className="inline-flex h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100"
-                        ><FiDownload /> Descargar expediente</button>
+                          disabled={busy !== ''}
+                          onClick={() => void exportExpediente(item)}
+                          title="Genera un nuevo PDF con los datos y la plantilla actuales"
+                          className="inline-flex h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-wait disabled:opacity-60"
+                        >{busy === `${item.id}:export` ? <FiLoader className="animate-spin" /> : <FiDownload />}{busy === `${item.id}:export` ? 'Generando PDF…' : 'Exportar PDF actualizado'}</button>
                       ) : null}
                       {item.estado === 'COMPLETADO_APROBADO' && item.notificaciones.final !== 'enviada' ? (
                         <button

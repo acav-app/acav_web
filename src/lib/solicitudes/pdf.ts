@@ -5,13 +5,13 @@ import path from 'node:path'
 
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from 'pdf-lib'
 
-import { DOCUMENTOS_INGRESO, ETIQUETAS_DOCUMENTO, nombreCompleto, redesSocialesComoTexto, type FirmaGuardada, type SolicitudIngreso } from './types'
+import { DOCUMENTOS_INGRESO, DOCUMENTOS_OPCIONALES, ETIQUETAS_DOCUMENTO, nombreCompleto, redesSocialesComoTexto, type FirmaGuardada, type SolicitudIngreso } from './types'
 
 const PAGE_WIDTH = 595.28
 const PAGE_HEIGHT = 841.89
 const MARGIN = 48
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2
-const HEADER_HEIGHT = 88
+const HEADER_HEIGHT = 70
 const FOOTER_SAFE = 56
 
 const COLORS = {
@@ -50,80 +50,95 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
   const pages: PDFPage[] = []
   let page = {} as PDFPage
   let y = 0
+  let activeSection: { title: string; letter: string } | null = null
   const headerBottom = PAGE_HEIGHT - HEADER_HEIGHT
+
+  const drawSectionHeading = (title: string, letter: string) => {
+    page.drawText(letter, { x: MARGIN, y: y - 1, size: 8, font: bold, color: COLORS.primary })
+    page.drawText(pdfSafe(title), { x: MARGIN + 22, y: y - 2, size: 12, font: bold, color: COLORS.navy })
+    page.drawLine({
+      start: { x: MARGIN + 22, y: y - 10 },
+      end: { x: PAGE_WIDTH - MARGIN, y: y - 10 },
+      thickness: 0.7, color: COLORS.border,
+    })
+    y -= 28
+  }
 
   const newPage = () => {
     page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
     pages.push(page)
     page.drawRectangle({ x: 0, y: headerBottom, width: PAGE_WIDTH, height: HEADER_HEIGHT, color: COLORS.primary })
-    page.drawRectangle({ x: 0, y: headerBottom, width: 5, height: HEADER_HEIGHT, color: COLORS.orange })
     page.drawRectangle({ x: 0, y: headerBottom - 3, width: PAGE_WIDTH, height: 3, color: COLORS.orange })
 
     if (logo) {
-      const scale = Math.min(112 / logo.width, 44 / logo.height)
+      const scale = Math.min(100 / logo.width, 32 / logo.height)
       const logoWidth = logo.width * scale
       const logoHeight = logo.height * scale
       page.drawImage(logo, {
         x: MARGIN,
-        y: headerBottom + (HEADER_HEIGHT - logoHeight) / 2,
+        y: headerBottom + 25,
         width: logoWidth,
         height: logoHeight,
       })
     } else {
-      page.drawText('ACAV', { x: MARGIN, y: headerBottom + 47, size: 20, font: bold, color: COLORS.white })
+      page.drawText('ACAV', { x: MARGIN, y: headerBottom + 32, size: 20, font: bold, color: COLORS.white })
     }
 
     const rightX = PAGE_WIDTH - MARGIN
     const eyebrow = 'EXPEDIENTE DIGITAL'
     page.drawText(eyebrow, {
-      x: rightX - bold.widthOfTextAtSize(eyebrow, 8), y: headerBottom + 55,
+      x: rightX - bold.widthOfTextAtSize(eyebrow, 8), y: headerBottom + 45,
       size: 8, font: bold, color: rgb(0.86, 0.94, 1),
     })
     const numberText = solicitud.numero
     page.drawText(numberText, {
-      x: rightX - bold.widthOfTextAtSize(numberText, 14), y: headerBottom + 31,
+      x: rightX - bold.widthOfTextAtSize(numberText, 14), y: headerBottom + 24,
       size: 14, font: bold, color: COLORS.white,
     })
     page.drawText('ASOCIACIÓN CORDOBESA DE AGENCIAS DE VIAJES', {
       x: MARGIN, y: headerBottom + 10, size: 6.5, font: regular, color: rgb(0.86, 0.94, 1),
     })
     y = headerBottom - 27
+    if (activeSection) drawSectionHeading(`${activeSection.title} (continuación)`, activeSection.letter)
   }
 
   const ensureSpace = (needed: number) => {
     if (y - needed < FOOTER_SAFE) newPage()
   }
 
-  const drawSection = (title: string, letter: string, followingSpace = 82) => {
-    ensureSpace(followingSpace + 28)
-    page.drawText(letter, { x: MARGIN, y: y - 1, size: 8, font: bold, color: COLORS.primary })
-    page.drawText(title, { x: MARGIN + 22, y: y - 2, size: 12, font: bold, color: COLORS.navy })
-    page.drawLine({
-      start: { x: MARGIN + 22, y: y - 10 },
-      end: { x: PAGE_WIDTH - MARGIN, y: y - 10 },
-      thickness: 0.7,
-      color: COLORS.border,
-    })
-    y -= 28
+  const drawSection = (title: string, letter: string, followingSpace = 52) => {
+    activeSection = null
+    ensureSpace(Math.min(followingSpace + 40, headerBottom - 27 - FOOTER_SAFE))
+    y -= 12
+    activeSection = { title, letter }
+    drawSectionHeading(title, letter)
   }
 
+  type Field = { label: string; value: unknown }
+  const fieldGap = 7
+  const fieldWidth = (CONTENT_WIDTH - 10) / 2
+  const fieldRows = (items: Field[]) => {
+    const rows = []
+    for (let index = 0; index < items.length; index += 2) {
+      const row = items.slice(index, index + 2).map((item) => ({
+        ...item,
+        lines: wrapText(String(item.value ?? '').trim() || '—', regular, 9, fieldWidth - 22),
+        labelLines: wrapText(item.label, bold, 7, fieldWidth - 22),
+      }))
+      rows.push({ row, height: Math.max(...row.map((item) => 16 + item.labelLines.length * 9 + item.lines.length * 11)) })
+    }
+    return rows
+  }
+  const fieldGridHeight = (items: Field[]) => fieldRows(items).reduce((total, row) => total + row.height + fieldGap, 0)
+
   const drawFieldGrid = (
-    items: Array<{ label: string; value: unknown }>,
+    items: Field[],
     fillColor: typeof COLORS.surface = COLORS.surface,
   ) => {
     const gap = 10
     const columnWidth = (CONTENT_WIDTH - gap) / 2
-    for (let index = 0; index < items.length; index += 2) {
-      const row = items.slice(index, index + 2).map((item) => {
-        const value = String(item.value ?? '').trim() || '—'
-        return {
-          ...item,
-          value,
-          lines: wrapText(value, regular, 9, columnWidth - 22),
-        }
-      })
-      const rowHeight = Math.max(48, ...row.map((item) => 29 + item.lines.length * 11))
-      ensureSpace(rowHeight + 9)
+    for (const { row, height: rowHeight } of fieldRows(items)) {
+      ensureSpace(rowHeight + fieldGap)
       row.forEach((item, column) => {
         const x = MARGIN + column * (columnWidth + gap)
         const top = y
@@ -131,23 +146,33 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
           x, y: top - rowHeight, width: columnWidth, height: rowHeight,
           color: fillColor, borderColor: COLORS.border, borderWidth: 0.55,
         })
-        page.drawText(pdfSafe(item.label), {
-          x: x + 11, y: top - 15, size: 7, font: bold, color: COLORS.muted,
+        item.labelLines.forEach((line, lineIndex) => {
+          page.drawText(line, {
+            x: x + 11, y: top - 12 - lineIndex * 9, size: 7, font: bold, color: COLORS.muted,
+          })
         })
         item.lines.forEach((line, lineIndex) => {
           page.drawText(line, {
-            x: x + 11, y: top - 30 - lineIndex * 11, size: 9, font: regular, color: COLORS.text,
+            x: x + 11, y: top - 16 - item.labelLines.length * 9 - lineIndex * 11, size: 9, font: regular, color: COLORS.text,
           })
         })
       })
-      y -= rowHeight + 9
+      y -= rowHeight + fieldGap
     }
   }
 
-  const drawSubheading = (title: string) => {
-    ensureSpace(95)
+  const drawSubheading = (title: string, followingSpace: number) => {
+    // Keep a person's fields together unless the block itself exceeds a page.
+    ensureSpace(Math.min(followingSpace + 25, headerBottom - 27 - 28 - FOOTER_SAFE))
+    y -= 8
     page.drawText(pdfSafe(title), { x: MARGIN, y: y - 1, size: 9, font: bold, color: COLORS.primary })
     y -= 17
+  }
+
+  const drawEmptyPerson = (label: string) => {
+    ensureSpace(28)
+    page.drawText(`${label}: no informado.`, { x: MARGIN, y: y - 12, size: 9, font: regular, color: COLORS.muted })
+    y -= 28
   }
 
   newPage()
@@ -167,8 +192,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
     { label: 'FINALIZACIÓN', value: formatDate(solicitud.firmas.aval2?.firmadaEn ?? null) },
   ], COLORS.blueSurface)
 
-  drawSection('Información de la agencia', 'A')
-  drawFieldGrid([
+  const agencyFields: Field[] = [
     { label: 'RAZÓN SOCIAL', value: d.razonSocial },
     { label: 'DESIGNACIÓN COMERCIAL', value: d.designacionComercial },
     { label: 'ACTIVIDAD PRINCIPAL', value: d.actividadPrincipal },
@@ -185,58 +209,75 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
     { label: 'EMAIL PRINCIPAL', value: d.email },
     { label: 'SITIO WEB', value: d.sitioWeb },
     { label: 'REDES SOCIALES', value: redesSocialesComoTexto(d.redesSociales) },
-  ])
+  ]
+  drawSection('Información de la agencia', 'A', fieldGridHeight(agencyFields))
+  drawFieldGrid(agencyFields)
 
-  drawSection('Titulares', 'B')
+  const titularFields = (titular: typeof d.titulares[number]): Field[] => [
+    { label: 'NOMBRE Y APELLIDO', value: nombreCompleto(titular) },
+    { label: 'FECHA DE NACIMIENTO', value: formatBirthDate(titular.fechaNacimiento) },
+    { label: 'DNI', value: titular.dni },
+    { label: 'CELULAR', value: titular.telefono },
+    { label: 'EMAIL', value: titular.email },
+    { label: 'PROFESIÓN / OCUPACIÓN', value: titular.ocupacion },
+  ]
+  drawSection('Titulares', 'B', fieldGridHeight(titularFields(d.titulares[0])) + 25)
   for (let index = 0; index < d.titulares.length; index++) {
     const titular = d.titulares[index]
-    drawSubheading(`Titular ${index + 1}`)
-    drawFieldGrid([
-      { label: 'NOMBRE Y APELLIDO', value: nombreCompleto(titular) },
-      { label: 'FECHA DE NACIMIENTO', value: titular.fechaNacimiento },
-      { label: 'DNI', value: titular.dni },
-      { label: 'CELULAR', value: titular.telefono },
-      { label: 'EMAIL', value: titular.email },
-      { label: 'PROFESIÓN / OCUPACIÓN', value: titular.ocupacion },
-    ])
+    if (!Object.values(titular).some((value) => value.trim())) {
+      drawEmptyPerson(`Titular ${index + 1}`)
+      continue
+    }
+    const fields = titularFields(titular)
+    drawSubheading(`Titular ${index + 1}`, fieldGridHeight(fields))
+    drawFieldGrid(fields)
   }
 
-  drawSection('Representantes ante ACAV', 'C')
+  const representativeFields = (persona: typeof d.delegado): Field[] => [
+    { label: 'NOMBRE Y APELLIDO', value: nombreCompleto(persona) },
+    { label: 'DNI', value: persona.dni },
+    { label: 'CELULAR', value: persona.telefono },
+    { label: 'EMAIL', value: persona.email },
+  ]
+  drawSection('Representantes ante ACAV', 'C', fieldGridHeight(representativeFields(d.delegado)) + 25)
   for (const [label, persona] of [['Delegado', d.delegado], ['Subdelegado', d.subdelegado]] as const) {
-    drawSubheading(label)
-    drawFieldGrid([
-      { label: 'NOMBRE Y APELLIDO', value: nombreCompleto(persona) },
-      { label: 'DNI', value: persona.dni },
-      { label: 'CELULAR', value: persona.telefono },
-      { label: 'EMAIL', value: persona.email },
-    ])
+    if (!Object.values(persona).some((value) => value.trim())) {
+      drawEmptyPerson(label)
+      continue
+    }
+    const fields = representativeFields(persona)
+    drawSubheading(label, fieldGridHeight(fields))
+    drawFieldGrid(fields)
   }
 
-  drawSection('Avales de asociados', 'D')
+  drawSection('Avales de asociados', 'D', fieldGridHeight(d.avales.flatMap((aval) => [
+    { label: 'AGENCIA', value: aval.agencia }, { label: 'EMAIL', value: aval.email },
+  ])))
   drawFieldGrid(d.avales.flatMap((aval, index) => [
     { label: `AVAL ${index + 1} · AGENCIA`, value: aval.agencia },
     { label: `AVAL ${index + 1} · EMAIL`, value: aval.email },
   ]))
 
-  drawSection('Documentación presentada', 'E')
   const docGap = 10
   const docWidth = (CONTENT_WIDTH - docGap) / 2
   for (let index = 0; index < DOCUMENTOS_INGRESO.length; index += 2) {
     const row = DOCUMENTOS_INGRESO.slice(index, index + 2).map((slot) => {
       const documento = solicitud.documentos[slot]
-      const labelLines = wrapText(ETIQUETAS_DOCUMENTO[slot], regular, 8, docWidth - 90)
+      const optional = (DOCUMENTOS_OPCIONALES as readonly string[]).includes(slot)
+      const labelLines = wrapText(ETIQUETAS_DOCUMENTO[slot], bold, 8, docWidth - 22)
       const fileLines = wrapText(documento?.nombre ?? 'No adjuntado', regular, 8, docWidth - 22)
-      return { documento, labelLines, fileLines }
+      return { documento, optional, labelLines, fileLines }
     })
-    const rowHeight = Math.max(...row.map(({ labelLines, fileLines }) => 37 + (labelLines.length + fileLines.length) * 9))
+    const rowHeight = Math.max(...row.map(({ labelLines, fileLines }) => 50 + (labelLines.length + fileLines.length) * 9))
+    if (index === 0) drawSection('Documentación presentada', 'E', rowHeight + 9)
     ensureSpace(rowHeight + 9)
-    row.forEach(({ documento, labelLines, fileLines }, column) => {
+    row.forEach(({ documento, optional, labelLines, fileLines }, column) => {
       const x = MARGIN + column * (docWidth + docGap)
       const top = y
-      const accent = documento ? COLORS.green : COLORS.orange
+      const accent = documento ? COLORS.green : optional ? COLORS.muted : COLORS.orange
       page.drawRectangle({
         x, y: top - rowHeight, width: docWidth, height: rowHeight,
-        color: documento ? COLORS.greenSurface : COLORS.orangeSurface,
+        color: documento ? COLORS.greenSurface : optional ? COLORS.surface : COLORS.orangeSurface,
         borderColor: COLORS.border, borderWidth: 0.55,
       })
       page.drawRectangle({ x, y: top - rowHeight, width: 2.5, height: rowHeight, color: accent })
@@ -245,9 +286,9 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
           x: x + 10, y: top - 14 - lineIndex * 9, size: 8, font: bold, color: COLORS.text,
         })
       })
-      const status = documento ? 'ADJUNTADO' : 'PENDIENTE'
+      const status = documento ? 'ADJUNTADO' : optional ? 'OPCIONAL NO PRESENTADO' : 'PENDIENTE'
       page.drawText(status, {
-        x: x + docWidth - 10 - bold.widthOfTextAtSize(status, 6), y: top - 14,
+        x: x + docWidth - 10 - bold.widthOfTextAtSize(status, 6), y: top - rowHeight + 7,
         size: 6, font: bold, color: accent,
       })
       fileLines.forEach((line, lineIndex) => {
@@ -259,35 +300,36 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
       if (documento) {
         const metadata = `${formatBytes(documento.size)} · ${formatDate(documento.uploadedAt)}`
         page.drawText(pdfSafe(metadata), {
-          x: x + 10, y: top - rowHeight + 7, size: 6.5, font: regular, color: COLORS.muted,
+          x: x + 10, y: top - rowHeight + 18, size: 6.5, font: regular, color: COLORS.muted,
         })
       }
     })
     y -= rowHeight + 9
   }
 
-  drawSection('Registro de firmas', 'F', 135)
   const signers: Array<{ label: string; key: 'solicitante' | 'aval1' | 'aval2'; context: string }> = [
-    { label: 'SOLICITANTE', key: 'solicitante', context: `DNI ${d.delegado.dni} · ${d.razonSocial}` },
+    { label: 'SOLICITANTE', key: 'solicitante', context: d.razonSocial },
     { label: 'AVAL 1', key: 'aval1', context: d.avales[0].agencia },
     { label: 'AVAL 2', key: 'aval2', context: d.avales[1].agencia },
   ]
   const signerGap = 10
-  const signerWidth = (CONTENT_WIDTH - signerGap) / 2
-  for (let index = 0; index < signers.length; index += 2) {
-    const row = signers.slice(index, index + 2).map((signer) => {
+  const signerWidth = (CONTENT_WIDTH - signerGap * 2) / 3
+  for (let index = 0; index < signers.length; index += 3) {
+    const row = signers.slice(index, index + 3).map((signer) => {
       const signature = solicitud.firmas[signer.key]
       return {
         signer,
         signature,
         nameLines: wrapText(signature?.nombre ?? 'Sin firma registrada', bold, 8.5, signerWidth - 22),
         contextLines: wrapText(signer.context, regular, 7.5, signerWidth - 20),
+        signedLines: wrapText(signature?.firmadaEn ? `Firmada · ${formatDate(signature.firmadaEn)}` : 'Pendiente de firma', regular, 6.5, signerWidth - 22),
       }
     })
-    const cardHeight = Math.max(125, ...row.map(({ nameLines, contextLines }) => 96 + (nameLines.length - 1) * 10 + contextLines.length * 9))
+    const cardHeight = Math.max(125, ...row.map(({ nameLines, contextLines, signedLines }) => 98 + nameLines.length * 10 + contextLines.length * 9 + signedLines.length * 9))
+    if (index === 0) drawSection('Registro de firmas', 'F', cardHeight + 46)
     ensureSpace(cardHeight + 10)
     for (let column = 0; column < row.length; column++) {
-      const { signer, signature, nameLines, contextLines } = row[column]
+      const { signer, signature, nameLines, contextLines, signedLines } = row[column]
       const x = MARGIN + column * (signerWidth + signerGap)
       const top = y
       page.drawRectangle({
@@ -319,16 +361,18 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
           size: 7.5, font: regular, color: COLORS.muted,
         })
       })
-      const signedAt = signature?.firmadaEn ? `Firmada · ${formatDate(signature.firmadaEn)}` : 'Pendiente de firma'
-      page.drawText(pdfSafe(signedAt), {
-        x: x + 11, y: top - cardHeight + 9, size: 6.5, font: regular,
-        color: signature ? COLORS.green : COLORS.orange,
+      signedLines.forEach((line, lineIndex) => {
+        page.drawText(line, {
+          x: x + 11, y: top - cardHeight + 9 + (signedLines.length - 1 - lineIndex) * 9,
+          size: 6.5, font: regular, color: signature ? COLORS.green : COLORS.orange,
+        })
       })
     }
     y -= cardHeight + 10
   }
 
-  const closingNote = 'Documento generado automáticamente por el portal de ACAV. La información refleja los datos y firmas registrados al momento de su emisión.'
+  activeSection = null
+  const closingNote = 'Resumen generado automáticamente por el portal de ACAV. Refleja los datos y firmas registrados al momento de su emisión; no incluye el contenido de los archivos adjuntos. Horarios de Argentina (UTC-3).'
   const closingLines = wrapText(closingNote, regular, 7, CONTENT_WIDTH)
   ensureSpace(closingLines.length * 10 + 12)
   y -= 4
@@ -428,8 +472,13 @@ function formatDate(value: string | null) {
   if (Number.isNaN(date.getTime())) return pdfSafe(value)
   return `${new Intl.DateTimeFormat('es-AR', {
     day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
-  }).format(date)} UTC`
+    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Argentina/Cordoba',
+  }).format(date)}`
+}
+
+function formatBirthDate(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : value
 }
 
 function formatBytes(value: number) {

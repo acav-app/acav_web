@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test:pdf": "node --test scripts/test-expediente-pdf.cjs",
+    "test:draft-cleanup": "node --test scripts/test-draft-cleanup.cjs",
     "import:socios": "node scripts/import-socios.mjs"
   },
   "dependencies": {

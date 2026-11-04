@@ -58,6 +58,23 @@ Configurar una regla de ciclo de vida para eliminar objetos del prefijo `solicit
 
 El asistente guarda los borradores durante 30 días. Los enlaces de firma de aval vencen a los 10 días y solo se emiten en orden. Para mantener el control de abusos entre varias instancias de despliegue, reemplazar el rate limit en memoria por un límite compartido antes de exponer el endpoint a tráfico alto.
 
+### Limpieza automática de borradores vacíos
+
+Los borradores completamente vacíos se eliminan tras **48 horas sin actividad**. Retomar el borrador con su enlace válido, guardar datos o iniciar una carga actualiza su actividad. El valor inicial `cantidadSucursales: "0"` no cuenta como contenido. Cualquier dato ingresado (incluso campos antiguos), documento, carga pendiente, firma o nota administrativa protege la solicitud. No se eliminan solicitudes en otros estados ni se aplica archivo automático a borradores con contenido.
+
+El workflow `.github/workflows/limpiar-borradores.yml` de **GitHub Actions** programa una revisión diaria a las **06:17 UTC (03:17 de Argentina)**, sin usar el cron de Vercel. La eliminación ocurre en la primera ejecución posterior a cumplir las 48 horas; GitHub puede demorar las ejecuciones programadas.
+
+Para activarla:
+
+1. Configurar `CRON_SECRET` con un secreto aleatorio robusto en el entorno del portal y desplegar el código.
+2. En GitHub → Settings → Secrets and variables → Actions, agregar el **secreto** `CRON_SECRET` con el mismo valor y la **variable** `ACAV_SITE_URL` con el origen HTTPS de producción, sin rutas (ej.: `https://acav.tudominio.com`). No exponer el secreto en variables `NEXT_PUBLIC_*`.
+3. Subir el workflow a la rama predeterminada del repositorio y habilitar GitHub Actions. El workflow llama al portal con `Authorization: Bearer <CRON_SECRET>`; no necesita credenciales Firebase ni de almacenamiento en GitHub.
+4. Probar desde Actions → Limpiar borradores vacíos → Run workflow, dejando marcada la opción **Simular sin eliminar borradores**. Desmarcarla ejecuta una limpieza real manual. Las ejecuciones programadas realizan la limpieza real.
+
+Para verificar sin borrar, invocar el mismo endpoint con `?dryRun=1` y el encabezado de autorización. Devuelve cantidades revisadas, candidatas, eliminadas, omitidas por actividad concurrente y errores; no devuelve datos personales. Cada eliminación revalida el documento en una transacción y deja un registro mínimo en `solicitudes_ingreso_limpiezas` (ID, motivo y fechas), sin copiar datos del formulario. No se ejecuta ninguna limpieza en la base real al instalar o probar el código.
+
 El PDF de cierre consolida los datos del trámite, la documentación declarada y las tres firmas. Los 12 archivos originales se descargan individualmente desde el panel administrativo; si `R2_BUCKET` es público, los enlaces del panel no impiden el acceso directo al objeto.
+
+**Exportación desde el administrador:** “Exportar PDF actualizado” consulta la solicitud y genera un PDF nuevo en cada descarga, con los datos, firmas y plantilla vigentes. No depende de que exista un PDF guardado y no reemplaza el archivo histórico almacenado ni modifica los correos enviados previamente.
 
 La rúbrica capturada en pantalla queda registrada como evidencia electrónica con timestamp, IP y navegador; no debe anunciarse como firma digital certificada ni como garantía de validez jurídica sin revisión legal específica.
