@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-const SESSION_COOKIE = 'acav_admin_session'
+import { SESSION_COOKIE } from '@/lib/admin/session-config'
 
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
@@ -14,14 +14,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (hasSession && isLogin) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/blog'
-    url.search = ''
-    return NextResponse.redirect(url)
-  }
-
-  return NextResponse.next()
+  // Cookie presence is not authentication. The login page verifies it on the
+  // server; redirecting here would trap expired cookies in a login/panel loop.
+  const headers = new Headers(request.headers)
+  headers.set('x-admin-return-to', pathname + search)
+  return NextResponse.next({ request: { headers } })
 }
 
 export const config = {

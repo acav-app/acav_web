@@ -148,7 +148,7 @@ export default function HomeEventsPopup() {
                         sizes="(max-width: 639px) 90vw, (max-width: 900px) 42vw, 390px"
                         className="h-auto w-full object-contain transition duration-700 sm:absolute sm:inset-0 sm:h-full sm:object-cover sm:group-hover:scale-[1.03]"
                       />
-                      <span aria-hidden="true" className="absolute bottom-3 right-3 inline-flex size-9 items-center justify-center rounded-full bg-slate-900 text-white shadow-lg ring-2 ring-white/80 sm:hidden">
+                      <span aria-hidden="true" className="absolute top-3 right-3 inline-flex size-9 items-center justify-center rounded-full bg-slate-900 text-white shadow-lg ring-2 ring-white/80 sm:hidden">
                         <FiArrowUpRight className="text-[17px]" />
                       </span>
                     </div>

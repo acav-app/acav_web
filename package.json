@@ -11,6 +11,7 @@
     "test:pdf": "node --test scripts/test-expediente-pdf.cjs",
     "test:draft-cleanup": "node --test scripts/test-draft-cleanup.cjs",
     "test:emails": "node --test scripts/test-solicitud-emails.cjs",
+    "test:admin-session": "node --test scripts/test-admin-session.cjs",
     "import:socios": "node scripts/import-socios.mjs"
   },
   "dependencies": {

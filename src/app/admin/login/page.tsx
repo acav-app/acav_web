@@ -1,5 +1,9 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+
+import { AuthServiceUnavailableError, ForbiddenError, getSessionUser } from '@/lib/admin/session'
+import { adminReturnPath } from '@/lib/admin/session-config'
 
 import LoginForm from './login-form'
 
@@ -8,7 +12,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function AdminLoginPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function AdminLoginPage({ searchParams }: { searchParams: { next?: string } }) {
+  let hasValidSession = false
+  try {
+    hasValidSession = !!await getSessionUser()
+  } catch (error) {
+    if (!(error instanceof AuthServiceUnavailableError) && !(error instanceof ForbiddenError)) throw error
+  }
+  if (hasValidSession) redirect(adminReturnPath(searchParams.next))
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl shadow-slate-200/70">

@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { UnauthorizedError, requireSessionUser } from '@/lib/admin/session'
+import { ForbiddenError, requireSessionUser } from '@/lib/admin/session'
 
 export async function requireIngresoAdmin() {
   const allowlist = (process.env.ADMIN_ALLOWED_EMAILS ?? '')
@@ -9,8 +9,8 @@ export async function requireIngresoAdmin() {
     .filter(Boolean)
   // Sensitive DNI, fiscal documents and signature audit data must never be exposed
   // when the production allowlist has not been configured.
-  if (!allowlist.length) throw new UnauthorizedError()
+  if (!allowlist.length) throw new ForbiddenError()
   const user = await requireSessionUser()
-  if (!user.email || !allowlist.includes(user.email.toLowerCase())) throw new UnauthorizedError()
+  if (!user.email || !allowlist.includes(user.email.toLowerCase())) throw new ForbiddenError()
   return user
 }

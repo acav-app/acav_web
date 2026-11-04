@@ -52,6 +52,16 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 Las variables de Firebase Admin/cliente existentes también deben estar configuradas. Configurar además `ADMIN_ALLOWED_EMAILS` con una lista separada por comas de las cuentas autorizadas para ver DNI, documentación fiscal y auditoría. El panel digital bloquea el acceso si esta lista está vacía. `RESEND_FROM_EMAIL` debe pertenecer a un dominio verificado en Resend. En producción, `NEXT_PUBLIC_SITE_URL` debe ser el origen HTTPS público.
 
+### Acceso al panel administrativo
+
+El login crea una **cookie de sesión de Firebase Admin con una duración máxima de 5 días**, en lugar de guardar un ID token de una hora durante cinco días. Se verifica su firma, vencimiento y revocación en el servidor. Se requieren `FIREBASE_PROJECT_ID` (o `NEXT_PUBLIC_FIREBASE_PROJECT_ID`), `FIREBASE_CLIENT_EMAIL` y `FIREBASE_PRIVATE_KEY`, con permisos de Firebase Authentication en el mismo proyecto que la configuración pública. Las credenciales privadas nunca deben usar el prefijo `NEXT_PUBLIC_`.
+
+Al ingresar se exige autenticación reciente, se fuerza un ID token nuevo y se descarta el estado temporal de Firebase del navegador después del intercambio. Los tokens del nuevo login no se conservan en almacenamiento persistente. Las cookies antiguas o vencidas se eliminan automáticamente al volver al acceso; las sesiones existentes del formato anterior requerirán iniciar sesión una vez después de desplegar este cambio. El botón **Restablecer acceso** borra únicamente la cookie del panel y el estado de Firebase Auth, sin vaciar la caché ni el resto del almacenamiento del navegador.
+
+La entrada predeterminada es **Banners (`/admin/banner`)**. Los enlaces a secciones protegidas se retoman después de iniciar sesión, validando que el destino permanezca dentro del panel y no sea el propio login. El panel revisa la sesión al recuperar foco y cada minuto mientras está visible. Un vencimiento vuelve al acceso; una caída temporal del servicio muestra un aviso y no cierra la sesión. El middleware nunca considera la mera presencia de una cookie como prueba de autenticación, evitando bucles entre el login y el panel.
+
+Ejecutar `npm run test:admin-session` para probar la creación, caducidad, revocación, errores de conexión, limpieza acotada, protección de origen y redirecciones con Firebase simulado, sin usar cuentas reales.
+
 **Almacenamiento de documentos:** el flujo usa `R2_BUCKET`, compartido con el contenido del sitio. Las credenciales R2 necesitan permisos de lectura y escritura para subir, inspeccionar, copiar y borrar objetos. El navegador sube con URLs prefirmadas; configurá CORS en este bucket para el origen exacto del sitio (y `http://localhost:3000` en desarrollo), método `PUT` y los encabezados requeridos. **Si el bucket o `R2_PUBLIC_BASE` permite acceso público, los documentos del trámite también podrían ser accesibles por URL.** Los links de descarga del panel vencen en 60 segundos.
 
 Configurar una regla de ciclo de vida para eliminar objetos del prefijo `solicitudes-ingreso-tmp/` luego de 1 día; ese prefijo solo contiene cargas temporales sin confirmar. Los documentos confirmados se copian a `solicitudes-ingreso/` dentro de `R2_BUCKET`.

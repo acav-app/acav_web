@@ -2,11 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { FiAward, FiFileText, FiImage, FiInbox, FiLogOut, FiMenu, FiUsers, FiX } from 'react-icons/fi'
-import { signOut } from 'firebase/auth'
-
-import { firebaseAuth } from '@/lib/firebase/client'
+import { resetAdminSession } from '@/lib/admin/session-client'
 
 const NAV = [
   { href: '/admin/banner', label: 'Banner', icon: FiImage },
@@ -18,17 +16,18 @@ const NAV = [
 
 export default function Sidebar({ email }: { email: string | null }) {
   const pathname = usePathname()
-  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
+  const [logoutError, setLogoutError] = useState('')
 
   async function handleLogout() {
     setSigningOut(true)
+    setLogoutError('')
     try {
-      await fetch('/api/admin/session', { method: 'DELETE' })
-      await signOut(firebaseAuth()).catch(() => undefined)
-      router.replace('/admin/login')
-      router.refresh()
+      await resetAdminSession()
+      window.location.replace('/admin/login')
+    } catch {
+      setLogoutError('No se pudo cerrar la sesión. Revisá tu conexión e intentá de nuevo.')
     } finally {
       setSigningOut(false)
     }
@@ -77,6 +76,7 @@ export default function Sidebar({ email }: { email: string | null }) {
           <FiLogOut className="text-lg" />
           {signingOut ? 'Saliendo…' : 'Cerrar sesión'}
         </button>
+        {logoutError ? <p role="alert" className="mt-2 px-1 text-xs text-red-600">{logoutError}</p> : null}
       </div>
     </div>
   )
