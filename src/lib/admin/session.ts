@@ -52,7 +52,8 @@ export async function getSessionUser(): Promise<DecodedIdToken | null> {
   if (!cookie) return null
 
   try {
-    const decoded = await firebaseAdminAuth().verifySessionCookie(cookie, true)
+    const auth = await firebaseAdminAuth()
+    const decoded = await auth.verifySessionCookie(cookie, true)
     if (!isAllowedEmail(decoded.email)) throw new ForbiddenError()
     return decoded
   } catch (error) {

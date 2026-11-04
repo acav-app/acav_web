@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { guardarDatosBorrador, obtenerBorradorIngreso } from '@/lib/solicitudes/service'
 import { draftTokenFromRequest } from '@/lib/solicitudes/draft-cookie'
+import { draftApiError } from '@/lib/solicitudes/draft-api-error'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -18,7 +19,7 @@ export async function GET(request: Request, { params }: Params) {
     }))
     return NextResponse.json({ ...result, documentos }, { headers: { 'Cache-Control': 'no-store' } })
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'No se pudo recuperar el borrador.' }, { status: 401 })
+    return draftApiError(error)
   }
 }
 
@@ -27,6 +28,6 @@ export async function PUT(request: Request, { params }: Params) {
     const result = await guardarDatosBorrador(params.id, draftTokenFromRequest(request, params.id), await request.json())
     return NextResponse.json(result, { headers: { 'Cache-Control': 'no-store' } })
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'No se pudo guardar el borrador.' }, { status: 400 })
+    return draftApiError(error)
   }
 }

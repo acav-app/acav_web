@@ -5,14 +5,14 @@ import Image from 'next/image'
 import { FiCheckCircle, FiEye, FiFileText, FiLoader, FiRefreshCw, FiUploadCloud } from 'react-icons/fi'
 
 import type { DocumentoGuardado, DocumentoIngreso } from '@/lib/solicitudes/types'
+import { SolicitudApiError, solicitudApiRequest } from '@/lib/solicitudes/api-client'
 
 type DocumentoUI = Omit<DocumentoGuardado, 'key'>
 
 async function getSavedDocumentUrl(solicitudId: string, slot: DocumentoIngreso, preview = false) {
   const query = preview ? '?preview=1' : ''
-  const response = await fetch(`/api/solicitudes/ingreso/${solicitudId}/documentos/${slot}${query}`, { cache: 'no-store' })
-  const data = await response.json() as { url?: unknown; error?: unknown }
-  if (!response.ok || typeof data.url !== 'string') {
+  const data = await solicitudApiRequest<{ url?: unknown; error?: unknown }>(`/api/solicitudes/ingreso/${solicitudId}/documentos/${slot}${query}`, {}, 'No se pudo abrir el documento.')
+  if (typeof data.url !== 'string') {
     throw new Error(typeof data.error === 'string' ? data.error : 'No se pudo abrir el documento.')
   }
   return data.url
@@ -84,13 +84,14 @@ export default function PrivateDocumentInput({ solicitudId, slot, label, dni = f
     setBusy(true)
     setProgress(0)
     try {
-      const presignResponse = await fetch(`/api/solicitudes/ingreso/${solicitudId}/documentos/presign`, {
+      const presignData = await solicitudApiRequest<{ uploadUrl: string; key: string; headers: Record<string, string> }>(`/api/solicitudes/ingreso/${solicitudId}/documentos/presign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ slot, contentType: file.type, size: file.size }),
-      })
-      const presignData = await presignResponse.json()
-      if (!presignResponse.ok) throw new Error(presignData.error ?? 'No se pudo iniciar la carga. Intentá de nuevo.')
+      }, 'No se pudo iniciar la carga. Intentá de nuevo.')
+      if (typeof presignData.uploadUrl !== 'string' || typeof presignData.key !== 'string' || !presignData.headers || typeof presignData.headers !== 'object') {
+        throw new SolicitudApiError('No se pudo preparar la carga del archivo. Volvé a intentar.', 200, 'INVALID_API_RESPONSE')
+      }
 
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest()
@@ -105,13 +106,14 @@ export default function PrivateDocumentInput({ solicitudId, slot, label, dni = f
         xhr.send(file)
       })
 
-      const confirmResponse = await fetch(`/api/solicitudes/ingreso/${solicitudId}/documentos/confirmar`, {
+      const confirmData = await solicitudApiRequest<{ documento: DocumentoUI }>(`/api/solicitudes/ingreso/${solicitudId}/documentos/confirmar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ slot, nombre: file.name, key: presignData.key }),
-      })
-      const confirmData = await confirmResponse.json()
-      if (!confirmResponse.ok) throw new Error(confirmData.error ?? 'No se pudo completar la carga. Intentá de nuevo.')
+      }, 'No se pudo completar la carga. Intentá de nuevo.')
+      if (!confirmData.documento || typeof confirmData.documento.nombre !== 'string' || typeof confirmData.documento.contentType !== 'string') {
+        throw new SolicitudApiError('No se pudo confirmar la carga del archivo. Volvé a intentar.', 200, 'INVALID_API_RESPONSE')
+      }
       onChange(confirmData.documento as DocumentoUI)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo cargar el archivo.')

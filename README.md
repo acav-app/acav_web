@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Usar **Node.js 24.x**, también fijado en `package.json` para Vercel. Firebase Admin 14 y sus dependencias JWT/ESM no funcionan en runtimes antiguos (por ejemplo, Node 22.11 falla con `ERR_REQUIRE_ESM` al cargar Auth). Después de cambiar la versión de Node, es necesario generar un despliegue nuevo; no alcanza con actualizar la página en el navegador.
+
 First, run the development server:
 
 ```bash
@@ -67,6 +69,10 @@ Ejecutar `npm run test:admin-session` para probar la creación, caducidad, revoc
 Configurar una regla de ciclo de vida para eliminar objetos del prefijo `solicitudes-ingreso-tmp/` luego de 1 día; ese prefijo solo contiene cargas temporales sin confirmar. Los documentos confirmados se copian a `solicitudes-ingreso/` dentro de `R2_BUCKET`.
 
 El asistente guarda los borradores durante 30 días. Los enlaces de firma de aval vencen a los 10 días y solo se emiten en orden. Para mantener el control de abusos entre varias instancias de despliegue, reemplazar el rate limit en memoria por un límite compartido antes de exponer el endpoint a tráfico alto.
+
+**Recuperación ante fallas del formulario:** las respuestas de la API se comprueban antes de interpretar JSON. Las páginas HTML de error, respuestas incompletas, redirecciones inesperadas y fallas de red muestran un mensaje legible sin descartar el borrador existente ni crear otro automáticamente. Solo una respuesta estructurada de acceso vencido, borrador inexistente o solicitud ya enviada permite iniciar uno nuevo. “Reintentar” vuelve a recuperar el borrador sin recargar toda la página. Los errores de infraestructura devuelven 503, no un falso 401 de acceso vencido. Firebase Auth se carga únicamente cuando se necesita para el administrador, sin bloquear al arrancar las rutas de Firestore del formulario.
+
+Ejecutar `npm run test:solicitud-api` para probar estos casos sin crear borradores reales. Ante un error HTML 500 en producción, revisar los Function Logs del despliegue en Vercel y confirmar que se ejecuta Node 24.x; el texto del HTML no permite conocer por sí solo la excepción interna.
 
 ### Limpieza automática de borradores vacíos
 

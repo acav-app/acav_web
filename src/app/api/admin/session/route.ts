@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   if (typeof idToken !== 'string' || !idToken || idToken.length > 8192) return failure('Falta un token de acceso válido.', 'INVALID_TOKEN', 400)
 
   try {
-    const auth = firebaseAdminAuth()
+    const auth = await firebaseAdminAuth()
     const decoded = await auth.verifyIdToken(idToken, true)
     if (!isAllowedEmail(decoded.email)) return failure('Esta cuenta no tiene acceso al panel.', 'ACCESS_DENIED', 403, true)
     // A stolen old ID token must not be exchanged for a fresh five-day session.

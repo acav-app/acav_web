@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FiArrowLeft, FiArrowRight, FiCheck, FiCheckCircle, FiLoader, FiSave, FiSend } from 'react-icons/fi'
 
 import { validarCuit, solicitudIngresoSchema } from '@/lib/solicitudes/schema'
+import { SolicitudApiError, solicitudApiRequest } from '@/lib/solicitudes/api-client'
+import { initializeSolicitudDraft, type DraftCredentials, type InitializedDraft } from '@/lib/solicitudes/draft-client'
 import { esUrlValida, validarFechaNacimiento, validarPerfilSocial, validarTelefonoArgentino } from '@/lib/solicitudes/validation'
 import {
   DATOS_INGRESO_VACIOS,
@@ -12,7 +14,6 @@ import {
   DOCUMENTOS_OPCIONALES,
   ETIQUETAS_DOCUMENTO,
   REDES_SOCIALES_CAMPOS,
-  migrarDatosIngreso,
   nombreCompleto,
   type DatosIngreso,
   type DocumentoGuardado,
@@ -25,8 +26,6 @@ import PrivateDocumentInput from './private-document-input'
 import SignaturePad from './signature-pad'
 
 type DocumentoUI = Omit<DocumentoGuardado, 'key'>
-type DraftCredentials = { id: string; numero: string }
-type InitializedDraft = { credentials: DraftCredentials; data: DatosIngreso; documents: Partial<Record<DocumentoIngreso, DocumentoUI>> }
 type FieldError = Record<string, string>
 
 const STEPS = ['Agencia', 'Personas', 'Avales', 'Documentación', 'Revisión y firma']
@@ -293,6 +292,7 @@ export default function SolicitudIngresoWizard() {
   const [signerNombres, setSignerNombres] = useState('')
   const [accepted, setAccepted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [initializationAttempt, setInitializationAttempt] = useState(0)
   const [sending, setSending] = useState(false)
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState('')
@@ -310,33 +310,7 @@ export default function SolicitudIngresoWizard() {
   useEffect(() => {
     let active = true
     if (!initPromise.current) {
-      initPromise.current = (async () => {
-        const cached = readDraftCredentials()
-        if (cached) {
-          try {
-            const value = JSON.parse(cached) as DraftCredentials
-            const response = await fetch(`/api/solicitudes/ingreso/${value.id}`, { cache: 'no-store' })
-            if (response.ok) {
-              const body = await response.json()
-              persistDraftCredentials(JSON.stringify(value))
-              return {
-                credentials: value,
-                data: migrarDatosIngreso(body.datos),
-                documents: body.documentos ?? {},
-              }
-            }
-          } catch {
-            // The old draft is no longer usable. A clean draft is created below.
-          }
-          clearDraftCredentials()
-        }
-        const response = await fetch('/api/solicitudes/ingreso/borradores', { method: 'POST' })
-        const body = await response.json()
-        if (!response.ok) throw new Error(body.error ?? 'No se pudo iniciar el formulario.')
-        const credentials = { id: body.id as string, numero: body.numero as string }
-        persistDraftCredentials(JSON.stringify(credentials))
-        return { credentials, data: DATOS_INGRESO_VACIOS, documents: {} }
-      })()
+      initPromise.current = initializeSolicitudDraft({ read: readDraftCredentials, write: persistDraftCredentials, clear: clearDraftCredentials })
     }
     initPromise.current.then((initializedDraft) => {
       if (active) {
@@ -350,12 +324,13 @@ export default function SolicitudIngresoWizard() {
       }
     }).catch((error: unknown) => {
       if (active) {
+        initPromise.current = null
         setFormError(error instanceof Error ? error.message : 'No se pudo iniciar el formulario.')
         setLoading(false)
       }
     })
     return () => { active = false }
-  }, [])
+  }, [initializationAttempt])
 
   const saveData = useCallback((payload: DatosIngreso, revision = dirtyRevision.current) => {
     if (!draft) return Promise.resolve()
@@ -365,14 +340,13 @@ export default function SolicitudIngresoWizard() {
     const task = saveQueue.current.catch(() => undefined).then(async () => {
       inFlightRevision.current = revision
       try {
-        const response = await fetch(`/api/solicitudes/ingreso/${draft.id}`, {
+        const result = await solicitudApiRequest<{ ok?: boolean }>(`/api/solicitudes/ingreso/${draft.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
           keepalive: true,
-        })
-        const body = await response.json()
-        if (!response.ok) throw new Error(body.error ?? 'No se pudo guardar el borrador.')
+        }, 'No se pudo guardar el borrador.')
+        if (result.ok !== true) throw new SolicitudApiError('No se pudo confirmar el guardado. Tus cambios siguen en el formulario; volvé a intentar.', 200, 'INVALID_API_RESPONSE')
         savedRevision.current = Math.max(savedRevision.current, revision)
         if (revision === dirtyRevision.current) setSaved(true)
       } finally {
@@ -499,13 +473,14 @@ export default function SolicitudIngresoWizard() {
     setSending(true)
     try {
       await saveData(data)
-      const response = await fetch(`/api/solicitudes/ingreso/${draft.id}/enviar`, {
+      const body = await solicitudApiRequest<{ numero: string; emailEnviado: boolean; emailSolicitanteEnviado?: boolean }>(`/api/solicitudes/ingreso/${draft.id}/enviar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ datos: data, firmaApellidos: signerApellidos, firmaNombres: signerNombres, firmaImagen: signature, aceptaDeclaracion: accepted }),
-      })
-      const body = await response.json()
-      if (!response.ok) throw new Error(body.error ?? 'No se pudo enviar la solicitud.')
+      }, 'No se pudo enviar la solicitud.')
+      if (typeof body.numero !== 'string' || !body.numero.trim()) {
+        throw new SolicitudApiError('No se pudo confirmar el envío. Conservamos la referencia de tu borrador; verificá el estado con ACAV antes de volver a enviar.', 200, 'INVALID_API_RESPONSE')
+      }
       setSuccess({
         numero: body.numero,
         emailEnviado: body.emailEnviado,
@@ -522,8 +497,8 @@ export default function SolicitudIngresoWizard() {
   if (loading) return <Skeleton />
   if (formError && !draft) {
     return <div className="rounded-[22px] border border-red-200 bg-red-50 p-6 text-center">
-      <p className="text-sm font-semibold text-red-700">{formError}</p>
-      <button type="button" onClick={() => window.location.reload()} className="mt-4 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm">Reintentar</button>
+      <p role="alert" className="text-sm font-semibold text-red-700">{formError}</p>
+      <button type="button" onClick={() => { initPromise.current = null; setFormError(''); setLoading(true); setInitializationAttempt((current) => current + 1) }} className="mt-4 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm">Reintentar</button>
     </div>
   }
   if (success) {

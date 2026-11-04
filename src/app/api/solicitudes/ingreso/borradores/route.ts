@@ -23,6 +23,6 @@ export async function POST(request: Request) {
     return response
   } catch (error) {
     console.error('[solicitudes-ingreso-borrador]', error)
-    return NextResponse.json({ error: 'No se pudo iniciar el formulario. Probá de nuevo.' }, { status: 503 })
+    return NextResponse.json({ error: 'No se pudo iniciar el formulario. Probá de nuevo en unos instantes.', code: 'DRAFT_SERVICE_UNAVAILABLE' }, { status: 503, headers: { 'Cache-Control': 'no-store' } })
   }
 }

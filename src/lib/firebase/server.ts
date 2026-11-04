@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { cert, getApps, initializeApp } from 'firebase-admin/app'
-import { getAuth } from 'firebase-admin/auth'
 
 export function firebaseAdminApp() {
   const name = 'acav-solicitudes-admin'
@@ -16,6 +15,9 @@ export function firebaseAdminApp() {
   return initializeApp({ credential: cert({ projectId, clientEmail, privateKey }), projectId }, name)
 }
 
-export function firebaseAdminAuth() {
+export async function firebaseAdminAuth() {
+  // Auth's JWT/ESM dependencies must not run while unrelated Firestore routes
+  // are loading. Keep failures inside the session handlers' error boundary.
+  const { getAuth } = await import('firebase-admin/auth')
   return getAuth(firebaseAdminApp())
 }

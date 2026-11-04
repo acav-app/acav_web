@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "ACAV - Sitio institucional moderno (Next.js + Tailwind)",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,6 +15,7 @@
     "test:draft-cleanup": "node --test scripts/test-draft-cleanup.cjs",
     "test:emails": "node --test scripts/test-solicitud-emails.cjs",
     "test:admin-session": "node --test scripts/test-admin-session.cjs",
+    "test:solicitud-api": "node --test scripts/test-solicitud-api.cjs",
     "import:socios": "node scripts/import-socios.mjs"
   },
   "dependencies": {

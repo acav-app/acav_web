@@ -7,6 +7,7 @@ import { solicitudesDb, FieldValue, Timestamp } from './firestore'
 import { confirmarSubidaSolicitud, crearSubidaSolicitud, deleteSolicitudFile, signedSolicitudDownload } from './storage'
 
 import { borradorIngresoSchema, normalizarDatosIngreso } from './schema'
+import { DraftAccessError } from './draft-errors'
 import {
   DATOS_INGRESO_VACIOS,
   DOCUMENTOS_INGRESO,
@@ -124,10 +125,10 @@ function publicRecord(stored: StoredSolicitudIngreso): SolicitudIngreso {
 }
 
 function assertDraft(stored: StoredSolicitudIngreso, token: string) {
-  if (stored.eliminando) throw new Error('Esta solicitud fue dada de baja y ya no está disponible.')
-  if (!token || !stored.draftHash || stored.draftHash !== hashToken(token)) throw new Error('El borrador no existe o el acceso venció. Iniciá una nueva solicitud.')
-  if (!stored.draftExpiresAt || new Date(stored.draftExpiresAt).getTime() < Date.now()) throw new Error('El borrador venció. Iniciá una nueva solicitud.')
-  if (stored.estado !== 'BORRADOR') throw new Error('Esta solicitud ya fue enviada y no admite cambios.')
+  if (stored.eliminando) throw new DraftAccessError('Esta solicitud fue dada de baja y ya no está disponible.', 'DRAFT_NOT_FOUND', 410)
+  if (!token || !stored.draftHash || stored.draftHash !== hashToken(token)) throw new DraftAccessError('El acceso al borrador venció. Iniciá una nueva solicitud.', 'DRAFT_ACCESS_DENIED', 401)
+  if (!stored.draftExpiresAt || new Date(stored.draftExpiresAt).getTime() < Date.now()) throw new DraftAccessError('El borrador venció. Iniciá una nueva solicitud.', 'DRAFT_EXPIRED', 410)
+  if (stored.estado !== 'BORRADOR') throw new DraftAccessError('Esta solicitud ya fue enviada y no admite cambios.', 'DRAFT_ALREADY_SUBMITTED', 409)
 }
 
 export async function crearBorradorIngreso() {
@@ -157,7 +158,7 @@ export async function obtenerBorradorIngreso(id: string, token: string) {
   const ref = collection().doc(id)
   return solicitudesDb().runTransaction(async (transaction) => {
     const snapshot = await transaction.get(ref)
-    if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
+    if (!snapshot.exists) throw new DraftAccessError('El borrador ya no está disponible.', 'DRAFT_NOT_FOUND', 404)
     const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
     assertDraft(stored, token)
     // Resuming a valid draft is activity, even before the next autosave.
@@ -173,7 +174,7 @@ export async function guardarDatosBorrador(id: string, token: string, input: unk
   const ref = collection().doc(id)
   await solicitudesDb().runTransaction(async (transaction) => {
     const snapshot = await transaction.get(ref)
-    if (!snapshot.exists) throw new Error('El borrador no existe o el acceso venció.')
+    if (!snapshot.exists) throw new DraftAccessError('El borrador ya no está disponible.', 'DRAFT_NOT_FOUND', 404)
     const stored = asStored(snapshot.data() as Record<string, unknown>, snapshot.id)
     assertDraft(stored, token)
     const datos = mergeDraftData(stored.datos, parsed as unknown as Partial<DatosIngreso>)
