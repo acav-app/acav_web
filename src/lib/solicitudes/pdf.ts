@@ -12,6 +12,8 @@ const PAGE_HEIGHT = 841.89
 const MARGIN = 48
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2
 const HEADER_HEIGHT = 70
+const FIRST_PAGE_TITLE_EXTRA_GAP = 23 // Approximately 8 mm, only below the first-page header.
+const FOLLOWING_PAGE_EXTRA_GAP = 12 // Approximately 4 mm below subsequent headers.
 const FOOTER_SAFE = 56
 
 const COLORS = {
@@ -52,6 +54,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
   let y = 0
   let activeSection: { title: string; letter: string } | null = null
   const headerBottom = PAGE_HEIGHT - HEADER_HEIGHT
+  const followingPageContentTop = headerBottom - 27 - FOLLOWING_PAGE_EXTRA_GAP
 
   const drawSectionHeading = (title: string, letter: string) => {
     page.drawText(letter, { x: MARGIN, y: y - 1, size: 8, font: bold, color: COLORS.primary })
@@ -98,7 +101,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
     page.drawText('ASOCIACIÓN CORDOBESA DE AGENCIAS DE VIAJES', {
       x: MARGIN, y: headerBottom + 10, size: 6.5, font: regular, color: rgb(0.86, 0.94, 1),
     })
-    y = headerBottom - 27
+    y = pages.length === 1 ? headerBottom - 27 : followingPageContentTop
     if (activeSection) drawSectionHeading(`${activeSection.title} (continuación)`, activeSection.letter)
   }
 
@@ -108,7 +111,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
 
   const drawSection = (title: string, letter: string, followingSpace = 52) => {
     activeSection = null
-    ensureSpace(Math.min(followingSpace + 40, headerBottom - 27 - FOOTER_SAFE))
+    ensureSpace(Math.min(followingSpace + 40, followingPageContentTop - FOOTER_SAFE))
     y -= 12
     activeSection = { title, letter }
     drawSectionHeading(title, letter)
@@ -163,7 +166,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
 
   const drawSubheading = (title: string, followingSpace: number) => {
     // Keep a person's fields together unless the block itself exceeds a page.
-    ensureSpace(Math.min(followingSpace + 25, headerBottom - 27 - 28 - FOOTER_SAFE))
+    ensureSpace(Math.min(followingSpace + 25, followingPageContentTop - 28 - FOOTER_SAFE))
     y -= 8
     page.drawText(pdfSafe(title), { x: MARGIN, y: y - 1, size: 9, font: bold, color: COLORS.primary })
     y -= 17
@@ -176,6 +179,7 @@ export async function generarExpedientePdf(solicitud: SolicitudIngreso): Promise
   }
 
   newPage()
+  y -= FIRST_PAGE_TITLE_EXTRA_GAP
   page.drawText('SOLICITUD DE INGRESO', { x: MARGIN, y, size: 18, font: bold, color: COLORS.navy })
   y -= 18
   page.drawText('Resumen del trámite y documentación registrada', {

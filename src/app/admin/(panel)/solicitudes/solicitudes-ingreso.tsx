@@ -407,7 +407,7 @@ export default function SolicitudesIngresoAdmin() {
                           onClick={() => void exportExpediente(item)}
                           title="Genera un nuevo PDF con los datos y la plantilla actuales"
                           className="inline-flex h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 text-xs font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-wait disabled:opacity-60"
-                        >{busy === `${item.id}:export` ? <FiLoader className="animate-spin" /> : <FiDownload />}{busy === `${item.id}:export` ? 'Generando PDF…' : 'Exportar PDF actualizado'}</button>
+                        >{busy === `${item.id}:export` ? <FiLoader className="animate-spin" /> : <FiDownload />}{busy === `${item.id}:export` ? 'Generando PDF…' : 'Exportar PDF'}</button>
                       ) : null}
                       {item.estado === 'COMPLETADO_APROBADO' && item.notificaciones.final !== 'enviada' ? (
                         <button

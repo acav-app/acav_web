@@ -109,6 +109,9 @@ test('expediente: pagination, header, optional documents and long content', asyn
     const orange = rectangles.filter(({ color }) => color?.red === 249 / 255 && color?.green === 73 / 255)
     assert.equal(orange.length, document.getPageCount())
     assert.ok(orange.every(({ x, width, height }) => x === 0 && width > 595 && height === 3), 'Only a bottom orange rule in the header')
+    const title = texts.find(({ text }) => text === 'SOLICITUD DE INGRESO')
+    assert.ok(title, 'The first page must have a title')
+    assert.ok(Math.abs(orange[0].y - title.y - 47) < 0.1, 'The first-page title has an additional 8 mm of clearance below the header')
     const signerLabels = texts.filter(({ text }) => ['SOLICITANTE', 'AVAL 1', 'AVAL 2'].includes(text))
     assert.equal(signerLabels.length, 3)
     assert.ok(signerLabels.every(({ page, y }) => page === signerLabels[0].page && y === signerLabels[0].y), 'All signatures share a row')
@@ -133,6 +136,7 @@ test('expediente: pagination, header, optional documents and long content', asyn
     assert.ok(texts.some(({ text }) => text.includes('(continuación)')))
     assert.equal(texts.filter(({ text }) => text === 'PENDIENTE').length, 1)
     assert.ok(texts.filter(({ text }) => text.includes('(continuación)')).every(({ y }) => y > 700))
+    assert.ok(texts.filter(({ text }) => text.includes('(continuación)')).every(({ y }) => Math.abs(y - (841.89 - 70 - 27 - 12 - 2)) < 0.1), 'Continuation headings have an additional 4 mm of header clearance')
     assert.ok(texts.filter(({ y }) => y < 56).every(({ text }) => text.startsWith('ACAV ·') || text.startsWith('Página ')), 'Content must not overlap the footer')
   } finally {
     PDFPage.prototype.drawText = originalText
