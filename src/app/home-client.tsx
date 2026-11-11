@@ -39,7 +39,6 @@ import {
 } from 'react-icons/fi'
 
 import HeroBanner from './components/hero-banner'
-import HomeEventsPopup from './components/home-events-popup'
 import Navbar from './components/navbar'
 import SiteFooter from './components/site-footer'
 import InstagramFeedWidget from './components/instagram-feed-widget'
@@ -76,7 +75,6 @@ export default function HomeClient({ slides }: { slides: BannerSlide[] }) {
   return (
     <>
       <Navbar />
-      <HomeEventsPopup />
 
       <main className="bg-white pt-16 md:pt-[72px]">
         {/* =============================================================

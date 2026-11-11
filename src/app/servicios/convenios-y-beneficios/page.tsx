@@ -24,6 +24,19 @@ export const metadata: Metadata = {
 
 const sociosBeneficios: BenefitCard[] = [
   {
+    title: 'Tucs Digital',
+    subtitle: 'Desarrollo de sitios web para agencias de viajes.',
+    image: '/images/beneficios/tucsdigital.png',
+    badges: ['20% OFF', 'Pago en 2 cuotas'],
+    benefit:
+      'Beneficio exclusivo para socios ACAV: 20% de descuento en cualquiera de nuestros 3 planes de desarrollo web, con atención prioritaria y capacitación para administrar tu sitio. Pago en 2 cuotas: 50% al iniciar y 50% contra entrega.',
+    contact: {
+      label: 'Escribir por WhatsApp: +54 9 1144713445',
+      href: 'https://wa.me/5491144713445',
+      external: true,
+    },
+  },
+  {
     title: 'Hospital Italiano',
     image: '/images/beneficios/hospital italiano.png',
     badges: ['20% OFF', 'Planes de salud'],
